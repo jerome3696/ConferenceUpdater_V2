@@ -136,38 +136,38 @@ ConferenceFinder/
 **목표**: 학회 데이터를 테이블로 보여주는 것. 배포하면 누구나 볼 수 있는 상태.
 
 #### Step 1.1: 프로젝트 초기화
-- [ ] 이 폴더(ConferenceFinder) 안에 Vite + React + Tailwind 프로젝트 생성
-- [ ] 기본 폴더 구조 생성 (src/components, src/services, src/hooks, src/utils)
-- [ ] Git 초기화 및 GitHub 저장소 연결
+- [x] 이 폴더(ConferenceFinder) 안에 Vite + React + Tailwind 프로젝트 생성
+- [x] 기본 폴더 구조 생성 (src/components, src/services, src/hooks, src/utils)
+- [x] Git 초기화 및 GitHub 저장소 연결
 - **확인**: `npm run dev` 실행 → 브라우저에서 Vite 기본 페이지가 뜨는가?
 
 #### Step 1.2: 초기 데이터 파일 생성
-- [ ] blueprint.md 부록 B의 학회 21건을 conferences.json으로 변환
-- [ ] 마스터 정보만 포함 (upcoming/past editions는 빈 배열)
-- [ ] public/data/에 배치
+- [x] blueprint.md 부록 B의 학회 21건을 conferences.json으로 변환 (학회목록_sample.xlsx 기준)
+- [x] 마스터 정보 + 사용자 제공 upcoming editions 18건 포함
+- [x] public/data/에 배치
 - **확인**: `public/data/conferences.json`을 열어서 21건이 모두 들어있는가?
 
 #### Step 1.3: 데이터 로드 및 테이블 표시
-- [ ] conferences.json을 fetch로 로드
-- [ ] 메인 테이블 컴포넌트 구현 (읽기 전용)
-- [ ] 컬럼 정렬 기능 구현
-- [ ] upcoming 시작일 기준 기본 정렬 (upcoming이 없는 학회는 하단)
+- [x] conferences.json을 fetch로 로드
+- [x] 메인 테이블 컴포넌트 구현 (읽기 전용, 이중 헤더: 마스터/Upcoming/Last/참고)
+- [x] 컬럼 정렬 기능 구현
+- [x] upcoming 시작일 기준 기본 정렬 (upcoming이 없는 학회는 하단)
 - **확인**: `npm run dev` → 브라우저에서 21개 학회가 테이블로 보이는가? 컬럼 클릭 시 정렬되는가?
 
 #### Step 1.4: 필터 기능
-- [ ] 분류, 분야, 지역 드롭다운 필터
-- [ ] 텍스트 검색 (학회명, 약칭)
+- [x] 분류, 분야, 지역 드롭다운 필터
+- [x] 텍스트 검색 (학회명, 약칭)
 - **확인**: 필터 드롭다운에서 "열전달" 선택 → 해당 분야 학회만 표시되는가? "IHTC" 검색 → 해당 학회만 나오는가?
 
 #### Step 1.5: 날짜 자동 전환
-- [ ] 페이지 로드 시 종료일이 지난 upcoming을 past로 전환하는 로직
-- [ ] 시각적 표시 (경고 아이콘 등)
+- [x] 페이지 로드 시 종료일이 지난 upcoming을 past로 전환하는 로직
+- [x] 시각적 표시 (경고 아이콘 등)
 - **확인**: 테스트로 과거 날짜의 upcoming을 수동으로 JSON에 넣고 → 페이지 로드 시 past로 자동 전환되는가?
 
 #### Step 1.6: 배포
-- [ ] GitHub Pages 배포 설정 (vite.config.js에 base 경로 설정 포함)
+- [x] GitHub Pages 배포 설정 (vite.config.js에 base 경로 설정 포함)
 - [ ] 접속 확인 (읽기 전용 동작 검증)
-- [ ] docs/STRUCTURE.md 최초 작성 (Claude Code에게 요청)
+- [x] docs/STRUCTURE.md 최초 작성 (Claude Code에게 요청)
 - **확인**: `https://[username].github.io/ConferenceFinder/` 접속 → 테이블이 보이고 필터/정렬 동작하는가?
 
 > ✅ Phase 1 완료 시점: URL로 접속하면 학회 테이블이 보이고, 필터/정렬이 동작함.

@@ -6,7 +6,15 @@
       "Bash(npx tailwindcss:*)",
       "Bash(git init:*)",
       "Bash(git remote:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git -c user.email=jerome3696@users.noreply.github.com -c user.name=jerome3696 commit -m 'Step 1.1: Initialize Vite + React + Tailwind project:*)",
+      "Bash(npm run:*)",
+      "Bash(kill %1)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(python:*)",
+      "Bash(node -e ':*)",
+      "Read(//tmp/xlsx_extract/xl/**)",
+      "Bash(cd /tmp)"
     ]
   }
 }
