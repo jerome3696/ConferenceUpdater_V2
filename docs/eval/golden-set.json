@@ -1,0 +1,143 @@
+{
+  "_generated": "이 파일은 csv-to-golden.js가 자동 생성합니다. 직접 편집하지 마세요. 편집은 docs/eval/golden-set.csv 에서.",
+  "snapshot_date": "2026-04-15",
+  "case_count": 17,
+  "cases": [
+    {
+      "id": "conf_001",
+      "full_name": "ASHRAE Winter Conference",
+      "link": "https://www.ashrae.org/conferences/2027-winter-conference",
+      "source_url": "https://www.ashrae.org/",
+      "verified_at": null,
+      "notes": "ASHRAE Winter Conference"
+    },
+    {
+      "id": "conf_003",
+      "full_name": "ISH Frankfrut",
+      "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "source_url": null,
+      "verified_at": null,
+      "notes": "프랑크프루트 냉난방 박람회 (ISH)"
+    },
+    {
+      "id": "conf_004",
+      "full_name": "European Turbo Conference",
+      "link": "https://www.etc17.eu/",
+      "source_url": null,
+      "verified_at": null,
+      "notes": "ETC"
+    },
+    {
+      "id": "conf_005",
+      "full_name": "Hannover Messe",
+      "link": "https://www.hannovermesse.de/en/",
+      "source_url": "https://www.hannovermesse.de/en/",
+      "verified_at": null,
+      "notes": "하노버 산업박람회"
+    },
+    {
+      "id": "conf_006",
+      "full_name": "IIR Conference on Cryogenics",
+      "link": "https://www.cryogenics-conference.eu/cryogenics2027/",
+      "source_url": "https://iifiir.org/en",
+      "verified_at": null,
+      "notes": "IIR Conference on Cryogenics"
+    },
+    {
+      "id": "conf_008",
+      "full_name": "IEEE The Intersociety Conference on Thermal and Thermomechanical Phenomena in Electronic Systems",
+      "link": "https://www.ieee-itherm.net/",
+      "source_url": "https://www.ieee-itherm.net/",
+      "verified_at": null,
+      "notes": "IEEE-Itherm"
+    },
+    {
+      "id": "conf_009",
+      "full_name": "International Cryocooler Conference",
+      "link": "https://www.cryocooler.org/",
+      "source_url": "https://www.cryocooler.org/",
+      "verified_at": null,
+      "notes": "ICC"
+    },
+    {
+      "id": "conf_010",
+      "full_name": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants",
+      "link": null,
+      "source_url": "https://iifiir.org/en",
+      "verified_at": null,
+      "notes": "IIR-TPTPR"
+    },
+    {
+      "id": "conf_011",
+      "full_name": "International Conference on Efficiency, Cost, Optmization, Simulation and Environmental Impact of Energy Systems",
+      "link": "https://ecos2026.insae.ro/",
+      "source_url": "https://ecos2024.com/about/ecos-international-society-inc/",
+      "verified_at": null,
+      "notes": "ECOS"
+    },
+    {
+      "id": "conf_012",
+      "full_name": "Therminic",
+      "link": "https://therminic.eu/",
+      "source_url": "https://therminic.eu/",
+      "verified_at": null,
+      "notes": "Therminic"
+    },
+    {
+      "id": "conf_013",
+      "full_name": "IEA Heat Pump Conference",
+      "link": "https://hpc2026.org/",
+      "source_url": "https://www.iea.org/",
+      "verified_at": null,
+      "notes": "IEA Heat Pump Conference"
+    },
+    {
+      "id": "conf_015",
+      "full_name": "International Conference on Computational Fluid Dynamics",
+      "link": "https://www.iccfd.org/",
+      "source_url": "https://www.iccfd.org/",
+      "verified_at": null,
+      "notes": "ICCFD"
+    },
+    {
+      "id": "conf_016",
+      "full_name": "International Heat Transfer Conference",
+      "link": "https://ihtc18.org/",
+      "source_url": null,
+      "verified_at": null,
+      "notes": "IHTC"
+    },
+    {
+      "id": "conf_017",
+      "full_name": "Pacific Rim Thermal Engineering Conference",
+      "link": "https://www.prtec2027.org/",
+      "source_url": null,
+      "verified_at": null,
+      "notes": "PRTEC"
+    },
+    {
+      "id": "conf_018",
+      "full_name": "IIR International Congress of Refrigeration",
+      "link": "https://www.icr2027.org/",
+      "source_url": "https://iifiir.org/en",
+      "verified_at": null,
+      "notes": "IIR-ICR"
+    },
+    {
+      "id": "conf_019",
+      "full_name": "IIR Gustav Lorentzen Conference on Natural Refrigerants",
+      "link": "https://www.iir-gl-2026.net/",
+      "source_url": "https://iifiir.org/en",
+      "verified_at": null,
+      "notes": "IIR Gustav Lorentzen Conference on Natur"
+    },
+    {
+      "id": "conf_022",
+      "full_name": "Building Simulation",
+      "link": "https://bs2027.org/",
+      "source_url": "https://ibpsa.org/",
+      "verified_at": null,
+      "notes": "Building Simulation"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+﻿id,link,source_url,verified_at,notes
+# === 편집 가이드 ===,,,,
+#,,,,
+# [필드],,,,
+# - link: AI가 맞춰야 할 정답. 그 회차의 가장 구체적인 공식 페이지.,,,,
+#         * 회차 전용 사이트 있으면 그것 (예: https://www.icr2027.org/),,,,
+#         * 없으면 커미티/주관 사이트 (예: https://astfe.org/conferences/),,,,
+# - source_url: 내가 실제로 값을 읽은 바로 그 페이지. 메인 페이지 X.,,,,
+#         * 보통 link와 같음,,,,
+#         * 회차 전용 사이트 없고 주관 캘린더에서 확인한 경우: 그 캘린더의 events 페이지,,,,
+#           예) https://iifiir.org/en/events  (메인 iifiir.org/ X),,,,
+# - verified_at: YYYY-MM-DD. 내가 source_url을 확인한 날짜. 6개월 넘으면 refresh 시 자동 재확인 대상.,,,,
+# - notes: 자유 메모. [재확인 필요] 태그는 refresh가 자동으로 답.,,,,
+#,,,,
+# [운영],,,,
+# - link와 source_url 중 하나라도 비어 있지 않으면 평가에 사용됨. 둘 다 비어 있으면 자동 스킵.,,,,
+# - 5~7건만 채우면 충분.,,,,
+# - npm run eval:refresh 를 실행하면:,,,,
+#     * conferences.json 기준으로 id 목록 갱신,,,,
+#     * link 값은 보존 (회차 전용 URL은 안 바뀌므로),,,,
+#     * verified_at 6개월 경과 또는 DB에서 upcoming이 past로 넘어간 건 source_url 자동 비움 + [재확인 필요] 표시,,,,
+#,,,,
+# [예시 — 삭제 가능],,,,
+# conf_XXX,https://www.icr2027.org/,https://iifiir.org/en/events,2026-04-15,IIR 캘린더에서 확인
+#,,,,
+conf_001,https://www.ashrae.org/conferences/2027-winter-conference,https://www.ashrae.org/,,ASHRAE Winter Conference
+conf_002,,,,ASEAN HVAC & Cleanroom Industry EXPO
+conf_003,https://ish.messefrankfurt.com/frankfurt/en.html,,,프랑크프루트 냉난방 박람회 (ISH)
+conf_004,https://www.etc17.eu/,,,ETC
+conf_005,https://www.hannovermesse.de/en/,https://www.hannovermesse.de/en/,,하노버 산업박람회
+conf_006,https://www.cryogenics-conference.eu/cryogenics2027/,https://iifiir.org/en,,IIR Conference on Cryogenics
+conf_007,,,,ICMF
+conf_008,https://www.ieee-itherm.net/,https://www.ieee-itherm.net/,,IEEE-Itherm
+conf_009,https://www.cryocooler.org/,https://www.cryocooler.org/,,ICC
+conf_010,,https://iifiir.org/en,,IIR-TPTPR
+conf_011,https://ecos2026.insae.ro/,https://ecos2024.com/about/ecos-international-society-inc/,,ECOS
+conf_012,https://therminic.eu/,https://therminic.eu/,,Therminic
+conf_013,https://hpc2026.org/,https://www.iea.org/,,IEA Heat Pump Conference
+conf_014,,,,ICBCHT
+conf_015,https://www.iccfd.org/,https://www.iccfd.org/,,ICCFD
+conf_016,https://ihtc18.org/,,,IHTC
+conf_017,https://www.prtec2027.org/,,,PRTEC
+conf_018,https://www.icr2027.org/,https://iifiir.org/en,,IIR-ICR
+conf_019,https://www.iir-gl-2026.net/,https://iifiir.org/en,,IIR Gustav Lorentzen Conference on Natur
+conf_020,,,,ACRA
+conf_021,,,,IHPC&S
+conf_022,https://bs2027.org/,https://ibpsa.org/,,Building Simulation

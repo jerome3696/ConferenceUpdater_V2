@@ -1,0 +1,197 @@
+{
+  "meta": {
+    "timestamp": "2026-04-15T14-39-48",
+    "version": "v1",
+    "snapshot_date": "2026-04-15",
+    "case_count": 17
+  },
+  "summary": {
+    "pass": 3,
+    "fail_or_error": 14
+  },
+  "results": [
+    {
+      "id": "conf_001",
+      "status": "pass",
+      "aiLink": "https://www.ashrae.org/conferences/2025-winter-conference-orlando",
+      "matchedAgainst": "https://www.ashrae.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2025-02-08",
+        "end_date": "2025-02-12",
+        "venue": "Orlando, USA",
+        "link": "https://www.ashrae.org/conferences/2025-winter-conference-orlando",
+        "source_url": "https://ashraeregionxi.org/event/2025-ashrae-winter-conference/",
+        "confidence": "high",
+        "notes": "Hilton Orlando에서 개최됨. AHR Expo와 동시 진행되며, 100개 이상의 기술 세션이 제공됨."
+      },
+      "elapsedMs": 7620,
+      "rawText": "```json\n{\n  \"start_date\": \"2025-02-08\",\n  \"end_date\": \"2025-02-12\",\n  \"venue\": \"Orlando, USA\",\n  \"link\": \"https://www.ashrae.org/conferences/2025-winter-conference-orlando\",\n  \"source_url\": \"https://ashraeregionxi.org/event/2025-ashrae-winter-conference/\",\n  \"confidence\": \"high\",\n  \"notes\": \"Hilton Orlando에서 개최됨. AHR Expo와 동시 진행되며, 100개 이상의 기술 세션이 제공됨.\"\n}\n```\n\n검색 결과를 바탕으로 2025 ASHRAE Winter Conference는 2025년 2월 8일부터 12일까지 미국 올랜도에서 개최됩니다. 행사는 Hilton Orlando에서 열리며, 1,600개 이상의 업체가 참여하는 AHR Expo와 함께 진행됩니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_003",
+      "status": "pass",
+      "aiLink": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "matchedAgainst": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-03-15",
+        "end_date": "2027-03-19",
+        "venue": "Frankfurt am Main, Germany",
+        "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "source_url": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "confidence": "high",
+        "notes": "공식 사이트에서 확인된 정보. Messe Frankfurt에서 개최되며, 3월 15-18일은 업계 관계자만, 19일은 일반인에게도 개방"
+      },
+      "elapsedMs": 14955,
+      "rawText": "```json\n{\n  \"start_date\": \"2027-03-15\",\n  \"end_date\": \"2027-03-19\",\n  \"venue\": \"Frankfurt am Main, Germany\",\n  \"link\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"source_url\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"confidence\": \"high\",\n  \"notes\": \"공식 사이트에서 확인된 정보. Messe Frankfurt에서 개최되며, 3월 15-18일은 업계 관계자만, 19일은 일반인에게도 개방\"\n}\n```\n\nISH Frankfurt 2027은 2027년 3월 15일부터 19일까지 프랑크푸르트 암 마인에서 개최됩니다. 이 학회는 Messe Frankfurt에서 열리는 세계 최대 규모의 HVAC + Water 전시회로, 3월 15-18일은 업계 관계자만 참관 가능하고, 19일은 일반인에게도 개방됩니다.\n\nISH는 국제 위생 및 난방 전시회(Internationale Sanitär- und Heizungsmesse)의 약칭으로, 1960년부터 시작되어 2년 주기로 홀수 해에 3월에 개최되는 전통적인 학회입니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_004",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_005",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_006",
+      "status": "pass",
+      "aiLink": "https://iifiir.org/en/iir-conferences-series",
+      "matchedAgainst": "https://iifiir.org/en",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": "Dresden, Germany",
+        "link": "https://iifiir.org/en/iir-conferences-series",
+        "source_url": "https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference",
+        "confidence": "medium",
+        "notes": "19차 IIR Conference on Cryogenics가 2027년 4월 독일 드레스덴에서 개최될 예정이나 정확한 일정은 확정되지 않았음"
+      },
+      "elapsedMs": 16224,
+      "rawText": "```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": \"Dresden, Germany\",\n  \"link\": \"https://iifiir.org/en/iir-conferences-series\",\n  \"source_url\": \"https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference\",\n  \"confidence\": \"medium\",\n  \"notes\": \"19차 IIR Conference on Cryogenics가 2027년 4월 독일 드레스덴에서 개최될 예정이나 정확한 일정은 확정되지 않았음\"\n}\n```\n\n19차 IIR Conference on Cryogenics가 2027년 4월에 독일 드레스덴에서 개최될 예정입니다. 2012년부터 이 학회는 드레스덴과 프라하에서 교대로 개최되고 있으며, 2025년 4월 7-11일에는 18차 학회가 프라하에서 열렸습니다. 이 학회는 2년마다 개최되므로 다음 개최는 2027년이 될 예정입니다.\n\n하지만 정확한 시작일과 종료일은 아직 공개되지 않았습니다. 공식 사이트나 신뢰할 수 있는 출처에서는 장소와 연도/월만 확인되었습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_008",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_009",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_010",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_011",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_012",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_013",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_015",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_016",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_017",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_018",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_019",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_022",
+      "status": "api_error",
+      "error": {
+        "kind": "rate_limit",
+        "message": "API 오류 (429): This request would exceed your organization's rate limit of 30,000 input tokens per minute (org: a60e44a1-d90d-45f0-a430-e0888dd91d91, model: claude-sonnet-4-20250514). For details, refer to: https://docs.claude.com/en/api/rate-limits. You can see the response headers for current usage. Please reduce the prompt length or the maximum tokens requested, or try again later. You may also contact sales at https://claude.com/contact-sales to discuss your options for a rate limit increase."
+      },
+      "version": "v1"
+    }
+  ]
+}

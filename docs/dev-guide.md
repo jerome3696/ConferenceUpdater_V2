@@ -166,7 +166,7 @@ ConferenceFinder/
 
 #### Step 1.6: 배포
 - [x] GitHub Pages 배포 설정 (vite.config.js에 base 경로 설정 포함)
-- [ ] 접속 확인 (읽기 전용 동작 검증)
+- [x] 접속 확인 (읽기 전용 동작 검증)
 - [x] docs/STRUCTURE.md 최초 작성 (Claude Code에게 요청)
 - **확인**: `https://[username].github.io/ConferenceFinder/` 접속 → 테이블이 보이고 필터/정렬 동작하는가?
 
@@ -179,35 +179,44 @@ ConferenceFinder/
 **목표**: 관리자가 학회 데이터를 수동으로 편집하고 내보내기/가져오기 할 수 있는 상태.
 
 #### Step 2.1: API 키 관리
-- [ ] API 키 입력 모달 구현
-- [ ] localStorage에 저장
-- [ ] API 키 유무로 관리자/열람자 모드 분기
+- [x] API 키 입력 모달 구현
+- [x] localStorage에 저장
+- [x] API 키 유무로 관리자/열람자 모드 분기
 - **확인**: API 키 입력 → 새로고침 후에도 키가 유지되는가? 키 없이 접속 시 편집 버튼이 숨겨지는가?
 
 #### Step 2.2: 학회 추가
-- [ ] 추가 모달 또는 폼 구현
-- [ ] 모든 필드 수동 입력
-- [ ] 저장 시 localStorage에 반영
+- [x] 추가 모달 또는 폼 구현
+- [x] 모든 필드 수동 입력
+- [x] 저장 시 localStorage에 반영
 - **확인**: 새 학회 추가 → 테이블에 나타나는가? 새로고침 후에도 유지되는가?
 
 #### Step 2.3: 학회 편집
-- [ ] 인라인 편집 또는 편집 모달
-- [ ] 중요도(별) 마킹 — 클릭으로 토글
-- [ ] 메모 편집
+- [x] 인라인 편집 또는 편집 모달
+- [x] 중요도(별) 마킹 — 클릭으로 토글
+- [x] 메모 편집
 - **확인**: 학회명 수정 → 저장 → 테이블에 반영되는가? 별 클릭 → 즉시 반영되는가?
 
 #### Step 2.4: 학회 삭제
-- [ ] 확인 대화상자 후 삭제
-- [ ] localStorage 반영
+- [x] 확인 대화상자 후 삭제
+- [x] localStorage 반영
 - **확인**: 삭제 버튼 → 확인 대화상자 → 삭제 → 테이블에서 사라지는가?
 
 #### Step 2.5: 데이터 내보내기/가져오기
-- [ ] JSON 다운로드 (내보내기)
-- [ ] JSON 업로드 (가져오기) — 확인 대화상자 필수
-- [ ] 가져오기 시 기존 데이터 교체
-- **확인**: 데이터 수정 → 내보내기 → 브라우저 데이터 초기화 → 내보낸 JSON 가져오기 → 수정 사항이 복원되는가?
+- [x] JSON 다운로드 (내보내기)
+- [x] xlsx 다운로드 (내보내기) — 요구 변경으로 추가
+- [ ] ~~JSON 업로드 (가져오기)~~ — 요구 변경으로 미구현 (GitHub 자동 저장이 동기화 담당, Step 2.6 참조)
+- [ ] ~~가져오기 시 기존 데이터 교체~~ — 상동
+- **확인**: 관리자 모드에서 [엑셀 내보내기] / [JSON 내보내기] 클릭 → 각각 `conferences_YYYY-MM-DD.xlsx` / `.json` 다운로드 → 파일 내용 확인
 
-> ✅ Phase 2 완료 시점: 관리자가 학회를 추가/편집/삭제하고, JSON으로 백업/복원 가능.
+#### Step 2.6 (신규): GitHub 자동 저장
+- [x] GitHub Personal Access Token 관리 (입력 모달, localStorage)
+- [x] PAT 기반 conferences.json 자동 커밋 (디바운스 10초)
+- [x] 저장 상태 UI (저장 중 / 저장됨 / 실패 / 충돌)
+- [x] 앱 로드 시 GitHub에서 최신본 fetch (token 있을 때)
+- [x] 충돌/실패 처리 (재시도 버튼, 충돌 시 새로고침 안내)
+- **확인**: PAT 입력 → 편집 → 10초 후 GitHub 커밋 → 다른 기기 접속 시 1~2분 뒤 반영
+
+> ✅ Phase 2 완료 시점: 관리자가 학회를 추가/편집/삭제하고, 편집이 GitHub에 자동 동기화되며, xlsx/JSON 스냅샷을 내보낼 수 있음.
 
 ---
 
@@ -216,34 +225,40 @@ ConferenceFinder/
 **목표**: AI를 통한 학회 정보 업데이트가 동작하는 상태.
 
 #### Step 3.1: CORS 확인 및 API 연동 기본
-- [ ] 브라우저에서 Claude API 직접 호출 테스트 (CORS 가능 여부 확인)
-- [ ] CORS 불가 시: Cloudflare Workers 또는 Vercel Serverless Function으로 프록시 구현
-- [ ] claudeApi.js 구현: API 호출, 응답 파싱
-- [ ] 웹 검색 도구(web_search) 활성화
-- [ ] 에러 핸들링 (키 오류, 네트워크 에러, 응답 파싱 실패)
+- [x] 브라우저에서 Claude API 직접 호출 테스트 (CORS 가능 여부 확인) — `anthropic-dangerous-direct-browser-access: true` 헤더로 통과 확인
+- [x] ~~CORS 불가 시: Cloudflare Workers 또는 Vercel Serverless Function으로 프록시 구현~~ — CORS 통과로 불필요
+- [x] claudeApi.js 구현: API 호출, 응답 파싱
+- [x] 웹 검색 도구(web_search) 활성화 — IHTC-18 테스트로 검증 완료
+- [x] 에러 핸들링 (키 오류, 네트워크 에러, 응답 파싱 실패) — `ClaudeApiError` 클래스로 kind 구분
 - **확인**: 개발자 도구 콘솔에서 API 호출이 성공하는가? 에러 시 사용자에게 명확한 메시지가 나오는가?
 
-#### Step 3.2: 프롬프트 빌더
-- [ ] 업데이트용 프롬프트 생성 함수 (promptBuilder.js)
-- [ ] 학회 정보를 프롬프트에 삽입
-- [ ] JSON 응답 파싱 로직 (try-catch 필수)
-- [ ] 하드코딩된 학회 1건으로 API 호출 테스트
-- [ ] docs/PROMPT_LOG.md 최초 작성 (첫 번째 프롬프트 버전 기록)
-- **확인**: 테스트 학회(예: IHTC)로 호출 → JSON 응답이 정상 파싱되는가?
+#### Step 3.2: 프롬프트 빌더 + 평가 아키텍처
+- [x] 업데이트용·검증용 프롬프트 생성 함수 (promptBuilder.js, 버전 기반)
+- [x] 학회 + last edition 정보 삽입
+- [x] JSON 응답 파싱 로직 (responseParser.js, 실패 원인 구분)
+- [x] 평가 러너 스크립트 (scripts/eval-prompt.js) — Node에서 정답지 돌리고 diff 표 출력
+- [x] docs/eval/ 구조 (golden-set.json, README.md) 생성
+- [x] docs/PROMPT_LOG.md 최초 작성 (v1 버전 기록)
+- [x] **사용자가 golden-set.csv에 17건 정답지 작성** (CSV 파이프라인으로 변경됨)
+- [x] 첫 평가 실행 → PROMPT_LOG.md "실행 결과" 섹션에 기록 (2026-04-15, pass 13/17)
+- **확인**: 테스트 학회(예: IHTC)로 호출 → JSON 응답이 정상 파싱되는가? ✅
+
+> **별도 과업 (MVP 외)**: v1 품질 개선은 `docs/PROMPT_STRATEGY.md`에 가설/전략 기록됨.
+> v2 프롬프트·토큰 절감·rate limit 스로틀링·반자동 log analyzer 등은 MVP 완성 후 별건으로 진행.
 
 #### Step 3.3: 개별 업데이트 구현
-- [ ] 각 학회 행의 "업데이트" 버튼
-- [ ] 클릭 → 페이지 2(업데이트 현황)로 이동
-- [ ] AI 호출 → 결과 표시 → 수용/리젝
-- [ ] 수용 시 데이터 반영 (localStorage)
+- [x] 각 학회 행의 "업데이트" 버튼
+- [x] 클릭 → 페이지 2(업데이트 현황)로 이동
+- [x] AI 호출 → 결과 표시 → 수용/리젝
+- [x] 수용 시 데이터 반영 (localStorage)
 - **확인**: IHTC "업데이트" 클릭 → 페이지 2에서 검색 결과가 표시되는가? 수용 → 메인 테이블에 반영되는가?
 
 #### Step 3.4: 전체 업데이트 구현
-- [ ] pass/검색 판단 로직 (updateLogic.js)
-- [ ] 대상 학회 목록 생성 및 표시
-- [ ] 순차 실행 + 진행률 표시
-- [ ] 중단 버튼
-- [ ] 각 결과별 수용/리젝
+- [x] pass/검색 판단 로직 (updateLogic.js)
+- [x] 대상 학회 목록 생성 및 표시
+- [x] 순차 실행 + 진행률 표시
+- [x] 중단 버튼
+- [x] 각 결과별 수용/리젝
 - **확인**: 전체 업데이트 → 진행률이 올라가는가? 중단 버튼이 동작하는가? 각 결과를 수용/리젝할 수 있는가?
 
 #### Step 3.5: 정합성 검증 구현

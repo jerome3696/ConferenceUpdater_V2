@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react';
-import { useConferences } from '../../hooks/useConferences';
 import { formatDateRange } from '../../utils/dateUtils';
 import FilterBar from './FilterBar';
+import ConferenceFormModal from './ConferenceFormModal';
+import StarRating from '../common/StarRating';
+import { exportAsJson, exportAsXlsx } from '../../services/exportService';
 
 // 그룹별 컬럼 정의 (이중 헤더용)
 const GROUPS = [
@@ -48,6 +50,12 @@ const GROUPS = [
   },
 ];
 
+const ACTION_GROUP = {
+  label: '작업',
+  className: 'bg-slate-50',
+  columns: [{ key: 'actions', label: '작업' }],
+};
+
 function getSortValue(row, key) {
   switch (key) {
     case 'upcoming_start': return row.upcoming?.start_date || '';
@@ -72,11 +80,13 @@ function LinkCell({ href }) {
   );
 }
 
-export default function MainTable() {
-  const { rows, loading, error } = useConferences();
+export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll }) {
+  const { rows, loading, error, data, addConference, updateStarred, saveConferenceEdit, deleteConference } = conferences;
   const [sortKey, setSortKey] = useState('upcoming_start');
   const [sortDir, setSortDir] = useState('asc');
   const [filters, setFilters] = useState({ category: '', field: '', region: '', query: '' });
+  const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
+  const [editingRow, setEditingRow] = useState(null);
 
   const { categories, fields, regions } = useMemo(() => {
     const uniq = (key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))].sort();
@@ -123,8 +133,53 @@ export default function MainTable() {
   if (loading) return <div className="p-8 text-slate-500">로딩 중...</div>;
   if (error) return <div className="p-8 text-red-600">오류: {error.message}</div>;
 
+  const groups = isAdmin ? [...GROUPS, ACTION_GROUP] : GROUPS;
+
+  const handleSubmit = (payload) => {
+    if (modalMode === 'add') {
+      addConference(payload.conference);
+    } else if (modalMode === 'edit' && editingRow) {
+      saveConferenceEdit(
+        editingRow.id,
+        payload,
+        editingRow.upcoming?.id || null,
+        editingRow.last?.id || null,
+      );
+    }
+  };
+
   return (
     <>
+    {isAdmin && (
+      <div className="flex justify-end gap-2 mb-2">
+        {onRequestUpdateAll && (
+          <button
+            onClick={() => onRequestUpdateAll(rows)}
+            className="px-3 py-1.5 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded"
+          >
+            전체 업데이트
+          </button>
+        )}
+        <button
+          onClick={() => exportAsXlsx(sorted)}
+          className="px-3 py-1.5 text-sm border border-slate-300 text-slate-700 hover:bg-slate-50 rounded"
+        >
+          엑셀 내보내기
+        </button>
+        <button
+          onClick={() => exportAsJson(data)}
+          className="px-3 py-1.5 text-sm border border-slate-300 text-slate-700 hover:bg-slate-50 rounded"
+        >
+          JSON 내보내기
+        </button>
+        <button
+          onClick={() => { setEditingRow(null); setModalMode('add'); }}
+          className="px-3 py-1.5 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded"
+        >
+          + 학회 추가
+        </button>
+      </div>
+    )}
     <FilterBar
       categories={categories} fields={fields} regions={regions}
       category={filters.category} field={filters.field}
@@ -136,7 +191,7 @@ export default function MainTable() {
       <table className="min-w-full text-sm border-collapse">
         <thead className="sticky top-0 z-10">
           <tr>
-            {GROUPS.map((g) => (
+            {groups.map((g) => (
               <th
                 key={g.label}
                 colSpan={g.columns.length}
@@ -147,7 +202,7 @@ export default function MainTable() {
             ))}
           </tr>
           <tr>
-            {GROUPS.flatMap((g) =>
+            {groups.flatMap((g) =>
               g.columns.map((c) => (
                 <th
                   key={c.key}
@@ -165,7 +220,13 @@ export default function MainTable() {
           {sorted.map((r) => (
             <tr key={r.id} className="hover:bg-slate-50 border-b border-slate-200">
               {/* 마스터 */}
-              <td className="px-3 py-2 text-yellow-500 border-r border-slate-200">{'★'.repeat(r.starred)}</td>
+              <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap">
+                <StarRating
+                  value={r.starred || 0}
+                  readOnly={!isAdmin}
+                  onChange={(v) => updateStarred(r.id, v)}
+                />
+              </td>
               <td className="px-3 py-2 border-r border-slate-200">{r.category}</td>
               <td className="px-3 py-2 border-r border-slate-200">{r.field}</td>
               <td className="px-3 py-2 font-mono border-r border-slate-200">{r.abbreviation}</td>
@@ -193,12 +254,42 @@ export default function MainTable() {
               <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.last?.link} /></td>
               {/* 메모 */}
               <td className="px-3 py-2 text-slate-500">{r.note}</td>
+              {/* 작업 */}
+              {isAdmin && (
+                <td className="px-3 py-2 whitespace-nowrap">
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => { setEditingRow(r); setModalMode('edit'); }}
+                      className="px-2 py-1 text-xs border border-slate-300 rounded hover:bg-slate-100 text-slate-700"
+                    >
+                      편집
+                    </button>
+                    {onRequestUpdate && (
+                      <button
+                        onClick={() => onRequestUpdate(r)}
+                        className="px-2 py-1 text-xs border border-blue-300 rounded hover:bg-blue-50 text-blue-700"
+                      >
+                        업데이트
+                      </button>
+                    )}
+                  </div>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
       <div className="p-3 text-xs text-slate-400">총 {sorted.length}건</div>
     </div>
+    <ConferenceFormModal
+      isOpen={modalMode !== null}
+      mode={modalMode || 'add'}
+      initial={editingRow}
+      onClose={() => { setModalMode(null); setEditingRow(null); }}
+      onSubmit={handleSubmit}
+      onDelete={editingRow ? () => deleteConference(editingRow.id) : undefined}
+      existingFields={fields}
+    />
     </>
   );
 }
