@@ -73,10 +73,8 @@ async function main() {
   // 기존 CSV 읽기 (있으면 값 보존)
   const existing = new Map(); // id → {link, source_url, verified_at, notes, prefix/suffix comment lines}
   const topComments = [];     // 헤더 이후 첫 # 주석들 — 가이드 블록. 유지.
-  let hasExisting = false;
 
   if (await exists(CSV_PATH)) {
-    hasExisting = true;
     let text = await readFile(CSV_PATH, 'utf8');
     if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
 

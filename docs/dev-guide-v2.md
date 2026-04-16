@@ -61,20 +61,14 @@ docs/
 - **확인**: `docs/` 구조가 §2와 일치하는가? → ✅ 일치 (2026-04-17)
 
 ### Step A.2: Husky + lint-staged 설치
-- [ ] `npm install -D husky lint-staged`
-- [ ] `npx husky init`
-- [ ] ESLint 설정 확인/생성 (없으면 기본 React 규칙)
-- [ ] `.husky/pre-commit` 작성: lint-staged 실행
-- [ ] `package.json`에 lint-staged 설정 추가
-  ```json
-  "lint-staged": {
-    "src/**/*.{js,jsx}": ["eslint --fix"]
-  }
-  ```
-- [ ] API 키 패턴 감지 스크립트 추가 (`scripts/check-secrets.sh`)
-  - `sk-ant-`, `github_pat_` 패턴 → 커밋 차단
-- [ ] pre-commit에 check-secrets.sh 연결
-- **확인**: 의도적으로 `const key = "sk-ant-test"` 넣고 커밋 시도 → 차단되는가?
+- [x] `npm install -D husky lint-staged` (husky 9.1.7 + lint-staged 16.4.0)
+- [x] `npx husky init` (`.husky/pre-commit` + package.json `prepare` 스크립트 자동 추가)
+- [x] ESLint 설정 확인 — 이미 flat config 존재. **현 25 errors 사전 정리**: scripts/에 node globals 추가, `react-hooks/set-state-in-effect`·`react-hooks/purity`·`react-refresh/only-export-components` warn으로 완화 (24건 cleanup은 qa-backlog 이관), unused vars 2건 실제 제거
+- [x] `.husky/pre-commit` 작성: `bash scripts/check-secrets.sh && npx lint-staged`
+- [x] `package.json`에 lint-staged 설정 추가 (`{src,scripts}/**/*.{js,jsx}: eslint --fix`)
+- [x] `scripts/check-secrets.sh` 작성 — `sk-ant-`, `github_pat_`, `ghp_` 패턴 staged diff에서 grep
+- [x] pre-commit에 check-secrets.sh 연결 (lint-staged보다 먼저)
+- **확인**: `src/test-trap.js`에 `const k = "sk-ant-test-fake-key"` 넣고 commit → 차단됨 ✅ (2026-04-17)
 
 ### Step A.3: 핵심 유틸 단위 테스트
 - [ ] Vitest 설치 (`npm install -D vitest`)

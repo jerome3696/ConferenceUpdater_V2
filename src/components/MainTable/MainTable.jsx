@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { formatDateRange } from '../../utils/dateUtils';
 import FilterBar from './FilterBar';
 import ConferenceFormModal from './ConferenceFormModal';
 import StarRating from '../common/StarRating';
