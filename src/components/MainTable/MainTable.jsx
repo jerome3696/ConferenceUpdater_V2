@@ -163,7 +163,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
         {onRequestVerifyAll && (
           <button
             onClick={() => onRequestVerifyAll(rows)}
-            className="px-3 py-1.5 text-sm bg-indigo-600 text-white hover:bg-indigo-700 rounded"
+            className="px-3 py-1.5 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded"
           >
             전체 검증
           </button>
@@ -195,7 +195,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
       onChange={setFilters}
       total={rows.length} filtered={sorted.length}
     />
-    <div className="overflow-auto border border-slate-300 rounded bg-white">
+    <div className="overflow-auto border border-slate-300 rounded bg-white max-h-[calc(100vh-220px)]">
       <table className="min-w-full text-sm border-collapse">
         <thead className="sticky top-0 z-10">
           <tr>

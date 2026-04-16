@@ -45,11 +45,11 @@
       "category": "학회",
       "field": "유체기기",
       "abbreviation": "ETC",
-      "full_name": "European Turbo Conference",
+      "full_name": "European Turbomachinery Conference",
       "cycle_years": 2,
       "duration_days": 5,
       "region": "유럽",
-      "official_url": "",
+      "official_url": "https://www.euroturbo.eu",
       "note": ""
     },
     {
@@ -62,7 +62,7 @@
       "cycle_years": 1,
       "duration_days": 5,
       "region": "유럽",
-      "official_url": "",
+      "official_url": "https://www.hannovermesse.de",
       "note": ""
     },
     {
@@ -96,12 +96,12 @@
       "starred": 0,
       "category": "학회",
       "field": "열전달",
-      "abbreviation": "IEEE-Itherm",
+      "abbreviation": "ITherm",
       "full_name": "IEEE The Intersociety Conference on Thermal and Thermomechanical Phenomena in Electronic Systems",
       "cycle_years": 1,
       "duration_days": 4,
       "region": "미주",
-      "official_url": "",
+      "official_url": "https://www.ieee-itherm.net/",
       "note": ""
     },
     {
@@ -122,7 +122,7 @@
       "starred": 0,
       "category": "학회",
       "field": "열물성/냉매",
-      "abbreviation": "IIR-TPTPR",
+      "abbreviation": "TPTPR",
       "full_name": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants",
       "cycle_years": 4,
       "duration_days": 4,
@@ -148,12 +148,12 @@
       "starred": 0,
       "category": "학회",
       "field": "열전달",
-      "abbreviation": "",
-      "full_name": "Therminic",
+      "abbreviation": "THERMINIC",
+      "full_name": "International Workshop on Thermal Investigations of ICs and Systems",
       "cycle_years": 1,
       "duration_days": 3,
       "region": "유럽",
-      "official_url": "",
+      "official_url": "https://therminic.eu/",
       "note": ""
     },
     {
@@ -164,9 +164,9 @@
       "abbreviation": "",
       "full_name": "IEA Heat Pump Conference",
       "cycle_years": 3,
-      "duration_days": 5,
+      "duration_days": 4,
       "region": "세계",
-      "official_url": "https://heatpumpingtechnologies.org/about/the-conference/",
+      "official_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
       "note": ""
     },
     {
@@ -176,11 +176,11 @@
       "field": "열전달",
       "abbreviation": "ICBCHT",
       "full_name": "International Conference On Boiling & Condensation Heat Transfer",
-      "cycle_years": 2,
+      "cycle_years": 3,
       "duration_days": 3,
       "region": "세계",
-      "official_url": "",
-      "note": "김우경박사님 추천"
+      "official_url": "https://sites.mit.edu/icbcht12/",
+      "note": ""
     },
     {
       "id": "conf_015",
@@ -190,10 +190,10 @@
       "abbreviation": "ICCFD",
       "full_name": "International Conference on Computational Fluid Dynamics",
       "cycle_years": 2,
-      "duration_days": 6,
+      "duration_days": 5,
       "region": "세계",
-      "official_url": "",
-      "note": "손상호박사님 방문"
+      "official_url": "https://www.iccfd.org/",
+      "note": ""
     },
     {
       "id": "conf_016",
@@ -219,17 +219,17 @@
       "duration_days": 4,
       "region": "미주",
       "official_url": "",
-      "note": "날짜 확정 X"
+      "note": ""
     },
     {
       "id": "conf_018",
       "starred": 0,
       "category": "학회",
       "field": "냉동공조",
-      "abbreviation": "IIR-ICR",
+      "abbreviation": "ICR",
       "full_name": "IIR International Congress of Refrigeration",
       "cycle_years": 4,
-      "duration_days": 5,
+      "duration_days": 6,
       "region": "세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
       "note": "IIR 시리즈"
@@ -274,7 +274,7 @@
       "note": ""
     },
     {
-      "id": "conf_022",
+      "id": "user_mo04ezfq",
       "starred": 0,
       "category": "학회",
       "field": "건물공조",
@@ -293,23 +293,23 @@
       "id": "ed_001",
       "conference_id": "conf_001",
       "status": "upcoming",
-      "start_date": "2025-02-08",
-      "end_date": "2025-02-12",
-      "venue": "Orlando, Florida, USA",
-      "link": "https://www.ashrae.org/conferences/2024-winter-conference-chicago",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2027-01-23",
+      "end_date": "2027-01-27",
+      "venue": "Chicago, Illinois, USA",
+      "link": "https://www.ashrae.org/conferences/2027-winter-conference",
+      "source": "ai_search",
+      "updated_at": "2026-04-15T23:49:58.914Z"
     },
     {
       "id": "ed_002",
       "conference_id": "conf_002",
       "status": "upcoming",
-      "start_date": "2025-03-05",
-      "end_date": "2025-03-07",
-      "venue": "Bangkok, Thailand",
-      "link": "http://www.aseanhvacexpo.com/index.php",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": null,
+      "end_date": null,
+      "venue": null,
+      "link": null,
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:23:30.192Z"
     },
     {
       "id": "ed_003",
@@ -326,12 +326,12 @@
       "id": "ed_004",
       "conference_id": "conf_004",
       "status": "upcoming",
-      "start_date": "2025-03-24",
-      "end_date": "2025-03-28",
-      "venue": "Hannover, Germany",
-      "link": "https://www.etc16.eu/",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2027-04-19",
+      "end_date": "2027-04-23",
+      "venue": "Gdansk, Poland",
+      "link": "https://www.etc17.eu/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:23:35.860Z"
     },
     {
       "id": "ed_005",
@@ -348,78 +348,78 @@
       "id": "ed_006",
       "conference_id": "conf_006",
       "status": "upcoming",
-      "start_date": "2025-04-07",
-      "end_date": "2025-04-11",
-      "venue": "Prague, Czech",
-      "link": "https://iifiir.org/en/events/18th-cryogenics-2025-iir-conference",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": null,
+      "end_date": null,
+      "venue": "Dresden, Germany",
+      "link": "https://iifiir.org/en/iir-conferences-series",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:23:46.637Z"
     },
     {
       "id": "ed_007",
       "conference_id": "conf_007",
       "status": "upcoming",
-      "start_date": "2025-05-11",
-      "end_date": "2025-05-16",
-      "venue": "Toulouse, France",
-      "link": "https://www.icmf2025.com/",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": null,
+      "end_date": null,
+      "venue": "Vancouver, Canada",
+      "link": null,
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:17.615Z"
     },
     {
       "id": "ed_008",
       "conference_id": "conf_008",
       "status": "upcoming",
-      "start_date": "2025-05-27",
-      "end_date": "2025-05-30",
-      "venue": "Dallas, USA",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2026-05-26",
+      "end_date": "2026-05-29",
+      "venue": "Orlando, Florida, United States",
+      "link": "https://www.ieee-itherm.net/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:33.448Z"
     },
     {
       "id": "ed_009",
       "conference_id": "conf_009",
       "status": "upcoming",
-      "start_date": "2025-06-03",
-      "end_date": "2024-06-06",
-      "venue": "Wisconsin, USA",
-      "link": "https://cryocooler.org/ICC23-Venue",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2026-06-15",
+      "end_date": "2026-06-18",
+      "venue": "Syracuse, New York, USA",
+      "link": "https://cryocooler.org/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:35.406Z"
     },
     {
       "id": "ed_010",
       "conference_id": "conf_010",
       "status": "upcoming",
-      "start_date": "2025-06-15",
-      "end_date": "2025-06-18",
-      "venue": "Mayland Univ. USA",
-      "link": "https://iifiir.org/en/events/7th-iir-conference-on-thermophysical-properties-and-transfer-processes-of-refrigerants",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": null,
+      "end_date": null,
+      "venue": null,
+      "link": "https://iifiir.org/en/iir-conferences-series",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:37.235Z"
     },
     {
       "id": "ed_011",
       "conference_id": "conf_011",
       "status": "upcoming",
-      "start_date": "2025-06-29",
-      "end_date": "2024-07-04",
-      "venue": "Paris, France",
-      "link": "https://www.google.com/search?q=ECOS2025&oq=ECOS2025&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDE2NTVqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2026-06-28",
+      "end_date": "2026-07-03",
+      "venue": "Constanța, Romania",
+      "link": "https://ecos2026.insae.ro/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:39.622Z"
     },
     {
       "id": "ed_012",
       "conference_id": "conf_012",
       "status": "upcoming",
-      "start_date": "2025-09-24",
-      "end_date": "2025-09-26",
-      "venue": "Naples, Italy",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2026-09-16",
+      "end_date": "2026-09-18",
+      "venue": "Berlin-Koepenick, Germany",
+      "link": "https://therminic.eu/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:42.571Z"
     },
     {
       "id": "ed_013",
@@ -428,64 +428,130 @@
       "start_date": "2026-05-26",
       "end_date": "2026-05-29",
       "venue": "Vienna, Austria",
-      "link": "https://heatpumpingtechnologies.org/closing-ceremony-of-the-14th-iea-heat-pump-conference-2023-in-chicago-concludes-on-a-high-note/",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "link": "https://hpc2026.org/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:22:20.802Z"
     },
     {
       "id": "ed_014",
       "conference_id": "conf_014",
       "status": "upcoming",
-      "start_date": "2026-06-01",
-      "end_date": "",
-      "venue": "Boston, USA",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2026-06-14",
+      "end_date": "2026-06-17",
+      "venue": "Cambridge, USA",
+      "link": "https://sites.mit.edu/icbcht12/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T12:19:22.019Z"
     },
     {
       "id": "ed_015",
       "conference_id": "conf_015",
       "status": "upcoming",
-      "start_date": "2026-07-06",
-      "end_date": "2026-07-10",
+      "start_date": null,
+      "end_date": null,
       "venue": "Milan, Italy",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "link": "https://easychair.org/smart-program/ICCFD13/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:48.830Z"
     },
     {
       "id": "ed_016",
       "conference_id": "conf_016",
       "status": "upcoming",
-      "start_date": "2026-08-10",
-      "end_date": "2026-08-15",
-      "venue": "Rio de Janerio, Brazil",
+      "start_date": "2026-08-02",
+      "end_date": "2026-08-07",
+      "venue": "Rio de Janeiro, Brazil",
       "link": "https://ihtc18.org/",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "source": "ai_search",
+      "updated_at": "2026-04-16T12:02:06.156Z"
     },
     {
       "id": "ed_017",
       "conference_id": "conf_017",
       "status": "upcoming",
-      "start_date": "2027-03-01",
-      "end_date": "",
-      "venue": "Hawaii, USA",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2027-03-14",
+      "end_date": "2027-03-18",
+      "venue": "Honolulu, Hawaii, USA",
+      "link": "https://www.prtec2027.org/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:52.830Z"
     },
     {
       "id": "ed_018",
       "conference_id": "conf_018",
       "status": "upcoming",
-      "start_date": "2027-08-01",
-      "end_date": "",
-      "venue": "Seoul, South Korea",
-      "link": "",
-      "source": "user_input",
-      "updated_at": "2026-04-14T00:00:00Z"
+      "start_date": "2027-08-21",
+      "end_date": "2027-08-27",
+      "venue": "Seoul, Republic of Korea",
+      "link": "https://www.icr2027.org/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:24:54.374Z"
+    },
+    {
+      "id": "ed_mo0owb4h",
+      "conference_id": "user_mo04ezfq",
+      "status": "upcoming",
+      "start_date": "2027-08-29",
+      "end_date": "2027-09-01",
+      "venue": "Vienna, Austria",
+      "link": "https://bs2027.framer.ai/",
+      "source": "ai_search",
+      "updated_at": "2026-04-15T23:36:44.369Z"
+    },
+    {
+      "id": "ed_mo1fi2f1",
+      "conference_id": "conf_019",
+      "status": "upcoming",
+      "start_date": "2026-08-23",
+      "end_date": "2026-08-26",
+      "venue": "Hamilton, New Zealand",
+      "link": "https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T12:01:29.533Z"
+    },
+    {
+      "id": "ed_mo1ifljh",
+      "conference_id": "conf_003",
+      "status": "upcoming",
+      "start_date": "2027-03-15",
+      "end_date": "2027-03-19",
+      "venue": "Frankfurt am Main, Germany",
+      "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:23:33.197Z"
+    },
+    {
+      "id": "ed_mo1ifst3",
+      "conference_id": "conf_005",
+      "status": "upcoming",
+      "start_date": "2026-04-20",
+      "end_date": "2026-04-24",
+      "venue": "Hannover, Germany",
+      "link": "https://www.hannovermesse.de/en/hannover-messe-2026/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:23:42.615Z"
+    },
+    {
+      "id": "ed_mo1ihhw0",
+      "conference_id": "conf_020",
+      "status": "upcoming",
+      "start_date": "2026-05-17",
+      "end_date": "2026-05-20",
+      "venue": "Taichung, Taiwan",
+      "link": "https://sites.google.com/view/hvac-acra2026/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:25:01.776Z"
+    },
+    {
+      "id": "ed_mo1ihjbm",
+      "conference_id": "conf_021",
+      "status": "upcoming",
+      "start_date": "2026-05-24",
+      "end_date": "2026-05-28",
+      "venue": "Gdańsk, Poland",
+      "link": "https://ihpcs.org/ihpcs2026/",
+      "source": "ai_search",
+      "updated_at": "2026-04-16T13:25:03.634Z"
     }
   ]
 }

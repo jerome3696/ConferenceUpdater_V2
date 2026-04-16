@@ -86,3 +86,32 @@
 
 - Tier 1 한도 30k ITPM 대비 **단일 호출 avg 34,510** → sequential에선 통과하나 병렬/고빈도 상황에선 여전히 위험.
 - sequential 사용(앱의 현재 동작) 한정으로는 Phase B/C 불필요. 상세는 `docs/RATE_LIMIT_STRATEGY.md §4.5, §8`.
+
+---
+
+## Step 3.6 실전 검증 (2026-04-16, 앱 브라우저)
+
+### 조건
+- Phase A 적용 상태 (`max_uses: 5`, `maxTokens: 1024`, Haiku 4.5).
+- 앱 UI에서 개별 [업데이트] 버튼으로 실행, 공식사이트 수동 대조.
+- eval 17건과 별개. 앱 큐 흐름 (승인 대기 → 수용 → 테이블 반영 → GitHub 저장) 검증 포함.
+
+### 4건 결과
+
+| 학회 | 결과 | AI 반환 | 관찰 |
+|---|---|---|---|
+| IIR GL 2026 (열물성/냉매) | pass | iifiir.org 리스팅 페이지 | 공식 `iir-gl-2026.net` 대비 리스팅 사이트 선호. 정보 자체는 정확 |
+| IHTC | pass | 2026-08-02~07 / Rio de Janeiro | 완벽 |
+| ICCFD | pass | easychair.org/smart-program/iccfd13 | **eval conf_015과 동일 실패 패턴 재현** — 공식 `iccfd.org` 대신 easychair 선호 |
+| ICBCHT | pass | Cambridge, USA / 2026-06-14~17 / sites.mit.edu/icbcht12 | 기존 "Boston" → AI가 Cambridge로 정밀화 (MIT는 Cambridge, MA). AI가 원본보다 정확한 케이스 |
+
+### 새 관찰
+
+1. **리스팅/플랫폼 사이트 선호 (반복 패턴)** — ICCFD easychair, IIR GL iifiir.org. v1의 WASET 블랙리스트가 포괄 못함. `PROMPT_STRATEGY.md §1 (B) 도메인 블랙리스트` 과제 재확인.
+2. **AI가 원본보다 정밀한 케이스** — ICBCHT Cambridge. 단순 일치 검사로는 이런 개선을 pass로만 뭉뚱그림. 정답지 품질 검토 여지 (MVP 후).
+3. **임박 학회 공식사이트 추종 아이디어** — 사용자 제안: 시작일까지 N일 이내면 link 있어도 공식 도메인 재검증. `PROMPT_STRATEGY.md §1 (E)`로 이관.
+
+### 결론
+- 4건 100% pass, UX 흐름(업데이트 → 수용 → 테이블 반영 → GitHub 저장) 정상 동작.
+- "전체 업데이트 22건 1회" 항목은 스킵 — eval 17건 + 실전 4건으로 충분, 자연 사용 중 관찰로 대체.
+- 품질 개선은 v2 프롬프트로 이월, 현 시점에서는 Step 4.1 진행.

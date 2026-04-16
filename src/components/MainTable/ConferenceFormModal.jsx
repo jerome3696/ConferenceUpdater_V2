@@ -216,7 +216,7 @@ function ConferenceFormModal({
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50" onClick={onClose}>
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6"
+        className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-bold text-slate-800 mb-4">

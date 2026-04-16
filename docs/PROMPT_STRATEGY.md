@@ -22,6 +22,7 @@ API rate limit 대응 및 호출 구조 개선은 → `docs/RATE_LIMIT_STRATEGY.
 | (B) 도메인 블랙리스트 | "금지: easychair, framer.ai, conferenceindex, waset, allconferencealert류" | 비공식 URL 제거 (품질) |
 | (C) 조기 종료 | "공식 페이지 찾으면 추가 검색 금지" | 검색 호출 수↓ → input 토큰↓ |
 | (D) JSON-only | "JSON 블록 1개만. preamble/후기 금지" | output 토큰↓ |
+| (E) 임박 학회 공식사이트 추종 | 시작일 ≤ N일(예: 90일)이면 link가 있어도 공식 도메인 재검증 | 리스팅 사이트 우회 (품질) — **프롬프트 단독 불충분, `updateLogic.shouldSearch` 확장 병행** |
 
 ### 예상 범위
 - pass: 13/17 → 15~16/17
@@ -73,6 +74,7 @@ API rate limit 대응 및 호출 구조 개선은 → `docs/RATE_LIMIT_STRATEGY.
 
 ## 3. 미해결 과제 리스트
 
-- [ ] v2 프롬프트 구현 및 v1/v2 비교 실행
-- [ ] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가
+- [ ] v2 프롬프트 구현 및 v1/v2 비교 실행 (레버 A~D)
+- [x] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가 (2026-04-16)
+- [ ] 레버 (E) 임박 학회 공식사이트 추종 — `updateLogic.shouldSearch` 확장(imminent 판단) + 프롬프트 공식 도메인 우선 지시. MVP 후.
 - [ ] (장기) 반자동 log analyzer 슬래시 커맨드 구성

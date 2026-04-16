@@ -54,3 +54,16 @@
 | `scripts/eval-prompt.js` | 골든셋 기반 프롬프트 평가 러너 |
 | `scripts/csv-to-golden.js` / `refresh-golden.js` | 골든셋 CSV↔JSON 동기화 |
 | `docs/eval/golden-set.json` / `.csv` | 평가 정답지 |
+
+## 문서
+
+| 파일 | 역할 |
+|---|---|
+| `README.md` | 프로젝트 소개, 사용법, API 키/PAT 안내 (프로젝트 루트) |
+| `CLAUDE.md` | Claude Code 작업 지침 + 현재 상태 + 문서 업데이트 규칙 |
+| `docs/blueprint.md` | 프로그램 설계 (What) |
+| `docs/dev-guide.md` | 개발 순서 (How) — MVP까지 |
+| `docs/DESIGN.md` | UI 디자인 결정 로그. UI 수정 시 갱신 |
+| `docs/CHANGELOG.md` | 변경 이력 (v1.0 MVP 이후). 디자인 *이유*는 DESIGN.md, 프롬프트 *실행*은 PROMPT_LOG.md |
+| `docs/PROMPT_LOG.md` / `PROMPT_STRATEGY.md` | 프롬프트 실행 이력 / 개선 전략 |
+| `docs/RATE_LIMIT_STRATEGY.md` | API rate limit 대응 로드맵 |
