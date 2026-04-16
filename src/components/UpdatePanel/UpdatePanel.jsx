@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import UpdateCard from './UpdateCard';
 import VerificationCard from './VerificationCard';
 import UpdateLog from './UpdateLog';
 
@@ -102,8 +103,11 @@ export default function UpdatePanel({ queue, onBack }) {
       {searching && (
         <div className="mb-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded flex items-center gap-3 text-sm">
           <span className="inline-block animate-spin text-blue-600">⟳</span>
+          <span className={`text-xs px-1.5 py-0.5 rounded ${searching.kind === 'verify' ? 'bg-indigo-100 text-indigo-700' : 'bg-blue-100 text-blue-700'}`}>
+            {searching.kind === 'verify' ? '검증' : '업데이트'}
+          </span>
           <span className="text-blue-800">
-            검색 중: <span className="font-semibold">{searching.row.abbreviation || searching.row.full_name}</span>
+            {searching.kind === 'verify' ? '검증' : '검색'} 중: <span className="font-semibold">{searching.row.abbreviation || searching.row.full_name}</span>
           </span>
           {waiting.length > 0 && (
             <span className="text-xs text-blue-600 ml-auto">다음 대기 {waiting.length}건</span>
@@ -114,14 +118,17 @@ export default function UpdatePanel({ queue, onBack }) {
       {pending.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-sm font-semibold text-slate-700">승인 대기 ({pending.length})</h3>
-          {pending.map((card) => (
-            <VerificationCard
-              key={card.id}
-              current={card}
-              onAccept={() => accept(card.id)}
-              onReject={() => reject(card.id)}
-            />
-          ))}
+          {pending.map((card) => {
+            const Card = card.kind === 'verify' ? VerificationCard : UpdateCard;
+            return (
+              <Card
+                key={card.id}
+                current={card}
+                onAccept={() => accept(card.id)}
+                onReject={() => reject(card.id)}
+              />
+            );
+          })}
         </div>
       )}
 

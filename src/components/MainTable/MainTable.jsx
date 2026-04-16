@@ -80,7 +80,7 @@ function LinkCell({ href }) {
   );
 }
 
-export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll }) {
+export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll, onRequestVerify, onRequestVerifyAll }) {
   const { rows, loading, error, data, addConference, updateStarred, saveConferenceEdit, deleteConference } = conferences;
   const [sortKey, setSortKey] = useState('upcoming_start');
   const [sortDir, setSortDir] = useState('asc');
@@ -158,6 +158,14 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
             className="px-3 py-1.5 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded"
           >
             전체 업데이트
+          </button>
+        )}
+        {onRequestVerifyAll && (
+          <button
+            onClick={() => onRequestVerifyAll(rows)}
+            className="px-3 py-1.5 text-sm bg-indigo-600 text-white hover:bg-indigo-700 rounded"
+          >
+            전체 검증
           </button>
         )}
         <button
@@ -270,6 +278,14 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                         className="px-2 py-1 text-xs border border-blue-300 rounded hover:bg-blue-50 text-blue-700"
                       >
                         업데이트
+                      </button>
+                    )}
+                    {onRequestVerify && (
+                      <button
+                        onClick={() => onRequestVerify(r)}
+                        className="px-2 py-1 text-xs border border-indigo-300 rounded hover:bg-indigo-50 text-indigo-700"
+                      >
+                        검증
                       </button>
                     )}
                   </div>

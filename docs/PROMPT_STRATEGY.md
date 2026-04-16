@@ -1,46 +1,14 @@
 # PROMPT_STRATEGY
 
-프롬프트·평가·API 호출 개선을 위한 **전략/가설/대응책** 저장소.
-사람이 먼저 읽고, 추후 Claude Code가 작업 맥락 파악용으로도 참조.
+프롬프트 품질 개선 전략.
+API rate limit 대응 및 호출 구조 개선은 → `docs/RATE_LIMIT_STRATEGY.md`
 
 `PROMPT_LOG.md`는 "무엇을 했나(버전별 서사와 실행 결과)"의 기록.
 이 파일은 "무엇을 할까/왜 이렇게 할까(설계 판단)"의 기록.
 
 ---
 
-## 1. Rate limit 대응 전략
-
-### 배경
-Anthropic tier 1 기본 한도: input 30,000 tokens/min. `web_search` 도구는 검색 결과 snippet이 입력에 재주입되어 케이스당 수천~1만 토큰 소모. 22건 연속 호출이면 확정적으로 429 발생.
-
-### 현재 구현 (eval 러너)
-- 케이스 간 고정 딜레이 0
-- 429 발생 시 `retry-after` 헤더(없으면 30s) 대기 후 1회 재시도
-- `src/services/claudeApi.js` — 429 응답에서 `retry-after` 헤더 파싱해 `err.retryAfterMs` 첨부
-- `scripts/eval-prompt.js` — `runOne` 래퍼가 `kind === 'rate_limit'`이면 1회 재시도
-
-### 2026-04-15 첫 실행 검증
-17건 전부 완주 (이전엔 14건 429 실패). rate_limit은 단발 재시도로 충분히 회복됨.
-
-### 전체 업데이트(Step 3.4)에서의 재발 가능성: 높음
-22건 × 웹검색 = 동일 구조. 사용자 UI에서 7분 무응답 + 중간 에러는 UX 파탄.
-
-### 개선 후보 (난이도 순)
-
-| # | 방법 | 난이도 | 효과 |
-|---|---|---|---|
-| A | **응답 헤더 기반 스로틀링**: `anthropic-ratelimit-input-tokens-remaining` 읽어 임계치 이하면 `reset` 시각까지 sleep | 중 | 이론상 최적. 낭비 없음 |
-| B | **동시성 제한 큐**: 병렬 1~2개로 처리량 올리되 한도 안 넘게 | 중 | 체감 속도 ↑ |
-| C | **진행률 UI + 백그라운드 큐**: "N/22 완료" 실시간 표시, 취소/재개 | 상 | UX 해결책 |
-| D | **Message Batches API**: 비동기 배치, 최대 24h, 50% 싸고 rate limit 별도 | 상 | 근본 해결. 단 `web_search` 도구 호환 확인 필요 |
-| E | **지수 백오프 + N회 재시도**: 현재 1회→3~5회 | 하 | 최소 개선 |
-
-### 추천 (Step 3.4 시점)
-A + E 조합. A로 평균 대기 최소화, E로 예외 안전망. C는 별개 UX 작업.
-
----
-
-## 2. v2 프롬프트 개선 가설
+## 1. v2 프롬프트 개선 가설
 
 ### v1 실패 패턴 (PROMPT_LOG v1 실행 결과 참고)
 - **past 회차 반환**: conf_001(ASHRAE 2025), conf_011(ECOS 2025)
@@ -68,16 +36,7 @@ A + E 조합. A로 평균 대기 최소화, E로 예외 안전망. C는 별개 U
 
 ---
 
-## 3. 토큰 절감의 추가 레버 (프롬프트 외)
-
-- **`web_search` 도구의 `max_uses` 파라미터**: 프롬프트로 "조기 종료"를 지시하는 것보다 더 직접적. 값 3~5로 캡 설정.
-- `max_tokens` 축소: 현재 2048. JSON-only 강제하면 512~1024로도 충분할 가능성.
-
-둘 다 v2 프롬프트 검증 후 별건으로 실험 가치 있음.
-
----
-
-## 4. 자동 프롬프트 최적화 (subagent 분업) 검토
+## 2. 자동 프롬프트 최적화 (subagent 분업) 검토
 
 ### 제안: crawler + log analyzer + prompt editor 3-agent 분업
 
@@ -112,10 +71,8 @@ A + E 조합. A로 평균 대기 최소화, E로 예외 안전망. C는 별개 U
 
 ---
 
-## 5. 미해결 과제 리스트
+## 3. 미해결 과제 리스트
 
 - [ ] v2 프롬프트 구현 및 v1/v2 비교 실행
 - [ ] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가
-- [ ] `web_search.max_uses` 파라미터 실험
-- [ ] Step 3.4 전체 업데이트 시 응답 헤더 기반 스로틀링 도입
 - [ ] (장기) 반자동 log analyzer 슬래시 커맨드 구성

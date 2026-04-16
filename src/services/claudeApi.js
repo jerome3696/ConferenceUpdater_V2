@@ -24,6 +24,7 @@ export class ClaudeApiError extends Error {
  * @param {string} [opts.system]               시스템 프롬프트
  * @param {boolean} [opts.webSearch=false]     web_search 도구 활성화
  * @param {number} [opts.maxTokens=1024]
+ * @param {number} [opts.maxWebSearches=5]     web_search 도구의 max_uses 캡 (input 토큰 상한 예측용)
  * @param {string} [opts.model]
  * @param {AbortSignal} [opts.signal]
  * @returns {Promise<object>} 원본 응답 JSON
@@ -34,6 +35,7 @@ export async function callClaude({
   system,
   webSearch = false,
   maxTokens = 1024,
+  maxWebSearches = 5,
   model = DEFAULT_MODEL,
   signal,
 }) {
@@ -48,7 +50,11 @@ export async function callClaude({
   };
   if (system) body.system = system;
   if (webSearch) {
-    body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+    body.tools = [{
+      type: 'web_search_20250305',
+      name: 'web_search',
+      max_uses: maxWebSearches,
+    }];
   }
 
   let res;

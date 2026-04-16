@@ -1,0 +1,262 @@
+{
+  "meta": {
+    "timestamp": "2026-04-16T12-51-39",
+    "version": "v1",
+    "snapshot_date": "2026-04-16",
+    "case_count": 17
+  },
+  "summary": {
+    "pass": 7,
+    "fail_or_error": 10
+  },
+  "results": [
+    {
+      "id": "conf_001",
+      "status": "pass",
+      "aiLink": "https://www.ashrae.org/conferences/2026-winter-conference",
+      "matchedAgainst": "https://www.ashrae.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-01-31",
+        "end_date": "2026-02-04",
+        "venue": "Las Vegas, United States",
+        "link": "https://www.ashrae.org/conferences/2026-winter-conference",
+        "source_url": "https://aspe.org/pipeline/2026-ashrae-winter-conference-technical-program-now-live/",
+        "confidence": "high",
+        "notes": "Conference will be held at Caesar's Palace Resort in Las Vegas with AHR Expo running concurrently February 2-4 at Las Vegas Convention Center"
+      },
+      "elapsedMs": 11852,
+      "rawText": "```json\n{\n  \"start_date\": \"2026-01-31\",\n  \"end_date\": \"2026-02-04\", \n  \"venue\": \"Las Vegas, United States\",\n  \"link\": \"https://www.ashrae.org/conferences/2026-winter-conference\",\n  \"source_url\": \"https://aspe.org/pipeline/2026-ashrae-winter-conference-technical-program-now-live/\",\n  \"confidence\": \"high\",\n  \"notes\": \"Conference will be held at Caesar's Palace Resort in Las Vegas with AHR Expo running concurrently February 2-4 at Las Vegas Convention Center\"\n}\n```\n\n2026 ASHRAE Winter Conference는 2026년 1월 31일부터 2월 4일까지 라스베이거스에서 개최됩니다. 행사 장소는 Caesar's Palace Resort입니다. AHR Expo가 2월 2-4일 라스베이거스 컨벤션 센터에서 동시 개최됩니다. 공식 웹사이트는 ashrae.org/2026Winter입니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_003",
+      "status": "pass",
+      "aiLink": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "matchedAgainst": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-03-15",
+        "end_date": "2027-03-19",
+        "venue": "Frankfurt am Main, Germany",
+        "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "source_url": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "confidence": "high",
+        "notes": "World's leading trade fair for HVAC + Water, held at Messe Frankfurt exhibition grounds. Biennial event with expected 200,000 visitors and 2,000+ exhibitors."
+      },
+      "elapsedMs": 13252,
+      "rawText": "```json\n{\n  \"start_date\": \"2027-03-15\",\n  \"end_date\": \"2027-03-19\",\n  \"venue\": \"Frankfurt am Main, Germany\",\n  \"link\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"source_url\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"confidence\": \"high\",\n  \"notes\": \"World's leading trade fair for HVAC + Water, held at Messe Frankfurt exhibition grounds. Biennial event with expected 200,000 visitors and 2,000+ exhibitors.\"\n}\n```\n\n검색 결과, ISH Frankfurt 2027은 2027년 3월 15일부터 19일까지 독일 프랑크푸르트 암 마인에서 개최됩니다. 이 행사는 물과 에너지의 책임감 있는 관리에 중점을 둔 세계 최고의 박람회이며, 전 세계에서 약 190,000명 이상의 전문가들이 참여할 것으로 예상됩니다. ISH는 2년 주기로 개최되며, 메세 프랑크푸르트 전시장에서 열립니다. 공식 웹사이트는 ish.messefrankfurt.com이며, 이곳에서 상세한 정보를 확인할 수 있습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_004",
+      "status": "pass",
+      "aiLink": "https://www.etc17.eu/",
+      "matchedAgainst": "https://www.etc17.eu/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-04-19",
+        "end_date": "2027-04-23",
+        "venue": "Gdansk, Poland",
+        "link": "https://www.etc17.eu/",
+        "source_url": "https://www.etc17.eu/",
+        "confidence": "high",
+        "notes": "ETC17 (17th European Turbomachinery Conference)는 Euroturbo와 EVI-GTI가 공동 주최하는 학회입니다. 2년 주기로 개최되며, 터보머신 유체역학 및 열역학 연구를 다룹니다."
+      },
+      "elapsedMs": 17173,
+      "rawText": "검색 결과에서 European Turbo Conference (ETC)에 대한 명확한 정보를 찾았습니다. 다음 개최 정보를 확인해보겠습니다.검색 결과를 바탕으로 European Turbo Conference (ETC)의 다음 개최 정보를 찾았습니다. 공식 웹사이트와 신뢰할 수 있는 출처에서 확인한 내용입니다.\n\n```json\n{\n  \"start_date\": \"2027-04-19\",\n  \"end_date\": \"2027-04-23\",\n  \"venue\": \"Gdansk, Poland\",\n  \"link\": \"https://www.etc17.eu/\",\n  \"source_url\": \"https://www.etc17.eu/\",\n  \"confidence\": \"high\",\n  \"notes\": \"ETC17 (17th European Turbomachinery Conference)는 Euroturbo와 EVI-GTI가 공동 주최하는 학회입니다. 2년 주기로 개최되며, 터보머신 유체역학 및 열역학 연구를 다룹니다.\"\n}\n```\n\nETC17 (17th European Turbomachinery Conference)는 2027년 4월 19-23일 폴란드 그단스크에서 개최될 예정입니다. 논문 제출 공고는 2026년 5월에 시작될 예정이며, Euroturbo와 EVI-GTI가 공동으로 조직하는 학회입니다.\n\n이는 Euroturbo 공식 웹사이트와 ETC17 전용 공식 웹사이트에서 확인한 공식 정보로, 신뢰도가 높습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_005",
+      "status": "pass",
+      "aiLink": "https://www.hannovermesse.de/en/",
+      "matchedAgainst": "https://www.hannovermesse.de/en/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-04-20",
+        "end_date": "2026-04-24",
+        "venue": "Hannover, Germany",
+        "link": "https://www.hannovermesse.de/en/",
+        "source_url": "https://www.hannovermesse.de/en/for-visitors/opening-hours/",
+        "confidence": "high",
+        "notes": "Official dates confirmed by multiple sources. Event held at Hannover Exhibition Grounds, 30521 Hannover."
+      },
+      "elapsedMs": 33958,
+      "rawText": "```json\n{\n  \"start_date\": \"2026-04-20\",\n  \"end_date\": \"2026-04-24\", \n  \"venue\": \"Hannover, Germany\",\n  \"link\": \"https://www.hannovermesse.de/en/\",\n  \"source_url\": \"https://www.hannovermesse.de/en/for-visitors/opening-hours/\",\n  \"confidence\": \"high\",\n  \"notes\": \"Official dates confirmed by multiple sources. Event held at Hannover Exhibition Grounds, 30521 Hannover.\"\n}\n```\n\nHANNOVER MESSE 2026는 2026년 4월 20일부터 24일까지 개최됩니다. 개최 장소는 독일 하노버의 전시장(Exhibition grounds, 30521 Hanover)입니다. 여러 공식 출처에서 동일한 일정과 장소가 확인되어 높은 신뢰도로 정보를 제공할 수 있습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_006",
+      "status": "pass",
+      "aiLink": "https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference",
+      "matchedAgainst": "https://iifiir.org/en",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": "Dresden, Germany",
+        "link": null,
+        "source_url": "https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference",
+        "confidence": "medium",
+        "notes": "19th 회차는 2027년 4월에 독일 드레스덴에서 개최 예정이나 정확한 날짜와 공식 사이트는 아직 공개되지 않음"
+      },
+      "elapsedMs": 37692,
+      "rawText": "검색 결과를 바탕으로 IIR Conference on Cryogenics의 다음 개최 정보를 정리했습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": \"Dresden, Germany\",\n  \"link\": null,\n  \"source_url\": \"https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference\",\n  \"confidence\": \"medium\",\n  \"notes\": \"19th 회차는 2027년 4월에 독일 드레스덴에서 개최 예정이나 정확한 날짜와 공식 사이트는 아직 공개되지 않음\"\n}\n```\n\n검색을 통해 확인된 정보:\n\n- 19th Cryogenics IIR International Conference will take place in April 2027 in Dresden, Germany\n- The 19th IIR Cryogenics Conference will take place in April 2027 in Dresden, Germany\n- Since 2012 the conference has been organized alternately in Dresden and Prague\n\n2025년 4월에 프라하에서 18회차가 개최된 이후, 다음 19회차는 2027년 4월에 독일 드레스덴에서 개최될 예정입니다. 이 학회는 every two years 개최되며, 2012년부터 드레스덴과 프라하에서 번갈아 개최되고 있습니다. 그러나 정확한 개최 날짜나 해당 회차의 전용 웹사이트는 아직 공개되지 않았습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_008",
+      "status": "pass",
+      "aiLink": "https://www.ieee-itherm.net/",
+      "matchedAgainst": "https://www.ieee-itherm.net/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-05-26",
+        "end_date": "2026-05-29",
+        "venue": "Orlando, Florida, United States",
+        "link": "https://www.ieee-itherm.net/",
+        "source_url": "https://www.ieee-itherm.net/hotel-2026/",
+        "confidence": "high",
+        "notes": "제25회 IEEE ITherm 2026이 JW Marriott Orlando, Grande Lakes에서 개최됩니다. IEEE ECTC 2026과 공동 개최되며, 공동 등록 시 할인 혜택이 있습니다."
+      },
+      "elapsedMs": 124143,
+      "rawText": "검색 결과를 기반으로 IEEE ITherm 2026 학회의 정보를 정리해보겠습니다.\n\n```json\n{\n  \"start_date\": \"2026-05-26\",\n  \"end_date\": \"2026-05-29\",\n  \"venue\": \"Orlando, Florida, United States\",\n  \"link\": \"https://www.ieee-itherm.net/\",\n  \"source_url\": \"https://www.ieee-itherm.net/hotel-2026/\",\n  \"confidence\": \"high\",\n  \"notes\": \"제25회 IEEE ITherm 2026이 JW Marriott Orlando, Grande Lakes에서 개최됩니다. IEEE ECTC 2026과 공동 개최되며, 공동 등록 시 할인 혜택이 있습니다.\"\n}\n```\n\n검색 결과에 따르면:\n\n- IEEE ITherm 2026은 2026년 5월 26일부터 29일까지 4일간 개최됩니다.\n- 개최 장소는 플로리다 올랜도의 JW Marriott Orlando, Grande Lakes입니다.\n- IEEE ECTC 2026과 함께 공동 개최되며, 공동 등록 시 할인된 요금 제공됩니다.\n- 이번이 제25회 IEEE ITherm 학회입니다.\n- 공식 웹사이트 ieee-itherm.net에서 상세 정보를 확인할 수 있습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_009",
+      "status": "pass",
+      "aiLink": "https://cryocooler.org/",
+      "matchedAgainst": "https://www.cryocooler.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-06-15",
+        "end_date": "2026-06-18",
+        "venue": "Syracuse, United States",
+        "link": "https://cryocooler.org/",
+        "source_url": "https://bluefors.com/events/icc24-international-cryocooler-conference/",
+        "confidence": "high",
+        "notes": "ICC24 will be hosted by Bluefors at the Everson Museum of Arts in Syracuse, New York"
+      },
+      "elapsedMs": 41628,
+      "rawText": "```json\n{\n  \"start_date\": \"2026-06-15\",\n  \"end_date\": \"2026-06-18\", \n  \"venue\": \"Syracuse, United States\",\n  \"link\": \"https://cryocooler.org/\",\n  \"source_url\": \"https://bluefors.com/events/icc24-international-cryocooler-conference/\",\n  \"confidence\": \"high\",\n  \"notes\": \"ICC24 will be hosted by Bluefors at the Everson Museum of Arts in Syracuse, New York\"\n}\n```\n\nICC24(24th International Cryocooler Conference)는 2026년 6월 15-18일에 뉴욕 주 시러큐스에서 개최됩니다. 구체적인 장소는 Everson Museum of Arts입니다. Bluefors가 이번 회차의 호스트를 맡고 있으며, 초록 제출은 2026년 1월 5일에 시작되었습니다. 조기 등록은 2026년 3월에 시작될 예정입니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_010",
+      "status": "fail",
+      "aiLink": "https://ceee.umd.edu/tptpr2025",
+      "matchedAgainst": null,
+      "expected": [
+        "https://iifiir.org/en"
+      ],
+      "aiData": {
+        "start_date": "2025-06-15",
+        "end_date": "2025-06-18",
+        "venue": "College Park, MD, United States",
+        "link": "https://ceee.umd.edu/tptpr2025",
+        "source_url": "https://ceee.umd.edu/news/story/plenary-speakers-announced-for-iir-conference-on-thermophysical-properties-and-transfer-processes",
+        "confidence": "high",
+        "notes": "7th IIR Conference hosted by University of Maryland Center for Environmental Energy Engineering"
+      },
+      "elapsedMs": 44215,
+      "rawText": "```json\n{\n  \"start_date\": \"2025-06-15\",\n  \"end_date\": \"2025-06-18\",\n  \"venue\": \"College Park, MD, United States\",\n  \"link\": \"https://ceee.umd.edu/tptpr2025\",\n  \"source_url\": \"https://ceee.umd.edu/news/story/plenary-speakers-announced-for-iir-conference-on-thermophysical-properties-and-transfer-processes\",\n  \"confidence\": \"high\",\n  \"notes\": \"7th IIR Conference hosted by University of Maryland Center for Environmental Energy Engineering\"\n}\n```\n\nThe 7th IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants is scheduled for June 15-18, 2025, at the University of Maryland, College Park, MD. The event will take place at the University of Maryland, College Park, MD, and the official website for this specific conference is available at https://ceee.umd.edu/tptpr2025.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_011",
+      "status": "fail",
+      "aiLink": "https://ecos2025.org/",
+      "matchedAgainst": null,
+      "expected": [
+        "https://ecos2026.insae.ro/",
+        "https://ecos2024.com/about/ecos-international-society-inc/"
+      ],
+      "aiData": {
+        "start_date": "2025-06-29",
+        "end_date": "2025-07-04",
+        "venue": "Paris, France",
+        "link": "https://ecos2025.org/",
+        "source_url": "https://ecos2025.org/",
+        "confidence": "high",
+        "notes": "38th International Conference (ECOS 2025), held at Mines Paris PSL. This edition celebrates the 200th anniversary of Sadi Carnot's thermodynamics work published in Paris in 1824."
+      },
+      "elapsedMs": 40812,
+      "rawText": "```json\n{\n  \"start_date\": \"2025-06-29\",\n  \"end_date\": \"2025-07-04\",\n  \"venue\": \"Paris, France\",\n  \"link\": \"https://ecos2025.org/\",\n  \"source_url\": \"https://ecos2025.org/\",\n  \"confidence\": \"high\",\n  \"notes\": \"38th International Conference (ECOS 2025), held at Mines Paris PSL. This edition celebrates the 200th anniversary of Sadi Carnot's thermodynamics work published in Paris in 1824.\"\n}\n```\n\n검색 결과에 따르면 ECOS 2025 (38차 국제회의)가 2025년 6월 29일부터 7월 4일까지 파리, 프랑스에서 개최될 예정입니다. 공식 웹사이트는 https://ecos2025.org/이며, Mines Paris PSL에서 개최됩니다. 이번 회의는 사디 카르노의 열역학 책 출간 200주년을 기념하는 특별한 의미를 가지고 있습니다.",
+      "version": "v1"
+    },
+    {
+      "id": "conf_012",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_013",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_015",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_016",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_017",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_018",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_019",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_022",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    }
+  ]
+}

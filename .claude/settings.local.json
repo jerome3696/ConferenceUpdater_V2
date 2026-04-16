@@ -14,7 +14,15 @@
       "Bash(python:*)",
       "Bash(node -e ':*)",
       "Read(//tmp/xlsx_extract/xl/**)",
-      "Bash(cd /tmp)"
+      "Bash(cd /tmp)",
+      "Bash(git rm:*)",
+      "Bash(node --check scripts/eval-prompt.js)",
+      "Bash(node --check src/utils/promptBuilder.js)",
+      "Bash(node --check src/services/responseParser.js)",
+      "Bash(node *)",
+      "Bash(git fetch *)",
+      "Bash(cat C:/Users/jerom/ConferenceFinder/src/config/*.js)",
+      "Bash(git mv *)"
     ]
   }
 }

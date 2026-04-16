@@ -14,7 +14,11 @@ function App() {
   const { apiKey, setApiKey, clearApiKey, hasKey } = useApiKey();
   const { token, setToken, clearToken, hasToken } = useGitHubToken();
   const conferences = useConferences({ token });
-  const updateQueue = useUpdateQueue({ apiKey, applyAiUpdate: conferences.applyAiUpdate });
+  const updateQueue = useUpdateQueue({
+    apiKey,
+    applyAiUpdate: conferences.applyAiUpdate,
+    applyVerifyUpdate: conferences.applyVerifyUpdate,
+  });
 
   const [isKeyModalOpen, setKeyModalOpen] = useState(false);
   const [isTokenModalOpen, setTokenModalOpen] = useState(false);
@@ -48,7 +52,36 @@ function App() {
       + `각 학회마다 Claude API 1회 호출이 발생합니다. 진행할까요?`
     );
     if (!ok) return;
-    updateQueue.enqueue(targets);
+    updateQueue.enqueue(targets, 'update');
+    setView('update');
+  };
+
+  const handleRequestVerify = (row) => {
+    if (!hasKey) {
+      alert('API 키를 먼저 입력해주세요.');
+      setKeyModalOpen(true);
+      return;
+    }
+    updateQueue.enqueue([row], 'verify');
+    setView('update');
+  };
+
+  const handleRequestVerifyAll = (rows) => {
+    if (!hasKey) {
+      alert('API 키를 먼저 입력해주세요.');
+      setKeyModalOpen(true);
+      return;
+    }
+    if (rows.length === 0) {
+      alert('검증할 학회가 없습니다.');
+      return;
+    }
+    const ok = window.confirm(
+      `전체 ${rows.length}건의 학회 마스터 정보를 검증합니다.\n\n`
+      + `각 학회마다 Claude API 1회 호출이 발생합니다. 진행할까요?`
+    );
+    if (!ok) return;
+    updateQueue.enqueue(rows, 'verify');
     setView('update');
   };
 
@@ -73,6 +106,8 @@ function App() {
             conferences={conferences}
             onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
             onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
+            onRequestVerify={hasKey ? handleRequestVerify : undefined}
+            onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
           />
         ) : (
           <UpdatePanel queue={updateQueue} onBack={() => setView('main')} />

@@ -15,6 +15,7 @@ import { callClaude, extractText } from '../src/services/claudeApi.js';
 import { buildUpdatePrompt } from '../src/utils/promptBuilder.js';
 import { parseUpdateResponse } from '../src/services/responseParser.js';
 import { urlMatch, normalizeUrl } from '../src/services/urlMatch.js';
+import { MODELS } from '../src/config/models.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -59,8 +60,9 @@ function scoreUrl(goldenCase, aiData) {
 async function runOne({ conference, lastEdition, apiKey, version, retryWaitMs }) {
   const { system, user } = buildUpdatePrompt(conference, lastEdition, { version });
   const t0 = Date.now();
+  // 앱의 useUpdateQueue와 일치: model=MODELS.update(haiku-4-5), maxTokens=1024. RATE_LIMIT_STRATEGY §4.1 참조.
   const attempt = async () => callClaude({
-    apiKey, prompt: user, system, webSearch: true, maxTokens: 2048,
+    apiKey, prompt: user, system, model: MODELS.update, webSearch: true, maxTokens: 1024,
   });
   try {
     let res;
@@ -79,7 +81,14 @@ async function runOne({ conference, lastEdition, apiKey, version, retryWaitMs })
     const elapsed = Date.now() - t0;
     const text = extractText(res);
     const parsed = parseUpdateResponse(text);
-    return { ok: true, elapsedMs: elapsed, rawText: text, parsed, stop_reason: res.stop_reason };
+    return {
+      ok: true,
+      elapsedMs: elapsed,
+      rawText: text,
+      parsed,
+      stop_reason: res.stop_reason,
+      usage: res.usage || null,
+    };
   } catch (err) {
     return {
       ok: false,
@@ -140,7 +149,14 @@ async function main() {
       summary = { id: c.id, status: 'api_error', error: r.error };
       console.log(`❌ API ${r.error.kind}: ${r.error.message}`);
     } else if (!r.parsed.ok) {
-      summary = { id: c.id, status: 'parse_fail', reason: r.parsed.reason, elapsedMs: r.elapsedMs };
+      summary = {
+        id: c.id,
+        status: 'parse_fail',
+        reason: r.parsed.reason,
+        elapsedMs: r.elapsedMs,
+        usage: r.usage,
+        stop_reason: r.stop_reason,
+      };
       console.log(`❌ parse:${r.parsed.reason} (${r.elapsedMs}ms)`);
     } else {
       const score = scoreUrl(c, r.parsed.data);
@@ -152,12 +168,15 @@ async function main() {
         expected: score.expected || null,
         aiData: r.parsed.data,
         elapsedMs: r.elapsedMs,
+        usage: r.usage,
+        stop_reason: r.stop_reason,
       };
       const icon = score.status === 'pass' ? '✅' : '❌';
       const tail = score.status === 'pass'
         ? `matched ${normalizeUrl(score.matchedAgainst)}`
         : `ai=${normalizeUrl(score.aiLink)}`;
-      console.log(`${icon} ${tail} (${r.elapsedMs}ms)`);
+      const usageStr = r.usage ? ` [in=${r.usage.input_tokens} out=${r.usage.output_tokens}]` : '';
+      console.log(`${icon} ${tail} (${r.elapsedMs}ms)${usageStr}`);
     }
     results.push({ ...summary, rawText: r.rawText, version: args.version });
   }
@@ -166,6 +185,29 @@ async function main() {
   const passed = results.filter((r) => r.status === 'pass').length;
   const failed = results.length - passed;
   console.log(`pass: ${passed}  fail/error: ${failed}  (총 ${results.length})`);
+
+  const withUsage = results.filter((r) => r.usage);
+  const totalIn = withUsage.reduce((s, r) => s + (r.usage.input_tokens || 0), 0);
+  const totalOut = withUsage.reduce((s, r) => s + (r.usage.output_tokens || 0), 0);
+  const stopMaxTokens = withUsage.filter((r) => r.stop_reason === 'max_tokens').length;
+  const tokenSummary = withUsage.length > 0
+    ? {
+        samples: withUsage.length,
+        total_input: totalIn,
+        total_output: totalOut,
+        avg_input: Math.round(totalIn / withUsage.length),
+        avg_output: Math.round(totalOut / withUsage.length),
+        stop_reason_max_tokens: stopMaxTokens,
+      }
+    : null;
+  if (tokenSummary) {
+    console.log(
+      `tokens: total in=${tokenSummary.total_input} out=${tokenSummary.total_output} · ` +
+      `avg in=${tokenSummary.avg_input} out=${tokenSummary.avg_output} · ` +
+      `stop_reason=max_tokens ${stopMaxTokens}/${withUsage.length}`
+    );
+  }
+
   console.table(results.map((r) => ({
     id: r.id,
     status: r.status,
@@ -173,6 +215,8 @@ async function main() {
     matched: r.matchedAgainst ? normalizeUrl(r.matchedAgainst) : '',
     err: r.reason || r.error?.kind || '',
     ms: r.elapsedMs || '',
+    in_tok: r.usage?.input_tokens || '',
+    out_tok: r.usage?.output_tokens || '',
   })));
 
   const resultsDir = join(ROOT, 'docs/eval/results');
@@ -181,7 +225,7 @@ async function main() {
   const outPath = join(resultsDir, `${timestamp}-${args.version}.json`);
   await writeFile(outPath, JSON.stringify({
     meta: { timestamp, version: args.version, snapshot_date: golden.snapshot_date, case_count: results.length },
-    summary: { pass: passed, fail_or_error: failed },
+    summary: { pass: passed, fail_or_error: failed, tokens: tokenSummary },
     results,
   }, null, 2));
   console.log(`\n📝 저장: ${outPath.replace(ROOT + '\\', '').replace(ROOT + '/', '')}\n`);

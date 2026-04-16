@@ -1,0 +1,168 @@
+{
+  "meta": {
+    "timestamp": "2026-04-16T13-03-33",
+    "version": "v1",
+    "snapshot_date": "2026-04-16",
+    "case_count": 17
+  },
+  "summary": {
+    "pass": 0,
+    "fail_or_error": 17,
+    "tokens": null
+  },
+  "results": [
+    {
+      "id": "conf_001",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_003",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_004",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_005",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_006",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_008",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_009",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_010",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_011",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_012",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_013",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_015",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_016",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_017",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_018",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_019",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    },
+    {
+      "id": "conf_022",
+      "status": "api_error",
+      "error": {
+        "kind": "server",
+        "message": "API 오류 (400): Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits."
+      },
+      "version": "v1"
+    }
+  ]
+}

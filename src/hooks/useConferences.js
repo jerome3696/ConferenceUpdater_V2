@@ -151,6 +151,21 @@ export function useConferences({ token } = {}) {
     updateConference(id, { starred: value });
   };
 
+  // 검증 결과 수용: status === '불일치' 인 필드만 correct 값으로 학회 마스터에 반영.
+  // 일치/확인불가 필드는 건드리지 않는다.
+  const applyVerifyUpdate = (conferenceId, result) => {
+    const FIELDS = ['full_name', 'abbreviation', 'cycle_years', 'duration_days', 'region', 'official_url'];
+    const patch = {};
+    for (const f of FIELDS) {
+      const entry = result?.[f];
+      if (entry && entry.status === '불일치' && entry.correct !== undefined && entry.correct !== null && entry.correct !== '') {
+        patch[f] = entry.correct;
+      }
+    }
+    if (Object.keys(patch).length === 0) return;
+    updateConference(conferenceId, patch);
+  };
+
   const applyAiUpdate = (conferenceId, proposed) => {
     const now = new Date().toISOString();
     const existing = data.editions
@@ -224,6 +239,7 @@ export function useConferences({ token } = {}) {
     updateStarred,
     saveConferenceEdit,
     applyAiUpdate,
+    applyVerifyUpdate,
     deleteConference,
   };
 }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { callClaude, extractText, ClaudeApiError } from '../services/claudeApi';
-import { buildUpdatePrompt } from '../utils/promptBuilder';
-import { parseUpdateResponse } from '../services/responseParser';
+import { buildUpdatePrompt, buildVerifyPrompt } from '../utils/promptBuilder';
+import { parseUpdateResponse, parseVerifyResponse } from '../services/responseParser';
 import { MODELS } from '../config/models';
 
 // 세션 내 메모리로만 유지. 새로고침하면 리셋됨.
@@ -12,13 +12,32 @@ import { MODELS } from '../config/models';
 //   pending  → 검색 완료되어 사용자 승인 대기 중인 카드들 (배열)
 //   log      → 최종 처리 완료 (accepted/rejected/error)
 //
+// 각 item 에는 kind ('update' | 'verify') 가 있으며, 루프가 kind 별로
+// 프롬프트/파서/모델/적용 함수를 분기한다.
+//
 // 검색은 큐가 빌 때까지 계속 진행된다.
 // 사용자는 pending에 쌓인 카드를 언제든 자유롭게 accept/reject 할 수 있다.
 
 let seq = 0;
 const nextId = () => `q_${Date.now().toString(36)}_${++seq}`;
 
-export function useUpdateQueue({ apiKey, applyAiUpdate }) {
+// kind별 호출/파싱 설정. 새로운 kind 추가 시 여기만 확장.
+function getHandlers(kind) {
+  if (kind === 'verify') {
+    return {
+      buildPrompt: (row) => buildVerifyPrompt(row),
+      parse: parseVerifyResponse,
+      model: MODELS.verify,
+    };
+  }
+  return {
+    buildPrompt: (row) => buildUpdatePrompt(row, row.last || null),
+    parse: parseUpdateResponse,
+    model: MODELS.update,
+  };
+}
+
+export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
   const [queue, setQueue] = useState([]);
   const [searching, setSearching] = useState(null);
   const [pending, setPending] = useState([]);
@@ -29,8 +48,8 @@ export function useUpdateQueue({ apiKey, applyAiUpdate }) {
   const abortRef = useRef(null);
   const rateLimitTimerRef = useRef(null);
 
-  const enqueue = useCallback((rows) => {
-    const items = rows.map((r) => ({ id: nextId(), conferenceId: r.id, row: r }));
+  const enqueue = useCallback((rows, kind = 'update') => {
+    const items = rows.map((r) => ({ id: nextId(), kind, conferenceId: r.id, row: r }));
     setQueue((q) => [...q, ...items]);
   }, []);
 
@@ -58,18 +77,19 @@ export function useUpdateQueue({ apiKey, applyAiUpdate }) {
         if (!apiKey) {
           throw new ClaudeApiError('API 키가 필요합니다. 우상단에서 입력해주세요.', { kind: 'auth' });
         }
-        const { system, user } = buildUpdatePrompt(item.row, item.row.last || null);
+        const { buildPrompt, parse, model } = getHandlers(item.kind);
+        const { system, user } = buildPrompt(item.row);
         const res = await callClaude({
           apiKey,
           prompt: user,
           system,
-          model: MODELS.update,
+          model,
           webSearch: true,
-          maxTokens: 2048,
+          maxTokens: item.kind === 'verify' ? 1536 : 1024,
           signal: controller.signal,
         });
         const text = extractText(res);
-        const parsed = parseUpdateResponse(text);
+        const parsed = parse(text);
         if (!parsed.ok) {
           card = { ...item, status: 'error', error: `응답 파싱 실패 (${parsed.reason})`, raw: parsed.raw };
         } else {
@@ -106,9 +126,14 @@ export function useUpdateQueue({ apiKey, applyAiUpdate }) {
   const accept = useCallback((cardId) => {
     const card = pending.find((c) => c.id === cardId);
     if (!card || card.status !== 'ready') return;
-    applyAiUpdate(card.conferenceId, card.result);
+    if (card.kind === 'verify') {
+      applyVerifyUpdate?.(card.conferenceId, card.result);
+    } else {
+      applyAiUpdate(card.conferenceId, card.result);
+    }
     pushLog({
       id: card.id,
+      kind: card.kind,
       conferenceId: card.conferenceId,
       abbrev: card.row.abbreviation,
       fullName: card.row.full_name,
@@ -116,13 +141,14 @@ export function useUpdateQueue({ apiKey, applyAiUpdate }) {
       result: card.result,
     });
     setPending((p) => p.filter((c) => c.id !== cardId));
-  }, [pending, applyAiUpdate, pushLog]);
+  }, [pending, applyAiUpdate, applyVerifyUpdate, pushLog]);
 
   const reject = useCallback((cardId) => {
     const card = pending.find((c) => c.id === cardId);
     if (!card) return;
     pushLog({
       id: card.id,
+      kind: card.kind,
       conferenceId: card.conferenceId,
       abbrev: card.row.abbreviation,
       fullName: card.row.full_name,
