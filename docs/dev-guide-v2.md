@@ -71,17 +71,17 @@ docs/
 - **확인**: `src/test-trap.js`에 `const k = "sk-ant-test-fake-key"` 넣고 commit → 차단됨 ✅ (2026-04-17)
 
 ### Step A.3: 핵심 유틸 단위 테스트
-- [ ] Vitest 설치 (`npm install -D vitest`)
-- [ ] `package.json`에 `"test": "vitest run"` 추가
-- [ ] `src/services/responseParser.test.js` 작성
+- [x] Vitest 설치 (`npm install -D vitest`)
+- [x] `package.json`에 `"test": "vitest run"` 추가
+- [x] `src/services/responseParser.test.js` 작성
   - parseUpdateResponse: 정상 JSON, 빈 응답, 부분 필드, 잘못된 형식
   - parseVerifyResponse: 정상, 부분 일치, 파싱 실패
-- [ ] `src/services/updateLogic.test.js` 작성
+- [x] `src/services/updateLogic.test.js` 작성
   - shouldSearch: upcoming 있음/없음, 필드 완성/미완성, source 구분
-- [ ] `src/utils/dateUtils.test.js` 작성
+- [x] `src/utils/dateUtils.test.js` 작성
   - 날짜 비교, 만료 판정, 포맷 변환
-- [ ] `npm run test` 전건 통과 확인
-- **확인**: responseParser에 일부러 버그 넣으면 테스트가 실패하는가?
+- [x] `npm run test` 전건 통과 확인 (40/40, 2026-04-17)
+- **확인**: responseParser에 `reason: 'empty' → 'SANITY_BUG'` 변경 → "빈 응답" 테스트 실패 확인 후 원복 ✅ (2026-04-17)
 
 ### Step A.4: CI 파이프라인 강화
 - [ ] `.github/workflows/ci.yml` 생성
