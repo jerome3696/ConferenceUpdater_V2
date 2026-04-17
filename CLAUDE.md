@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.6 완료, 다음: Step A.7). 상세 진행은 `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.7 완료, 다음: Step A.8). 상세 진행은 `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
@@ -23,34 +23,36 @@ MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.6 완료, 다음: S
 
 `docs/legacy/`·`docs/reference/`는 명시 요청 없으면 진입 불요.
 
-## 작업 방식
+## 작업 흐름
+1. 플랜 작성 → `docs/plans/active/PLAN-xxx.md`
+2. `feature/PLAN-xxx-설명` 브랜치 생성
+3. 코드 구현 (feature branch에서만)
+4. `bash scripts/verify-task.sh` → 전항목 통과
+5. 커밋 (Conventional Commits)
+6. PR → CI 통과 확인
+7. merge → 플랜 `completed/`로 자동 이동
 
+## 작업 방식
 - 협력자다. 지시에 객관·비판·건설적 의견을 견지.
 - 새 기능·구조 변경은 의도·예상결과·진행방향을 먼저 요약·확인받기. 단순 버그/오타/스타일은 직진.
-- 한 번에 하나의 Step만.
 - 파일 수정 후 기존 기능 영향 확인.
 - **이 파일(CLAUDE.md) 자가 수정 금지**: 사용자 명시 요청·승인 없이 수정 불가. 갱신 제안은 자유 (요청·승인 후 수정). 단, "현재 상태" 한 줄 갱신은 자동 허용.
 - **이 파일은 60줄을 넘기지 말 것.** 넘으면 슬림화 우선.
 
 ## 작업 규칙
-
 - **작업 완료 후 반드시 `bash scripts/verify-task.sh` 실행할 것.**
 - **브랜치**: `feature/PLAN-xxx-설명` | `fix/설명` | `docs/설명` | `chore/설명` (main 직접 push 금지)
 - **커밋**: Conventional Commits — `feat:` `fix:` `docs:` `refactor:` `test:` `chore:`
 - API 키 하드코딩 금지. AI 응답 파싱은 try-catch 필수.
 - **파괴적 명령 금지**: `--overwrite`, `--force`, `rm -rf`, `git reset --hard`, `git clean -fd` 등은 사용자 명시 승인 없이 실행 금지. 특히 루트·`docs/` 대상은 더더욱.
-- 스캐폴딩 도구(`npm create`, `npx create-*`)는 대상에 기존 파일 있으면 먼저 확인.
 - 대화형 프롬프트 우회용으로 파괴 플래그 쓰지 말고 사용자에게 `!<command>` 직접 실행 요청.
 
 ## 비자명한 코드 제약
-
-- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2 공존)
+- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2·v3 공존, 활성: v3)
 - `src/services/claudeApi.js`는 브라우저·Node 양쪽에서 사용 (브라우저 전용 API 금지)
 - `responseParser.js` ↔ `UpdateCard.jsx`/`VerificationCard.jsx`의 JSON 구조 일치 필수 — 하나 바꾸면 나머지 확인
-- 한국어 주석 가능
 
 ## 문서 갱신 트리거
-
 - Step 완료: `docs/dev-guide-v2.md` 체크박스 [x], CLAUDE.md "현재 상태" 한 줄 갱신
 - 프롬프트 변경: `docs/prompteng.md` §5 로그 + §1 현황판
 - 구조/디자인/기능설계 변경: `structure.md` / `design.md` / `blueprint.md` 해당 섹션

@@ -242,7 +242,7 @@ const TEMPLATES = {
   },
 };
 
-export const DEFAULT_UPDATE_VERSION = 'v1';
+export const DEFAULT_UPDATE_VERSION = 'v3';
 export const DEFAULT_VERIFY_VERSION = 'v1';
 
 /**
