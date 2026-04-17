@@ -330,10 +330,11 @@
       "status": "upcoming",
       "start_date": "2027-04-19",
       "end_date": "2027-04-23",
-      "venue": "Gdansk, Poland",
+      "venue": "Gdańsk, Poland",
       "link": "https://www.etc17.eu/",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:23:35.860Z"
+      "updated_at": "2026-04-17T15:58:07.544Z",
+      "confidence": "high"
     },
     {
       "id": "ed_005",
