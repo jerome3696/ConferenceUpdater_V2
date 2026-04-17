@@ -25,18 +25,22 @@
 ## §1. 빠른 현황판 (Active)
 
 ### 활성 버전
-- **앱 사용 중**: `v1` (Haiku 4.5 + Phase A 적용) — v3 검증 완료, 활성 전환 대기
+- **앱 사용 중**: `v4` (Haiku 4.5 + Phase A 적용)
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
 - **마지막 측정(v3)**: 2026-04-17 / pass **19/19 (100%)** / avg input 41,651 · output 722 토큰
   - 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
+- **v4 eval**: 미실행 — `npm run eval -- --version v4` 로 확인 필요
 
 ### 잔존 실패 (다음 개선 타겟)
-- **[P2 부분 미해결] conf_006 IIR Cryogenics, conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만, 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net) 미발굴. 리스팅 2순위 허용 범위 내 pass여서 전용 사이트 선호를 강화하려면 레버 E(임박 학회 재검증) 필요.
+- **[P2 부분 미해결] conf_006 IIR Cryogenics, conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만, 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net) 미발굴. 레버 E(임박 학회 재검증) 필요.
+- **[P5·P6 신규] 브라우저 실사용 발견** — ICMF(부분정보 confidence 과대), ICCFD(날짜 미추출), TPTPR(시리즈 페이지 링크) → v4에서 수정
 
 ### 다음 시도 (next levers)
 - [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
 - [x] **A'. today 앵커 정밀화** — v3 적용 완료 (2026-04-17). 19/19 pass, P4 완전 해소
-- [ ] **활성 전환**: `DEFAULT_UPDATE_VERSION` v1 → v3 (의사결정 필요)
+- [x] **활성 전환**: `DEFAULT_UPDATE_VERSION` v3 → v4 (2026-04-17)
+- [x] **C. 부분정보 처리 규칙** — v4: confidence 기준 명시 + link 4순위 + 날짜 탐색 강화 + 시리즈 null 강화
+- [ ] **v4 eval 확인**: `npm run eval -- --version v4` → 19/19 유지 확인
 - [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. P2 부분 미해결 대응. MVP 후 본격 검토
 
 ---
@@ -250,6 +254,25 @@
 
 ---
 
+### 2026-04-17 — v4 / Haiku 4.5 + Phase A
+
+#### 변경 내용 (v3 → v4)
+- `UPDATE_SYSTEM_V4`: `[신뢰도 기준]` 섹션 신규 — high/medium/low 판정 기준 명시
+- `UPDATE_SYSTEM_V4`: `[링크 우선순위]` 4순위 추가 — 공식 회차 페이지 없을 때 출처 URL 허용 (confidence=low 강제)
+- `UPDATE_SYSTEM_V4`: 시리즈/일반 페이지 link=null 강화 — "회차 specific 없으면 link=null" 명시, 금지 예시 2건 추가
+- `buildUpdateUserV4`: `[기타 주의]` 공식사이트 내 하위 페이지 탐색 의무 추가
+
+#### 결과
+- eval: **미실행** — `npm run eval -- --version v4` 실행 후 기록 예정
+- 브라우저 수동 확인: ICMF / ICCFD / TPTPR 3케이스 확인 필요
+
+#### 배경 패턴
+- **P5** ICMF: 날짜 미확인인데 confidence=medium, 출처 URL link 미반영
+- **P6** ICCFD: 공식사이트 홈에 날짜 없어서 하위 페이지 미탐색
+- **P2 재발** TPTPR: 금지 도메인 명시에도 시리즈 페이지 link 사용
+
+---
+
 ## §6. 실패 패턴 카탈로그
 
 루프를 돌릴수록 같은 패턴이 반복된다. 패턴 단위로 누적하여 다음 가설의 인풋으로 사용.
@@ -284,6 +307,18 @@
 - **공통점**: 모두 2026년 내 학회 (4월 이후). 모델이 "같은 연도 = 이미 진행" 으로 단락할 가능성
 - **대응 레버**: A' — "시작일(YYYY-MM-DD) > 오늘(YYYY-MM-DD)이면 upcoming" 부등호 명시. "이후/이전" 한국어보다 날짜 비교 식 표현이 더 명확
 - **상태**: **v3에서 해소** ✅ (2026-04-17, 3/3 케이스 모두 upcoming 정확 인식)
+
+### P5. 부분정보 신뢰도 과대 평가
+- **원인**: confidence 판정 기준 미명시 → AI 재량으로 medium/high 사용
+- **사례**: ICMF (날짜 미확인인데 confidence=medium, 출처 URL만 있는데 link=null) — 2026-04-17 브라우저
+- **대응 레버**: confidence 기준 명시(low: start_date 미확인), link 4순위(출처 URL + confidence=low 강제)
+- **상태**: v4에서 대응 ✅
+
+### P6. 공식사이트 홈 탐색 후 하위 페이지 미진입
+- **원인**: AI가 공식 홈에서 날짜를 못 찾으면 null 반환, 하위 페이지(Important Dates 등) 미탐색
+- **사례**: ICCFD (iccfd.org 발견 후 날짜 미추출, Milan만 반환) — 2026-04-17 브라우저
+- **대응 레버**: 공식사이트 발견 후 하위 페이지 탐색 의무 지침
+- **상태**: v4에서 대응 ✅
 
 > 신규 패턴은 P{n}. 으로 추가하고, 사례에 [날짜·버전·id]를 함께 기록.
 
