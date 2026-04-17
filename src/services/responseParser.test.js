@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   parseUpdateResponse,
   parseVerifyResponse,
+  normalizeUpdateData,
   UPDATE_SCHEMA,
   VERIFY_FIELDS,
+  BANNED_LINK_DOMAINS,
 } from './responseParser.js';
 
 describe('parseUpdateResponse', () => {
@@ -139,5 +141,114 @@ describe('스키마 상수', () => {
   it('VERIFY_FIELDS에 6개 필드', () => {
     expect(VERIFY_FIELDS).toHaveLength(6);
     expect(VERIFY_FIELDS).toContain('official_url');
+  });
+});
+
+describe('BANNED_LINK_DOMAINS 상수', () => {
+  it('제3자 CFP 집계·IIR 시리즈 도메인을 포함한다', () => {
+    expect(BANNED_LINK_DOMAINS).toContain('easychair.org');
+    expect(BANNED_LINK_DOMAINS).toContain('wikicfp.com');
+    expect(BANNED_LINK_DOMAINS).toContain('conferenceindex.org');
+    expect(BANNED_LINK_DOMAINS).toContain('waset.org');
+    expect(BANNED_LINK_DOMAINS).toContain('iifiir.org');
+  });
+
+  it('framer.ai 는 포함하지 않는다 (draft 연성화)', () => {
+    expect(BANNED_LINK_DOMAINS).not.toContain('framer.ai');
+  });
+});
+
+describe('normalizeUpdateData — link 백필 안전망 (PLAN-006)', () => {
+  const BASE = {
+    start_date: '2026-07-06',
+    end_date: '2026-07-10',
+    venue: 'Milan, Italy',
+    link: null,
+    source_url: 'https://iccfd.org/iccfd13/',
+    confidence: 'high',
+    notes: 'official page',
+  };
+
+  it('조건 충족 시 link 에 source_url 백필', () => {
+    const result = normalizeUpdateData({ ...BASE });
+    expect(result.link).toBe('https://iccfd.org/iccfd13/');
+  });
+
+  it('백필 시 confidence 를 1단계 다운그레이드 (high → medium)', () => {
+    const result = normalizeUpdateData({ ...BASE, confidence: 'high' });
+    expect(result.confidence).toBe('medium');
+  });
+
+  it('백필 시 confidence 다운그레이드 (medium → low)', () => {
+    const result = normalizeUpdateData({ ...BASE, confidence: 'medium' });
+    expect(result.confidence).toBe('low');
+  });
+
+  it('백필 시 confidence 다운그레이드 (low → low)', () => {
+    const result = normalizeUpdateData({ ...BASE, confidence: 'low' });
+    expect(result.confidence).toBe('low');
+  });
+
+  it('백필 시 notes 에 마커 추가', () => {
+    const result = normalizeUpdateData({ ...BASE });
+    expect(result.notes).toContain('[파서 백필: source_url → link]');
+    expect(result.notes).toContain('official page');
+  });
+
+  it('notes 가 없었으면 마커만 세팅', () => {
+    const result = normalizeUpdateData({ ...BASE, notes: undefined });
+    expect(result.notes).toBe('[파서 백필: source_url → link]');
+  });
+
+  it('차단: source_url 이 금지 도메인 (easychair)', () => {
+    const result = normalizeUpdateData({
+      ...BASE,
+      source_url: 'https://easychair.org/cfp/ICCFD13',
+    });
+    expect(result.link).toBeNull();
+    expect(result.confidence).toBe('high');
+  });
+
+  it('차단: source_url 이 금지 도메인 (iifiir.org 서브경로)', () => {
+    const result = normalizeUpdateData({
+      ...BASE,
+      source_url: 'https://iifiir.org/en/events/something',
+    });
+    expect(result.link).toBeNull();
+  });
+
+  it('차단: source_url 없음', () => {
+    const result = normalizeUpdateData({ ...BASE, source_url: undefined });
+    expect(result.link).toBeNull();
+  });
+
+  it('차단: start_date 없음', () => {
+    const result = normalizeUpdateData({ ...BASE, start_date: null });
+    expect(result.link).toBeNull();
+  });
+
+  it('정상 유지: link 이미 존재하면 source_url 영향 없음', () => {
+    const result = normalizeUpdateData({
+      ...BASE,
+      link: 'https://original.example.org/',
+    });
+    expect(result.link).toBe('https://original.example.org/');
+    expect(result.confidence).toBe('high');
+    expect(result.notes).toBe('official page');
+  });
+
+  it('parseUpdateResponse 마지막 단계에서 자동 호출 (source_url → link 백필)', () => {
+    const text = JSON.stringify({
+      start_date: '2026-07-06',
+      end_date: '2026-07-10',
+      venue: 'Milan, Italy',
+      link: null,
+      source_url: 'https://iccfd.org/iccfd13/',
+      confidence: 'high',
+    });
+    const result = parseUpdateResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.data.link).toBe('https://iccfd.org/iccfd13/');
+    expect(result.data.confidence).toBe('medium');
   });
 });

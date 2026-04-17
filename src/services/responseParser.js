@@ -10,7 +10,57 @@ export const VERIFY_FIELDS = [
   'full_name', 'abbreviation', 'cycle_years', 'duration_days', 'region', 'official_url',
 ];
 
+// link 필드·파서 백필에서 금지되는 도메인. 프롬프트와 파서가 공유하는 단일 공급원.
+export const BANNED_LINK_DOMAINS = [
+  'easychair.org',
+  'wikicfp.com',
+  'conferenceindex.org',
+  'allconferencealert.com',
+  'waset.org',
+  'iifiir.org',
+];
+
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function hostMatchesBanned(url) {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return BANNED_LINK_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
+  } catch {
+    return false;
+  }
+}
+
+const CONFIDENCE_DOWNGRADE = { high: 'medium', medium: 'low', low: 'low' };
+
+/**
+ * link=null 이지만 source_url 이 유효하면 link 에 백필.
+ * confidence 1단계 다운그레이드 + notes 에 마커 추가.
+ * 조건: link 없음 + source_url 있음 + 금지도메인 아님 + start_date 있음.
+ */
+export function normalizeUpdateData(data) {
+  if (!data || typeof data !== 'object') return data;
+  const link = data.link;
+  const src = data.source_url;
+  const hasStart = Boolean(data.start_date);
+  const canBackfill =
+    (link == null || link === '') &&
+    typeof src === 'string' &&
+    src.length > 0 &&
+    !hostMatchesBanned(src) &&
+    hasStart;
+
+  if (!canBackfill) return data;
+
+  data.link = src;
+  const cur = data.confidence;
+  if (typeof cur === 'string' && cur in CONFIDENCE_DOWNGRADE) {
+    data.confidence = CONFIDENCE_DOWNGRADE[cur];
+  }
+  const marker = '[파서 백필: source_url → link]';
+  data.notes = data.notes ? `${data.notes} ${marker}` : marker;
+  return data;
+}
 
 /**
  * 텍스트에서 JSON 블록을 추출. 코드펜스, 바깥 중괄호 순서로 시도.
@@ -59,6 +109,8 @@ export function parseUpdateResponse(text) {
       data[`${key}_raw`] = data[key];
     }
   }
+
+  normalizeUpdateData(data);
 
   return { ok: true, data, missing };
 }
