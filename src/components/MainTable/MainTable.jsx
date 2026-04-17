@@ -6,19 +6,20 @@ import { exportAsJson, exportAsXlsx } from '../../services/exportService';
 import { formatLocation } from '../../utils/locationFormatter';
 
 // 그룹별 컬럼 정의 (이중 헤더용). Last/참고는 기본 접힘(QA #7).
+// cellClass: th·td에 공통 적용할 클래스 (예: min-w로 좁은 폭에서 한글 절단 방지).
 const GROUPS = [
   {
     label: '학회 마스터',
     className: 'bg-slate-200',
     columns: [
       { key: 'starred', label: '★' },
-      { key: 'category', label: '분류' },
-      { key: 'field', label: '분야' },
+      { key: 'category', label: '분류', cellClass: 'min-w-[4.5rem]' },
+      { key: 'field', label: '분야', cellClass: 'min-w-[4.5rem]' },
       { key: 'abbreviation', label: '약칭' },
       { key: 'full_name', label: '학회명' },
-      { key: 'cycle_years', label: '주기' },
-      { key: 'duration_days', label: '기간(일)' },
-      { key: 'region', label: '지역' },
+      { key: 'cycle_years', label: '주기(년)' },
+      { key: 'duration_days', label: <>기간<br />(일)</> },
+      { key: 'region', label: '지역', cellClass: 'min-w-[4.5rem]' },
       { key: 'official_url', label: '링크' },
     ],
   },
@@ -93,7 +94,7 @@ function LinkCell({ href }) {
   );
 }
 
-export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll, onRequestVerify, onRequestVerifyAll }) {
+export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll, onRequestVerifyAll }) {
   const { rows, loading, error, data, addConference, updateStarred, saveConferenceEdit, deleteConference } = conferences;
   const [sortKey, setSortKey] = useState('upcoming_start');
   const [sortDir, setSortDir] = useState('asc');
@@ -257,7 +258,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                 <th
                   key={c.key}
                   onClick={() => onSort(c.key)}
-                  className={`px-3 py-2 text-left font-semibold text-slate-700 border border-slate-300 cursor-pointer select-none hover:bg-slate-200 whitespace-nowrap ${g.className}`}
+                  className={`px-3 py-2 text-center font-semibold text-slate-700 border border-slate-300 cursor-pointer select-none hover:bg-slate-200 whitespace-nowrap ${c.cellClass || ''} ${g.className}`}
                 >
                   {c.label}
                   {sortKey === c.key && <span className="ml-1">{sortDir === 'asc' ? '▲' : '▼'}</span>}
@@ -287,14 +288,6 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                         업데이트
                       </button>
                     )}
-                    {onRequestVerify && (
-                      <button
-                        onClick={() => onRequestVerify(r)}
-                        className="px-2 py-1 text-xs border border-indigo-300 rounded hover:bg-indigo-50 text-indigo-700"
-                      >
-                        검증
-                      </button>
-                    )}
                   </div>
                 </td>
               )}
@@ -306,21 +299,21 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                   onChange={(v) => updateStarred(r.id, v)}
                 />
               </td>
-              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.category}</td>
-              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.field}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text min-w-[4.5rem]">{r.category}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text min-w-[4.5rem]">{r.field}</td>
               <td className="px-3 py-2 font-mono border-r border-slate-200">{r.abbreviation}</td>
               <td className="px-3 py-2 border-r border-slate-200 cell-text max-w-xs">
                 <div className="line-clamp-5" title={r.full_name}>{r.full_name}</div>
               </td>
               <td className="px-3 py-2 text-center border-r border-slate-200">{r.cycle_years || ''}</td>
               <td className="px-3 py-2 text-center border-r border-slate-200">{r.duration_days || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.region}</td>
-              <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.official_url} /></td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text min-w-[4.5rem]">{r.region}</td>
+              <td className="px-3 py-2 border-r-2 border-slate-400 whitespace-nowrap"><LinkCell href={r.official_url} /></td>
               {/* Upcoming */}
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.start_date || ''}</td>
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.end_date || ''}</td>
               <td className="px-3 py-2 border-r border-slate-200 cell-text">{formatLocation(r.upcoming?.venue)}</td>
-              <td className="px-3 py-2 border-r border-slate-200"><LinkCell href={r.upcoming?.link} /></td>
+              <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap"><LinkCell href={r.upcoming?.link} /></td>
               <td className="px-3 py-2 border-r-2 border-slate-400">
                 {r.upcoming?.source && (
                   <span className={`px-2 py-0.5 rounded text-xs whitespace-nowrap ${r.upcoming.source === 'ai_search' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
@@ -340,7 +333,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                   <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.start_date || ''}</td>
                   <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.end_date || ''}</td>
                   <td className="px-3 py-2 border-r border-slate-200 text-slate-500 cell-text">{formatLocation(r.last?.venue)}</td>
-                  <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.last?.link} /></td>
+                  <td className="px-3 py-2 border-r-2 border-slate-400 whitespace-nowrap"><LinkCell href={r.last?.link} /></td>
                 </>
               )}
               {/* 메모 (collapsible) */}

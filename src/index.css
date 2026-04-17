@@ -2,10 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* QA #8, #12 — 한글은 어절 경계로 줄바꿈. 긴 영문/URL은 anywhere로 폴백. */
+/* 한글 어절 경계로만 줄바꿈. overflow-wrap 폴백은 없음 — 좁은 폭에서 음절 중간 절단 방지 (PLAN-004 #1). 분류·지역 등 짧은 한글 열은 `min-w-[4.5rem]`로 3자 수용. */
 .cell-text {
   word-break: keep-all;
-  overflow-wrap: anywhere;
 }
 
 /* QA #9 — 학회명·메모 5줄 truncation + ellipsis. */

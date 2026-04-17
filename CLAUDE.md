@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 완료, B.2 prompt v4 진행). 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 완료, B.2 v4 작성·활성·eval 미실행), **QA Batch 1 완료** (PLAN-003: 14건), **QA Batch 2 완료** (PLAN-004: 4건 — word-break·LinkCell·헤더·검증 개별 제거). 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 

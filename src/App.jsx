@@ -56,15 +56,6 @@ function App() {
     setUpdatePanelOpen(true);
   };
 
-  const handleRequestVerify = (row) => {
-    if (!hasKey) {
-      alert('API 키를 먼저 입력해주세요.');
-      setKeyModalOpen(true);
-      return;
-    }
-    updateQueue.enqueue([row], 'verify');
-  };
-
   const handleRequestVerifyAll = (rows) => {
     if (!hasKey) {
       alert('API 키를 먼저 입력해주세요.');
@@ -103,7 +94,6 @@ function App() {
           conferences={conferences}
           onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
           onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
-          onRequestVerify={hasKey ? handleRequestVerify : undefined}
           onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
         />
       </main>
