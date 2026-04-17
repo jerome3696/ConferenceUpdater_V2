@@ -158,10 +158,11 @@ docs/
 **목표**: 기존 코드의 품질 향상 + 프롬프트 개선. Track A와 병행 가능하나, Step B.1은 A.3 이후.
 
 ### Step B.1: 테스트 커버리지 확대
-- [ ] 컴포넌트 테스트: MainTable 렌더링, 필터 동작
-- [ ] 훅 테스트: useConferences (데이터 로드, 날짜 전환, applyAiUpdate)
-- [ ] 서비스 테스트: dataManager (로드, 저장, GitHub 커밋 mock)
+- [x] 컴포넌트 테스트: MainTable 렌더링, 필터 동작
+- [x] 훅 테스트: useConferences (데이터 로드, 날짜 전환, applyAiUpdate)
+- [x] 서비스 테스트: dataManager (로드, 저장, GitHub 커밋 mock)
 - **의존**: Step A.3 (Vitest 설치) 완료 후
+- **확인**: 73건 전건 통과, verify-task ✅ 5 ❌ 0 (2026-04-17)
 
 ### Step B.2: 프롬프트 v2 수동 이터레이션
 - [ ] prompteng.md의 v2 가설 (레버 A~D) 중 A(today 앵커) + B(도메인 블랙리스트) 먼저 적용
