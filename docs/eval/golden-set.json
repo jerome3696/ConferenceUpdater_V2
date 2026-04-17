@@ -1,7 +1,7 @@
 {
   "_generated": "이 파일은 csv-to-golden.js가 자동 생성합니다. 직접 편집하지 마세요. 편집은 docs/eval/golden-set.csv 에서.",
-  "snapshot_date": "2026-04-16",
-  "case_count": 17,
+  "snapshot_date": "2026-04-17",
+  "case_count": 19,
   "cases": [
     {
       "id": "conf_001",
@@ -21,7 +21,7 @@
     },
     {
       "id": "conf_004",
-      "full_name": "European Turbo Conference",
+      "full_name": "European Turbomachinery Conference",
       "link": "https://www.etc17.eu/",
       "source_url": null,
       "verified_at": null,
@@ -77,7 +77,7 @@
     },
     {
       "id": "conf_012",
-      "full_name": "Therminic",
+      "full_name": "International Workshop on Thermal Investigations of ICs and Systems",
       "link": "https://therminic.eu/",
       "source_url": "https://therminic.eu/",
       "verified_at": null,
@@ -90,6 +90,14 @@
       "source_url": "https://www.iea.org/",
       "verified_at": null,
       "notes": "IEA Heat Pump Conference"
+    },
+    {
+      "id": "conf_014",
+      "full_name": "International Conference On Boiling & Condensation Heat Transfer",
+      "link": "https://sites.mit.edu/icbcht12/",
+      "source_url": "https://sites.mit.edu/icbcht12/",
+      "verified_at": "2026-04-17",
+      "notes": "ICBCHT"
     },
     {
       "id": "conf_015",
@@ -132,12 +140,20 @@
       "notes": "IIR Gustav Lorentzen Conference on Natur"
     },
     {
-      "id": "conf_022",
-      "full_name": "Building Simulation",
-      "link": "https://bs2027.org/",
-      "source_url": "https://ibpsa.org/",
-      "verified_at": null,
-      "notes": "Building Simulation"
+      "id": "conf_020",
+      "full_name": "Asian Conference on Refrigeration and Air-conditioning",
+      "link": "https://sites.google.com/view/hvac-acra2026/",
+      "source_url": "https://sites.google.com/view/hvac-acra2026/",
+      "verified_at": "2026-04-17",
+      "notes": "ACRA"
+    },
+    {
+      "id": "conf_021",
+      "full_name": "International Heat Pipe Conferences and Symposia",
+      "link": "https://ihpcs.org/ihpcs2026/",
+      "source_url": "https://ihpcs.org/ihpcs2026/",
+      "verified_at": "2026-04-17",
+      "notes": "IHPC&S"
     }
   ]
 }

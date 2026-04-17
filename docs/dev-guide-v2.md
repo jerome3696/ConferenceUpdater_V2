@@ -142,21 +142,12 @@ docs/
 - **확인**: `feature/PLAN-999-test` 브랜치에서 플랜 없이 커밋 → 차단되는가?
 
 ### Step A.8: CLAUDE.md 전면 갱신
-- [ ] "필수 참조 문서" → v2 문서 구조 반영
-- [ ] "현재 상태" → Post-MVP Track A/B/C 진행 상황
-- [ ] "작업 흐름" 섹션 신규 추가:
-  ```
-  1. 플랜 문서 작성 → docs/plans/active/PLAN-xxx.md
-  2. feature/PLAN-xxx-설명 브랜치 생성
-  3. 코드 구현 (feature branch에서만)
-  4. scripts/verify-task.sh 실행 → 전항목 통과
-  5. 커밋 (Conventional Commits 형식)
-  6. PR 생성 → CI 통과 확인
-  7. merge → 플랜이 completed/로 자동 이동
-  ```
-- [ ] "문서 업데이트 규칙" 갱신 (v2 문서명으로)
-- [ ] "코드 구조 참고" 갱신 (테스트 파일 추가)
-- **확인**: 새 세션에서 Claude가 CLAUDE.md를 읽고 v2 흐름대로 작업하는가?
+- [x] "필수 참조 문서" → v2 문서 구조 반영 (A.1에서 완료)
+- [x] "현재 상태" → Post-MVP Track A/B/C 진행 상황 (A.7 완료 반영)
+- [x] "작업 흐름" 섹션 신규 추가 (7단계 블록)
+- [x] "문서 업데이트 규칙" 갱신 (v2 문서명 반영, "문서 갱신 트리거" 섹션)
+- [x] "코드 구조 참고" → `structure.md` 문서 맵 링크로 대체 (별도 섹션 불필요)
+- **확인**: 새 세션에서 Claude가 CLAUDE.md를 읽고 v2 흐름대로 작업하는가? ✅ (2026-04-17)
 
 > ✅ **Track A 완료 조건**: Husky hook 동작, 테스트 통과, CI 게이트 작동, 브랜치 보호 활성, 플랜 강제 hook 작동.
 
