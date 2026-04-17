@@ -25,18 +25,19 @@
 ## §1. 빠른 현황판 (Active)
 
 ### 활성 버전
-- **앱 사용 중**: `v1` (Haiku 4.5 + Phase A 적용)
+- **앱 사용 중**: `v1` (Haiku 4.5 + Phase A 적용) — v3 검증 완료, 활성 전환 대기
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
-- **마지막 측정**: 2026-04-16 / pass **16/17 (94%)** / avg input 34,510 · output 649 토큰
-  - 결과 파일: `docs/eval/results/2026-04-16T13-14-08-v1.json`
+- **마지막 측정(v3)**: 2026-04-17 / pass **19/19 (100%)** / avg input 41,651 · output 722 토큰
+  - 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
 
 ### 잔존 실패 (다음 개선 타겟)
-- **conf_015 ICCFD** — easychair.org 선호. v1 WASET 블랙리스트가 easychair까지 포괄 못함. → 레버 B
-- **리스팅 사이트 선호 (실전 관찰)** — IIR GL 2026 → iifiir.org. eval과 별개로 앱 사용 중 반복 관찰. → 레버 B + E
+- **[P2 부분 미해결] conf_006 IIR Cryogenics, conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만, 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net) 미발굴. 리스팅 2순위 허용 범위 내 pass여서 전용 사이트 선호를 강화하려면 레버 E(임박 학회 재검증) 필요.
 
 ### 다음 시도 (next levers)
-- [ ] **A. today 앵커** + **B. 도메인 블랙리스트** — v2로 묶어 우선 적용
-- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장 필요. MVP 후 본격 검토
+- [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
+- [x] **A'. today 앵커 정밀화** — v3 적용 완료 (2026-04-17). 19/19 pass, P4 완전 해소
+- [ ] **활성 전환**: `DEFAULT_UPDATE_VERSION` v1 → v3 (의사결정 필요)
+- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. P2 부분 미해결 대응. MVP 후 본격 검토
 
 ---
 
@@ -66,7 +67,8 @@
 |---|---|---|---|---|---|
 | v1 | 2026-04-15 | Sonnet 4 | 13/17 (76%) | (미계측) | 초기. past 회차 + 비공식 도메인 4건 fail |
 | v1 | 2026-04-16 | Haiku 4.5 + Phase A | **16/17 (94%)** | 34,510 / 649 | `max_uses 5` 캡 효과로 품질 상승 (의외) |
-| v2 | 미실행 | (예정) | — | — | 레버 A(today 앵커) + B(도메인 블랙리스트) 적용 예정 |
+| v2 | 2026-04-17 | Haiku 4.5 + Phase A | **16/19 (84%)** | 39,954 / 677 | 레버 A+B 적용. P1·P2 일부 해결. P4(today 앵커 과잉 교정) 신규 발생 |
+| v3 | 2026-04-17 | Haiku 4.5 + Phase A | **19/19 (100%)** | 41,651 / 722 | 레버 A' 적용. P4 3건 완전 해소 (IEA HPC·ICBCHT·IHTC), P1·P2 유지 |
 
 ---
 
@@ -76,8 +78,8 @@
 
 | 레버 | 지시 예시 | 기대 효과 | 실측 |
 |---|---|---|---|
-| **A. today 앵커** | "오늘: YYYY-MM-DD. 시작일이 과거면 반환 금지" | past 회차 제거 (품질) | 미실측 (Phase A 부수 효과로 일부 해소된 듯) |
-| **B. 도메인 블랙리스트** | "금지 도메인: easychair, framer.ai, conferenceindex, waset, allconferencealert 류" | 비공식 URL 제거 (품질) | 미실측 (v2 우선 대상) |
+| **A. today 앵커** | "오늘: YYYY-MM-DD. 시작일이 과거면 반환 금지" | past 회차 제거 (품질) | v2 적용: P1(ECOS) 해결 ✅. v2에서 P4(날짜 역전) 발생 → v3(레버 A')에서 부등호 명시·검증 예시로 완전 해소 ✅ |
+| **B. 도메인 블랙리스트** | "금지 도메인: easychair, framer.ai, conferenceindex, waset, allconferencealert 류" | 비공식 URL 제거 (품질) | v2 적용: P2(ICCFD easychair) 해결 ✅. IIR 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net)는 부분 미해결 |
 | **C. 조기 종료** | "공식 페이지 찾으면 추가 검색 금지" | 검색 호출↓ → input 토큰↓ | `max_uses: 5` 캡으로 부분 검증 — 품질 상승 동반 |
 | **D. JSON-only** | "JSON 블록 1개만. preamble/후기 금지" | output 토큰↓ | 미실측 |
 | **E. 임박 학회 공식사이트 추종** | 시작일 ≤ N일(예: 90일)이면 link가 있어도 공식 도메인 재검증 | 리스팅 사이트 우회 (품질) | **프롬프트 단독 불가** — `updateLogic.shouldSearch`에 imminent 판단 확장 필요 |
@@ -188,6 +190,66 @@
 
 ---
 
+### 2026-04-17 — v2 / Haiku 4.5 + Phase A
+
+#### 변경 내용 (v1 → v2)
+- `UPDATE_SYSTEM_V2` 신규: 날짜 규칙·링크 우선순위·이름 매칭 섹션 구조화
+- `buildUpdateUserV2`: `const today = new Date().toISOString().slice(0, 10)` 런타임 주입, 금일 명시
+- 레버 A: "오늘 이후 회차만 반환" 명시 / 레버 B: easychair·framer·wikicfp 등 블랙리스트 + 링크 우선순위(1·2·3순위) 명시
+
+#### 결과 — 19건 실행 (golden-set 3건 신규 추가 반영)
+- pass **16/19 (84%)** — 결과 파일: `docs/eval/results/2026-04-17T05-46-34-v2.json`
+- 토큰: avg input 39,954 / output 677 (v1 대비 input +16% — 시스템 프롬프트 증가 영향)
+- `stop_reason=max_tokens` 0/19
+
+#### 케이스별 변화 (v1 → v2)
+| id | v1 | v2 | 비고 |
+|---|---|---|---|
+| conf_011 ECOS | ecos2025.org ❌ | ecos2026.insae.ro ✅ | **P1 수정** — today 앵커 효과 |
+| conf_015 ICCFD | easychair.org ❌ | iccfd.org ✅ | **P2 수정** — 블랙리스트 효과 |
+| conf_013 IEA HPC | hpc2026.org ✅ | heatpumpingtechnologies.org ❌ | **신규 회귀 (P4)** — AI가 5월 26일을 "이미 경과"로 오인 |
+| conf_016 IHTC | ihtc18.org ✅ | astfe.org ❌ | **신규 회귀 (P4)** — AI가 8월 2일을 "이미 지나간 것"으로 오인 |
+| conf_014 ICBCHT | (신규 golden-set) | null ❌ | **P4** — AI가 6월 14일을 "이미 진행 중"으로 오인, ICBCHT13(2029) 탐색 |
+
+#### 가설 검증
+- **레버 A 효과**: P1(past 회차) 수정 확인 ✅. 단, 날짜 비교 지시 표현이 모호해 역방향 오인 유발(P4). "시작일이 과거면 금지" → "시작일 > 오늘이어야 upcoming" 로 표현 정밀화 필요
+- **레버 B 효과**: easychair 블랙리스트 효과 확인 ✅. 그러나 iifiir.org는 2순위(주관기관 이벤트 페이지) 허용 범위라 eval pass. 전용 사이트(cryogenics-conference.eu) 미발굴은 아직 미해결.
+
+#### 잔존 과제
+- P4 해결: v3에서 today 앵커 표현 명확화 — "시작일이 YYYY-MM-DD 보다 **이후**인 경우만 upcoming" 부등호 명시
+
+---
+
+### 2026-04-17 — v3 / Haiku 4.5 + Phase A
+
+#### 변경 내용 (v2 → v3)
+- `UPDATE_SYSTEM_V3` 신규: 날짜 규칙을 **부등호 명시**로 교체 — "`start_date` 문자열이 오늘(`YYYY-MM-DD`) 문자열보다 크면 upcoming"
+- `buildUpdateUserV3`: 반환 직전 **필수 검증 블록** 추가 — "같은 연도니까 이미 지났다" 같은 연도 기반 단락 추론 명시적 금지
+- 검증 예시 7건(오늘 기준 전·후 분기 점검)을 프롬프트에 포함. 월/일 자릿수 단위 비교 규칙으로 일반화
+
+#### 결과 — 19건 실행 (golden-set 유지)
+- pass **19/19 (100%)** 🎯 — 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
+- 토큰: avg input **41,651** / output **722** (v2 대비 input +4% / output +7% — 검증 예시 블록 비용)
+- `stop_reason=max_tokens` 0/19
+
+#### 케이스별 변화 (v2 → v3)
+| id | v2 | v3 | 비고 |
+|---|---|---|---|
+| conf_013 IEA HPC | heatpumpingtechnologies.org ❌ | hpc2026.org ✅ | **P4 해소** — 5월 26일을 upcoming으로 정확히 인식 |
+| conf_014 ICBCHT | null ❌ | sites.mit.edu/icbcht12/ ✅ | **P4 해소** — 6월 14일을 upcoming으로 정확히 인식 |
+| conf_016 IHTC | astfe.org ❌ | ihtc18.org ✅ | **P4 해소** — 8월 2일을 upcoming으로 정확히 인식 |
+| 나머지 16건 | 유지 | 유지 | P1·P2 수정 케이스 모두 유지 |
+
+#### 가설 검증
+- **레버 A' 효과**: 부등호 명시 + 검증 예시 7건으로 P4 **완전 해소** ✅. "이후/이전" 한국어 표현의 모호성이 단일 실패 축이었음 재확인
+- **토큰 비용**: 검증 블록의 +4% input / +7% output은 허용 범위. 100% pass 달성 대비 충분히 수용 가능
+
+#### 잔존 과제
+- **P2 부분 미해결**: conf_006 IIR Cryogenics, conf_019 Gustav Lorentzen — 전용 사이트 미발굴 상태(source_url 매칭으로 pass). 레버 E(임박 학회 공식사이트 재검증)로 대응 예정
+- **활성 전환 의사결정**: `DEFAULT_UPDATE_VERSION` v1 → v3
+
+---
+
 ## §6. 실패 패턴 카탈로그
 
 루프를 돌릴수록 같은 패턴이 반복된다. 패턴 단위로 누적하여 다음 가설의 인풋으로 사용.
@@ -200,15 +262,28 @@
 
 ### P2. 비공식/리스팅 도메인 선호
 - **원인**: 검색 상위 결과에 리스팅 플랫폼이 자주 노출됨 (SEO·플랫폼 효과)
-- **사례**: conf_015 ICCFD (easychair, eval+실전 양쪽), conf_022 Building Sim (framer, v1 Sonnet에서만), IIR GL 2026 (iifiir.org, 실전)
-- **대응 레버**: B (블랙리스트). 임박 학회는 E 병행
-- **상태**: 미해결, v2 우선 대상
+- **사례**:
+  - conf_015 ICCFD: easychair.org (eval+실전+2026-04-17 browser eval 반복) → 정답: iccfd.org
+  - conf_019 IIR Gustav Lorentzen: iifiir.org/en/events/... (이벤트 리스팅) → 정답: iir-gl-2026.net (2026-04-17)
+  - conf_006 IIR Cryogenics: iifiir.org/en/iir-conferences-series (집계 페이지) → 정답: cryogenics-conference.eu/cryogenics2027/ (2026-04-17)
+  - conf_022 Building Sim: bs2027.framer.ai (v1 Sonnet에서만)
+  - IIR GL 2026 (실전 브라우저): iifiir.org 리스팅
+- **패턴 공통점**: 주관기관 도메인(iifiir.org)이라도 집계/리스팅 페이지(iir-conferences-series)는 전용 사이트 발굴을 막음
+- **대응 레버**: B (도메인 블랙리스트 + 링크 우선순위 명시). 임박 학회는 E 병행
+- **상태**: v2에서 레버 B 적용 중 — 결과 §5에 기록 예정
 
 ### P3. AI가 원본보다 정밀
 - **원인**: 단순 일치 채점 한계
 - **사례**: ICBCHT Boston → Cambridge, MA
 - **의미**: 채점 로직 개선 여지 (정답지 자체에 "허용 범위" 기록 등). MVP 후.
 - **상태**: 관찰만, 즉시 대응 불요
+
+### P4. today 앵커 과잉 교정 (날짜 비교 역전)
+- **원인**: "오늘 이후 회차만" 지시가 모호 → 모델이 일부 케이스에서 "시작일 > 오늘" 판별을 역방향으로 수행
+- **사례**: conf_013 IEA HPC (5월 26일을 "이미 경과"), conf_014 ICBCHT (6월 14일을 "진행 중"), conf_016 IHTC (8월 2일을 "지나간 것") — v2, 2026-04-17
+- **공통점**: 모두 2026년 내 학회 (4월 이후). 모델이 "같은 연도 = 이미 진행" 으로 단락할 가능성
+- **대응 레버**: A' — "시작일(YYYY-MM-DD) > 오늘(YYYY-MM-DD)이면 upcoming" 부등호 명시. "이후/이전" 한국어보다 날짜 비교 식 표현이 더 명확
+- **상태**: **v3에서 해소** ✅ (2026-04-17, 3/3 케이스 모두 upcoming 정확 인식)
 
 > 신규 패턴은 P{n}. 으로 추가하고, 사례에 [날짜·버전·id]를 함께 기록.
 
@@ -240,7 +315,10 @@
 
 ## §8. 미해결 과제
 
-- [ ] v2 프롬프트 구현 (레버 A + B 우선) 및 v1/v2 비교 실행
+- [x] v2 프롬프트 구현 (레버 A + B) 및 v1/v2 비교 실행 (2026-04-17) — 16/19(84%). P4 신규 발생
+- [x] v3 프롬프트 구현: 레버 A' (today 앵커 정밀화 — 부등호 + 검증 예시) (2026-04-17)
+- [x] v3 eval 실행 → P4 해결 여부 검증 (2026-04-17) — 19/19 (100%), P4 3건 완전 해소
+- [ ] 활성 전환 의사결정: `DEFAULT_UPDATE_VERSION` v1 → v3
 - [x] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가 (2026-04-16)
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
