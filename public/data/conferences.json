@@ -349,13 +349,13 @@
       "id": "ed_006",
       "conference_id": "conf_006",
       "status": "upcoming",
-      "start_date": "2027-04-01",
+      "start_date": "2027-04-26",
       "end_date": "2027-04-30",
       "venue": "Dresden, Germany",
-      "link": null,
+      "link": "https://www.cryogenics-conference.eu/cryogenics2027/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:51:32.735Z",
-      "confidence": "medium"
+      "updated_at": "2026-04-17T15:53:10.998Z",
+      "confidence": "high"
     },
     {
       "id": "ed_007",
