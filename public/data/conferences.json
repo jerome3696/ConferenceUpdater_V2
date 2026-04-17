@@ -296,10 +296,11 @@
       "status": "upcoming",
       "start_date": "2027-01-23",
       "end_date": "2027-01-27",
-      "venue": "Chicago, Illinois, USA",
+      "venue": "Chicago, USA",
       "link": "https://www.ashrae.org/conferences/2027-winter-conference",
       "source": "ai_search",
-      "updated_at": "2026-04-15T23:49:58.914Z"
+      "updated_at": "2026-04-17T15:57:55.984Z",
+      "confidence": "high"
     },
     {
       "id": "ed_002",
