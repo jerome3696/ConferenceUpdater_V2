@@ -73,8 +73,9 @@ export default function UpdatePanel({ queue, onBack }) {
           <button
             onClick={onBack}
             className="px-3 py-1.5 text-sm border border-slate-300 rounded hover:bg-slate-100"
+            aria-label="닫기"
           >
-            ← 메인으로
+            ✕ 닫기
           </button>
           <h2 className="text-lg font-bold text-slate-800">업데이트 현황</h2>
         </div>

@@ -75,7 +75,7 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 - [x] Step 2 — Group 1: Item 2 (ESLint advisory 룰 3건 cleanup + warn → error 복귀)
 - [x] Step 3 — Group 2: Items 4, 5 (UpdateCard 변경없음 배너 + 변경있음 폰트/패딩)
 - [x] Step 4 — Group 2: Items 1, 3 (UpdateCard confidence badge + source_url, UpdatePanel 전체 승인/거절)
-- [ ] Step 5 — Group 3: Item 11 (App.jsx에서 setView 제거, UpdatePanel overlay화)
+- [x] Step 5 — Group 3: Item 11 (App.jsx에서 setView 제거, UpdatePanel overlay화)
 - [ ] Step 6 — Group 4: Item 13 (useConferences upsertEdition source 조건 + 테스트)
 - [ ] Step 7 — Group 5: Item 10 (locationFormatter 신규 + 테스트)
 - [ ] Step 8 — Group 6: Items 8, 9, 12-css (CSS — word-break, line-clamp)
@@ -123,3 +123,4 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 - 2026-04-17: Step 1 완료 — REGION '세계'→'전세계' (1 source + 10 data + 3 docs).
 - 2026-04-17: Step 2 완료 — ESLint advisory 룰 7건 cleanup. (1) `ConferenceFormModal` 인라인 export 분리 → `conferenceConstants.js` (only-export-components ×2 해소), (2) Modal 3종(`ConferenceFormModal`/`ApiKeyModal`/`GitHubTokenModal`) `isOpen` prop 제거 → 부모 conditional render + key prop 패턴 (set-state-in-effect ×3 해소), (3) `UpdatePanel` `useState(Date.now())` → lazy init (purity 1 해소), (4) `useConferences` token 변경 시 setLoading은 의도된 동기화 → eslint-disable + 사유 주석. ESLint 룰 3종 `warn → error` 승격. lint zero, 테스트 73건 그대로 통과, verify-task 5/5.
 - 2026-04-17: Step 3·4 완료 — UpdateCard 폰트/패딩 축소(text-sm → text-xs, p-4 → p-3, 그리드 100px → 80px), 변경없음 케이스 두 종(노정보·동일) 한 줄 `CompactBanner`로 분기, `ConfidenceBadge` 컬러(고/중/저 = emerald/amber/rose) 도입, source_url을 인라인 "출처 ↗" 링크로 정리. UpdatePanel에 "전체 승인 (ready건수)"/"전체 거절 (전체건수)" 버튼 추가, `useUpdateQueue.acceptAll/rejectAll` 신규 — error 카드는 acceptAll에서 제외, rejectAll은 모두 정리. verify-task 5/5.
+- 2026-04-17: Step 5 완료 — Item 11 (UpdatePanel overlay化, Option B). `view` state → `isUpdatePanelOpen` 단일 boolean. App.jsx는 항상 MainTable 렌더, UpdatePanel은 모달 overlay(`fixed inset-0 bg-black/40`, max-w-5xl)로 표시. 개별 업데이트(`handleRequestUpdate`/`handleRequestVerify`) 클릭은 큐에만 추가하고 자동 오픈하지 않음 — 헤더의 "업데이트 현황 (n)" 버튼이 진입점. 일괄 작업(`handleRequestUpdateAll`/`handleRequestVerifyAll`)은 즉시 overlay 오픈. UpdatePanel "← 메인으로" → "✕ 닫기" 라벨 변경. Header `view` prop 제거.
