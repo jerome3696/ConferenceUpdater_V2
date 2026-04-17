@@ -603,6 +603,18 @@
       "confidence": "high",
       "source": "ai_search",
       "updated_at": "2026-04-17T16:17:19.339Z"
+    },
+    {
+      "id": "ed_mo348475",
+      "conference_id": "user_mo347qjj",
+      "status": "upcoming",
+      "start_date": "2027-06-06",
+      "end_date": "2027-06-10",
+      "venue": "Wageningen, Netherlands",
+      "link": "https://www.ishs.org/symposium/854",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-17T16:21:21.857Z"
     }
   ]
 }
