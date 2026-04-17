@@ -2,6 +2,8 @@
 // v1은 blueprint.md §5.3/§5.4 원문을 그대로 반영.
 // 새 버전 추가 시 TEMPLATES.update / TEMPLATES.verify 에 키 하나 추가하면 됨.
 
+import { BANNED_LINK_DOMAINS } from '../services/responseParser.js';
+
 const UPDATE_SYSTEM_V1 = `당신은 학회/박람회 정보를 검색하는 전문 리서처입니다.
 다음 학회의 최신 개최 정보를 웹에서 검색하세요.
 반드시 공식 사이트 또는 신뢰할 수 있는 출처에서 정보를 찾으세요.
@@ -288,6 +290,122 @@ function buildUpdateUserV4(conference, lastEdition) {
 
 const UPDATE_SYSTEM_V5 = UPDATE_SYSTEM_V4;
 
+const BANNED_LIST_INLINE = BANNED_LINK_DOMAINS.join(', ');
+
+const UPDATE_SYSTEM_V6 = `당신은 학회/박람회 정보를 검색하는 전문 리서처입니다.
+
+[날짜 규칙 — 엄격]
+요청에는 오늘 날짜가 YYYY-MM-DD 형식으로 명시됩니다.
+"upcoming" 회차의 정의: **start_date > today** (YYYY-MM-DD 문자열 사전식 비교).
+
+검증 예시 (today=2026-04-17 기준):
+- start_date=2026-04-18 → upcoming ✅  (4/18이 4/17보다 뒤)
+- start_date=2026-05-26 → upcoming ✅  (5월이 4월보다 뒤)
+- start_date=2026-08-02 → upcoming ✅  (8월이 4월보다 뒤)
+- start_date=2027-01-23 → upcoming ✅  (2027년이 2026년보다 뒤)
+- start_date=2026-04-17 → 반환 금지  (오늘과 동일)
+- start_date=2026-03-10 → 반환 금지  (오늘보다 앞)
+- start_date=2025-06-28 → 반환 금지  (과거 연도)
+
+**반환 전 반드시 확인**: start_date 문자열이 today 문자열보다 뒤인지 자릿수 단위로 비교하세요.
+같은 연도 안에 있다는 이유만으로 "이미 지났다"고 판단하지 마세요 — 오늘이 4월이면 5·6·7·8·9·10·11·12월은 모두 미래입니다.
+
+[링크 우선순위]
+1순위: 해당 회차 전용 사이트 (예: icr2027.org, cryogenics-conference.eu/cryogenics2027/)
+2순위: 주관기관 공식 이벤트 페이지 (예: iifiir.org/en/events/XXX — 이벤트 직접 URL이 **특정 회차를 가리키는 경우만**)
+3순위: 주관기관의 컨퍼런스 색인/허브 페이지. 해당 회차를 명시적으로 나열·언급하는 경우에 한해 허용 (예: ibpsa.org/conferences/, astfe.org/conferences/). 허용 시 confidence는 'medium' 이하.
+4순위 (1·2·3순위 링크 없을 때만): venue 또는 개최 사실을 확인한 출처 URL — 이 경우 confidence 반드시 'low'. 단, 아래 금지 도메인에 해당하면 사용 불가.
+
+금지 (제3자 CFP 집계·회차 무관 시리즈 페이지): ${BANNED_LIST_INLINE}. 특히 iifiir.org/en/iir-conferences-series 및 iifiir.org/en/events (이벤트 목록/검색 페이지 루트) 금지. 단, iifiir.org/en/events/<특정 이벤트 슬러그> 처럼 해당 회차를 **직접 가리키는** 이벤트 페이지는 2순위로 허용.
+
+**중요**: 해당 회차 specific 정보(날짜 또는 해당 회차를 식별하는 URL)가 없으면 link=null.
+
+[Link–Confidence 상호구속]
+- confidence가 'high' 또는 'medium' 이면 link는 반드시 non-null이어야 한다. 1~3순위가 막히면 4순위라도 채우고 confidence='low'로 내린다. 반대로 link가 null이면 confidence는 무조건 'low'.
+- confidence='high'인데 link=null, 혹은 "공식 페이지에서 확인" 취지의 notes와 link=null이 공존하는 응답은 **모순**이므로 금지.
+
+[Draft/초안 사이트 처리]
+- 주최자가 스태틱 사이트 빌더(framer.ai, notion.site, wix.com, squarespace.com 등)로 만든 회차 페이지도 **link로 사용 허용**.
+- 허용 조건: 사이트에서 해당 회차의 날짜나 장소 중 하나 이상 확인 가능. 이 경우 confidence는 'low' 강제, notes에 'draft/prototype' 명시.
+- 정식 도메인(자체 .org/.com)이 나중에 개설되면 그것이 1순위, draft 사이트는 즉시 대체.
+
+[Venue 포맷 — 엄격]
+venue는 아래 규칙을 반드시 따라야 한다.
+- 미국 개최: "City, State, USA" (예: "Orlando, Florida, USA", "Chicago, Illinois, USA"). 주 이름은 풀 네임(약자 FL/IL 금지). 국가명은 'USA' 고정 — 'United States'/'US'/'U.S.'/'U.S.A.' 금지.
+- 캐나다 개최: "City, Province, Canada" (예: "Toronto, Ontario, Canada").
+- 기타 국가: "City, Country" (예: "Milan, Italy", "Seoul, Korea"). 국가명 정규화: 영국은 'UK' (United Kingdom 금지), 한국은 'Korea' (South Korea/Republic of Korea 금지).
+
+[신뢰도 기준]
+high  : 1·2순위 링크에서 날짜(start_date)+장소 모두 직접 확인, link non-null
+medium: 날짜 있으나 장소 불확실, 또는 3순위 색인 페이지에서 확인. link non-null
+low   : start_date 미확인, 또는 4순위(간접 출처)·draft 사이트만 존재, 또는 link=null
+
+[이름 매칭]
+학회명/약칭이 요청에 명시됩니다. 정확히 그 학회의 정보만 반환하세요.
+("ASHRAE Winter Conference"와 "ASHRAE Annual Conference"는 다른 학회)
+
+반드시 공식 사이트 또는 신뢰할 수 있는 출처에서 정보를 찾으세요.`;
+
+function buildUpdateUserV6(conference, lastEdition) {
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    full_name = '',
+    abbreviation = '',
+    cycle_years = 0,
+    official_url = '',
+    dedicated_url = '',
+  } = conference;
+  const dedicatedLine = dedicated_url ? `\n회차 전용 사이트(힌트): ${dedicated_url}` : '';
+  const dedicatedHint = dedicated_url
+    ? '\n- "회차 전용 사이트(힌트)"가 제공된 경우: 그 URL을 직접 방문·탐색하여 날짜/장소를 확보하라. 힌트 URL이 유효(해당 회차 공식 페이지)하면 link로 우선 사용. 힌트가 오래되었거나 잘못된 경우에만 일반 검색으로 보정.'
+    : '';
+  return `다음 학회의 다음(upcoming) 개최 정보를 찾아주세요.
+
+오늘: ${today}
+
+학회명: ${full_name}
+약칭: ${abbreviation || '없음'}
+주기: ${cycle_years ? `${cycle_years}년` : '미상'}
+공식사이트: ${official_url || '없음'}${dedicatedLine}
+마지막 개최: ${formatLastEdition(lastEdition)}
+
+[upcoming 판별 — 반환 직전 필수 검증]
+찾은 학회의 start_date를 오늘(${today})과 YYYY-MM-DD 문자열로 비교하세요.
+- start_date > ${today} → upcoming. 그대로 반환.
+- start_date <= ${today} → 반환 금지 (과거 또는 당일). 주기를 고려해 다음 회차를 탐색하되, 정보가 없으면 start_date/end_date/venue/link 모두 null로 둘 것.
+
+비교는 연·월·일 자릿수 단위. 같은 연도라도 start_date의 월·일이 오늘(${today})보다 뒤라면 미래입니다. "같은 연도니까 이미 지났다"는 판단 금지.
+
+[반환 직전 자기검증 체크리스트]
+1. venue 포맷: 미국이면 "City, State, USA", 캐나다면 "City, Province, Canada", 그 외 "City, Country". 국가명 표기 규칙 준수.
+2. link vs confidence: confidence가 'high'/'medium'인데 link=null이면 안 됨. 둘 중 하나를 수정 후 반환.
+3. source_url이 있으면 link도 최소 그 URL 또는 더 적합한 링크로 채워져 있어야 함 (금지 도메인 제외).
+
+[기타 주의]
+- 해당 회차 전용 사이트를 최우선. 3순위(주관기관 컨퍼런스 색인) 페이지도 회차를 식별하면 허용.
+- 공식사이트를 발견했으나 홈페이지에 날짜가 없을 경우, 사이트 내 하위 페이지(Important Dates / Program / Venue / About / Registration 등)를 추가 탐색하라. 날짜가 사이트 어딘가에 있다면 반드시 추출해야 한다.${dedicatedHint}
+
+찾아야 할 정보:
+- 시작일 (YYYY-MM-DD)
+- 종료일 (YYYY-MM-DD)
+- 장소 (위 venue 포맷 규칙 적용)
+- 공식 링크 (링크 우선순위 1→4순위 적용, Link–Confidence 상호구속 준수)
+
+반드시 아래 JSON 형식으로만 응답하세요. 설명 문장은 JSON 뒤에 붙여도 되지만, JSON 블록은 반드시 포함되어야 합니다. 확인 불가 필드는 null로 두세요.
+
+\`\`\`json
+{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "venue": "City, State, USA | City, Country",
+  "link": "https://...",
+  "source_url": "근거가 된 출처 URL",
+  "confidence": "high" | "medium" | "low",
+  "notes": "부가 설명 (선택)"
+}
+\`\`\``;
+}
+
 function buildUpdateUserV5(conference, lastEdition) {
   const today = new Date().toISOString().slice(0, 10);
   const {
@@ -385,6 +503,7 @@ const TEMPLATES = {
     v3: { system: UPDATE_SYSTEM_V3, user: buildUpdateUserV3 },
     v4: { system: UPDATE_SYSTEM_V4, user: buildUpdateUserV4 },
     v5: { system: UPDATE_SYSTEM_V5, user: buildUpdateUserV5 },
+    v6: { system: UPDATE_SYSTEM_V6, user: buildUpdateUserV6 },
   },
   verify: {
     v1: { system: VERIFY_SYSTEM_V1, user: buildVerifyUserV1 },

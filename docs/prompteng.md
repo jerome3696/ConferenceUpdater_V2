@@ -29,14 +29,18 @@
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
   - **Haiku→Sonnet 재시도** (PLAN-005, 2026-04-18): 1차 Haiku 결과 `start_date=null`이면 Sonnet 4.6 + `web_fetch` 로 1회 재시도
 - **v5 휴면**: `dedicated_url` 힌트 라인 추가 버전. `DEFAULT_UPDATE_VERSION=v4` 유지. eval 통과 후 활성 검토
+- **v6 휴면 (신규)**: PLAN-006 — Link–Confidence 상호구속, Venue 포맷(USA/Canada/그외) 엄격화, 3순위 색인 페이지 허용 명료화, framer.ai 연성화(draft 규칙). 파서 `normalizeUpdateData` 안전망 동반
 - **마지막 측정(v3)**: 2026-04-17 / pass **19/19 (100%)** / avg input 41,651 · output 722 토큰
   - 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
-- **v4 / v5 eval**: 미실행 — `npm run eval -- --version v4` / `--version v5` 로 확인 필요. 3-tier 채점(pass/partial/fail) 적용됨 — URL만 맞고 `start_date=null` 은 partial로 드러남
+- **v4 / v5 / v6 eval**: 미실행 — `npm run eval -- --version v4|v5|v6` 로 확인 필요. 3-tier 채점(pass/partial/fail) 적용됨 — URL만 맞고 `start_date=null` 은 partial로 드러남
 
 ### 잔존 실패 (다음 개선 타겟)
 - **[P2 해소] conf_006 IIR Cryogenics** — `official_url` 이 금지 도메인(iir-conferences-series)이었음. 2026-04-18 `cryogenics-conference.eu` 로 교체 (PLAN-005 Part 1). 브라우저 확인 필요
 - **[P6 대응] conf_015 ICCFD** — Haiku `web_search` 가 홈페이지 평문 날짜 누락 → Sonnet 4.6 + `web_fetch` 재시도로 보정 (PLAN-005 Part 3). `dedicated_url=https://iccfd13.polimi.it` 힌트도 v5 에 추가
 - **[P2 부분 미해결] conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만 전용 사이트(iir-gl-2026.net) 미발굴. 레버 E(임박 학회 재검증) 필요
+- **[P8 대응] conf_006 1차 run** — `confidence=high` + `link=null` 자기모순 관찰 → v6 Link–Confidence 상호구속 + 파서 `normalizeUpdateData` 백필
+- **[P9 대응] conf_001 ASHRAE / conf_008 ITherm** — `Orlando, United States`/`Chicago, USA` 처럼 주(state) 누락 → v6 Venue 포맷 규칙
+- **[P10 대응] conf_022 BS 2027** — (a) framer.ai 하드 금지가 과잉 일반화, (b) `ibpsa.org/conferences/` 3순위 허용 vs 시리즈 금지 충돌 → v6 색인 페이지 허용 명료화 + draft 연성화
 
 ### 다음 시도 (next levers)
 - [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
@@ -45,7 +49,10 @@
 - [x] **C. 부분정보 처리 규칙** — v4: confidence 기준 명시 + link 4순위 + 날짜 탐색 강화 + 시리즈 null 강화
 - [x] **F. Haiku→Sonnet 재시도** — PLAN-005: `start_date=null` 트리거, 1회 제한 (2026-04-18)
 - [x] **G. dedicated_url 힌트** — v5 옵션: `conferences.json` 에 `dedicated_url` 있으면 프롬프트에 한 줄 주입 (2026-04-18)
-- [ ] **v4 / v5 eval 확인**: 3-tier 채점 → 이전 "19/19 pass" 착시 해소, partial 분리 측정
+- [x] **H. Link–Confidence 상호구속** — v6: `high/medium` 이면 link non-null 강제, 파서 백필 안전망 병행 (PLAN-006, 2026-04-18)
+- [x] **I. Venue 포맷 정규화** — v6: US `City, State, USA` / Canada `City, Province, Canada` / 그 외 `City, Country` (Korea·UK 표기 고정) (PLAN-006, 2026-04-18)
+- [x] **J. Draft 사이트 연성화 + 3순위 색인 페이지 허용 명료화** — v6: framer.ai 하드 금지 제거, confidence=low + notes='draft/prototype' 조건부 사용. `ibpsa.org/conferences/` 류 색인 페이지는 3순위로 공식 허용 (PLAN-006, 2026-04-18)
+- [ ] **v4 / v5 / v6 eval 확인**: 3-tier 채점 → 이전 "19/19 pass" 착시 해소, partial 분리 측정
 - [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. MVP 후 본격 검토
 
 ---
@@ -80,6 +87,7 @@
 | v3 | 2026-04-17 | Haiku 4.5 + Phase A | **19/19 (100%)** | 41,651 / 722 | 레버 A' 적용. P4 3건 완전 해소 (IEA HPC·ICBCHT·IHTC), P1·P2 유지 |
 | v4 | 2026-04-17 | Haiku 4.5 + Phase A | (미측정) | — | 레버 C: confidence 기준·link 4순위·하위 페이지 탐색 의무 |
 | v5 | 2026-04-18 | Haiku + Phase A + (`dedicated_url` 힌트) + Sonnet 4.6 폴백 | (미측정) | — | 레버 F·G. v4 system 동일, user에 `dedicated_url` 있을 때만 힌트 1줄 + 사용 지침 추가 |
+| v6 | 2026-04-18 | Haiku + Phase A + Sonnet 4.6 폴백 + 파서 `normalizeUpdateData` | (미측정) | — | 레버 H·I·J. Link–Confidence 상호구속 + Venue 포맷 엄격 + draft 연성화 + 3순위 색인 페이지 허용. `BANNED_LINK_DOMAINS` 상수 단일 공급원 |
 
 ---
 
@@ -96,6 +104,9 @@
 | **E. 임박 학회 공식사이트 추종** | 시작일 ≤ N일(예: 90일)이면 link가 있어도 공식 도메인 재검증 | 리스팅 사이트 우회 (품질) | **프롬프트 단독 불가** — `updateLogic.shouldSearch`에 imminent 판단 확장 필요 |
 | **F. Haiku→Sonnet 재시도** | 1차 Haiku 결과 `start_date=null` 이면 Sonnet 4.6 + `web_fetch` 로 1회 재호출 (동일 프롬프트) | 평문 날짜 누락 보정 (품질) | **프롬프트 밖** — `useUpdateQueue`에 구현 (PLAN-005). maxTokens=2048 |
 | **G. dedicated_url 힌트** | `conferences.json` 에 `dedicated_url` 있으면 v5 user 프롬프트에 "회차 전용 사이트(힌트): …" + 사용 지침 1줄 주입 | 탐색 스텝 단축 (품질·토큰) | 옵트인: 필드 비면 v4와 동일. eval 측정 전 |
+| **H. Link–Confidence 상호구속** | "confidence가 'high'/'medium' 이면 link는 non-null. link=null이면 confidence는 'low'" + user 프롬프트 자기검증 체크리스트 | `high + link=null` 자기모순 제거 (품질) | v6 + 파서 `normalizeUpdateData` 안전망 이중 방어. eval 측정 전 |
+| **I. Venue 포맷 정규화** | US는 `City, State, USA` / Canada는 `City, Province, Canada` / 그 외는 `City, Country`. 국가명 고정(`USA`/`UK`/`Korea`) + 예시 4건 | 주(state) 누락·국가명 요동 제거 (품질) | v6. 예시 기반 지시는 v3 today 앵커 선례. 토큰 +3% 예상 |
+| **J. Draft 연성화 + 3순위 색인 허용** | framer.ai 하드 금지 제거 → confidence=low + notes='draft/prototype' 조건 허용. 주관기관 컨퍼런스 색인 페이지(`ibpsa.org/conferences/` 등)는 3순위로 명시 허용 | `link=null` 오탐 감소, 초안 사이트 정보 회수 | v6. 레버 E(임박 재검증)와 상보적 |
 
 > 새 레버를 추가할 땐 알파벳 다음 글자(F, G…)를 부여해 §6 패턴과 cross-ref 가능하게.
 
@@ -307,6 +318,44 @@
 
 ---
 
+### 2026-04-18 — PLAN-006: v6 프롬프트 + 파서 안전망
+
+#### 변경 내용
+1. **Part 1: `UPDATE_SYSTEM_V6` + `buildUpdateUserV6` 신규** (`src/utils/promptBuilder.js`) — v4·v5 불변
+   - [Link–Confidence 상호구속] 섹션: `confidence=high|medium` 이면 link non-null 강제, link=null이면 confidence=low 강제 (레버 H)
+   - [링크 우선순위] 재정리: 3순위(주관기관 컨퍼런스 색인 페이지)에서 해당 회차를 명시적으로 나열하는 경우 허용 명시. `iifiir.org/en/events/<슬러그>` 직접 이벤트 URL은 2순위로 편입, 일반 `/events` 루트만 금지
+   - [Venue 포맷 — 엄격] 섹션 신규: US/Canada/기타 3분기, 국가명 정규화(`USA`/`UK`/`Korea`) + 예시 4건 (레버 I)
+   - [Draft/초안 사이트 처리] 섹션 신규: framer.ai/notion.site/wix.com 등 빌더 사이트를 link로 사용 허용, confidence=low 강제 + notes='draft/prototype' (레버 J)
+   - 자기검증 체크리스트를 user 프롬프트에 주입 (venue 포맷 / link–confidence / source_url 기반 link)
+2. **Part 2: 파서 안전망** (`src/services/responseParser.js`)
+   - `BANNED_LINK_DOMAINS` 상수 export — 프롬프트 템플릿 리터럴과 파서가 공유하는 단일 공급원
+   - `normalizeUpdateData(data)` 신규 export + `parseUpdateResponse` 마지막 단계 자동 호출
+   - 백필 조건: `link==null && source_url 유효(금지 미매칭) && start_date 존재` → `link=source_url` + confidence 1단계 다운그레이드(high→medium, medium→low, low→low) + notes 에 `[파서 백필: source_url → link]` 마커
+3. **Part 3: 단위 테스트**
+   - `responseParser.test.js`: `BANNED_LINK_DOMAINS`(2종) + `normalizeUpdateData`(12종) 신규 — framer.ai 미포함 / 백필 성공·차단 분기 / confidence 다운그레이드 3분기 / parseUpdateResponse 통합 동작
+   - `promptBuilder.test.js`: v6 분기 7종 — Link–Confidence 텍스트, Venue 포맷 예시, Draft 섹션, framer.ai 금지리스트 미등장, 3순위 색인 허용, 자기검증 체크리스트, dedicated_url 힌트 (v5 동일 동작)
+
+#### 결과
+- eval: **미실행** — `npm run eval -- --version v6` 측정 후 기록 예정
+- 단위 테스트: 전건 122/122 통과 (신규 +21: 파서 14, 프롬프트 7)
+
+#### 가설 (측정 대기)
+- 레버 H 효과: v6 에서 `link=null + confidence=high` 자기모순 0건 (v4 재현 기준 대비)
+- 레버 I 효과: v4 응답에서 관찰된 US 주(state) 누락 2건(conf_001·008) → v6 에서 `City, State, USA` 준수
+- 레버 J 효과: conf_022 BS 2027 같은 케이스에서 `bs2027.framer.ai` link 채워지고 confidence=low + notes='draft/prototype' 표기. 혹은 `ibpsa.org/conferences/` 색인 페이지를 3순위로 채용
+- 파서 안전망 효과: v4 활성 동안에도 `link=null` 오탐 일부 자동 백필 (단, 날짜 있는 경우만)
+- 토큰 비용: v4 대비 +10~15% 예상 (3개 신규 섹션). 허용선 초과 시 [Venue 포맷] 예시 축소
+
+#### 활성 전환 정책
+- `DEFAULT_UPDATE_VERSION='v4'` 유지. eval 3-tier 측정에서 v6 가 v4 대비 partial/fail 감소 확인 후 별도 커밋으로 전환
+
+#### 잔존 과제
+- **DB 잔여 오염**: 기존 `conferences.json`/`editions` 의 `United States`/state 누락/framer 링크는 손대지 않음 — 다음 업데이트 때 자동 수렴 예정
+- **v6 토큰 비용**: 레버 H·I·J 누적으로 input 증가 예상. eval 결과로 허용선 판단
+- **`BANNED_LINK_DOMAINS` 단일 공급원 의존**: 프롬프트와 파서가 같은 상수 참조 → 수정 시 두 테스트 스위트 동시 회귀 확인
+
+---
+
 ## §6. 실패 패턴 카탈로그
 
 루프를 돌릴수록 같은 패턴이 반복된다. 패턴 단위로 누적하여 다음 가설의 인풋으로 사용.
@@ -360,6 +409,31 @@
 - **대응**: DB 쪽 교정 (2026-04-18 conf_006 swap, PLAN-005 Part 1). 운영 규칙: `official_url` 에 금지 도메인 저장 금지
 - **상태**: conf_006 해소 ✅. 다른 학회도 스크리닝 필요 (후속 QA)
 
+### P8. `link=null` + `confidence=high/medium` 자기모순
+- **원인**: v4 시스템 프롬프트에 link 와 confidence 상호 제약이 없음. LLM 비결정성으로 같은 입력에 서로 다른 응답 (conf_006 1차: high+link=null / 2차: 정상)
+- **사례**: conf_006 IIR Cryogenics 1차 실행 (2026-04-18, v4 브라우저) — notes="공식 전용 페이지(1순위)에서 확인"이라 쓰면서 link=null
+- **대응 레버**: H(Link–Confidence 상호구속, v6) + 파서 `normalizeUpdateData` 안전망 (백필 + 다운그레이드)
+- **상태**: PLAN-006 에서 이중 방어 ✅ (측정 대기)
+
+### P9. Venue 포맷 비일관 (US 주 누락·국가명 요동)
+- **원인**: v4 에 venue 포맷 규칙 없음. 응답마다 `Orlando, Florida, United States` / `Orlando, United States` / `Chicago, USA` 처럼 주 유무·국가 표기가 요동
+- **사례**:
+  - conf_008 ITherm: `Orlando, Florida, United States` → `Orlando, United States` (주 누락)
+  - conf_001 ASHRAE: `Chicago, Illinois, USA` → `Chicago, USA` (주 누락)
+  - (잠재) UK/Korea 표기: `United Kingdom` / `South Korea` 도 혼재 가능
+- **대응 레버**: I(Venue 포맷 엄격, v6) — US/Canada/기타 3분기 + 국가명 고정 + 예시 4건
+- **상태**: v6 반영 ✅ (측정 대기). DB 잔여 오염은 다음 업데이트 시 자연 수렴
+
+### P10. draft 사이트 하드 금지 과잉 일반화 + 3순위 허용 범위 모호
+- **원인 (2축)**:
+  - (a) v2 블랙리스트 등재 당시 framer.ai 는 v1 Sonnet 단 1건(conf_022 `bs2027.framer.ai`) 관찰의 과잉 일반화 — 주최측이 드래프트로 시작했다가 정식 도메인으로 이사하는 정상 패턴을 차단
+  - (b) v4 "3순위 허용" 과 "**중요** 시리즈 목록 페이지 금지" 규칙이 충돌 — 주관기관 컨퍼런스 색인 페이지(`ibpsa.org/conferences/`, `astfe.org/conferences/`)가 회차를 명시하는 경우에도 AI가 안전한 `null` 선택
+- **사례**: conf_022 BS 2027 (2026-04-18, v4 브라우저) — `source_url=https://ibpsa.org/conferences/` 면서 link=null
+- **대응 레버**: J(draft 연성화 + 3순위 색인 허용 명료화, v6)
+  - framer.ai 하드 금지 제거 → confidence=low + notes='draft/prototype' 조건부 허용
+  - 3순위 색인 페이지는 해당 회차를 명시적으로 나열·언급하면 명시적으로 허용, confidence='medium' 이하
+- **상태**: v6 반영 ✅ (측정 대기). 학회 직전 재검증(레버 E)과 상보적 — draft 링크는 임박 시 공식 도메인 재검색 우선
+
 > 신규 패턴은 P{n}. 으로 추가하고, 사례에 [날짜·버전·id]를 함께 기록.
 
 ---
@@ -398,8 +472,10 @@
 - [x] eval 3-tier 채점(pass/partial/fail) (PLAN-005, 2026-04-18) — URL만 맞고 start_date=null인 착시 드러냄
 - [x] Haiku→Sonnet 재시도 인프라 (PLAN-005, 2026-04-18)
 - [x] v5 `dedicated_url` 힌트 옵션 (PLAN-005, 2026-04-18) — `DEFAULT_UPDATE_VERSION=v4` 유지, 측정 후 활성 전환 검토
-- [ ] v4·v5 eval 실행 및 3-tier 결과 기록
+- [x] v6 Link–Confidence 상호구속 + Venue 포맷 + draft 연성화 + 파서 안전망 (PLAN-006, 2026-04-18)
+- [ ] v4·v5·v6 eval 실행 및 3-tier 결과 기록
 - [ ] conf_006 외 `official_url`에 금지 도메인 저장된 학회 스크리닝 (P7 확장)
+- [ ] DB 잔여 venue 오염(`United States`·주 누락·framer 링크) 일괄 갱신 — 다음 업데이트 때 자동 수렴 또는 일회성 스크립트
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
 - [ ] (장기) 정답지 채점 정밀화 — "허용 범위" 필드 추가 등 (P3 패턴 대응)

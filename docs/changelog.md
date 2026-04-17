@@ -9,6 +9,29 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (PLAN-006, 2026-04-18)
+
+**프롬프트 v6 — Link–Confidence 상호구속 + Venue 포맷 + draft 연성화** (휴면)
+- `UPDATE_SYSTEM_V6` 신규: [Link–Confidence 상호구속] / [Venue 포맷 — 엄격] / [Draft/초안 사이트 처리] 3개 섹션 추가. 3순위(주관기관 컨퍼런스 색인 페이지) 허용 범위 명료화
+- [Venue 포맷]: US `City, State, USA` / Canada `City, Province, Canada` / 기타 `City, Country`. 국가명 정규화(`USA`/`UK`/`Korea` 고정)
+- [Draft 사이트]: framer.ai/notion.site/wix.com 등 빌더 페이지를 link로 사용 허용, confidence=low 강제 + notes='draft/prototype' 마커
+- [Link–Confidence]: confidence `high|medium` 이면 link non-null, link=null이면 confidence=low 강제. user 프롬프트 반환 직전 자기검증 체크리스트 동봉
+- `buildUpdateUserV6`: v5 dedicated_url 힌트 유지 + 자기검증 체크리스트. `DEFAULT_UPDATE_VERSION='v4'` 유지 — v6 는 eval 측정 후 활성 전환 검토
+
+**파서 `normalizeUpdateData` 안전망**
+- `src/services/responseParser.js`: `BANNED_LINK_DOMAINS` 상수 export (프롬프트와 공유하는 단일 공급원: easychair/wikicfp/conferenceindex/allconferencealert/waset/iifiir) + `normalizeUpdateData(data)` export
+- 백필 조건: `link==null && source_url 유효(금지 미매칭) && start_date 존재` → `link=source_url` + confidence 1단계 다운그레이드(high→medium→low) + notes 에 `[파서 백필: source_url → link]` 마커
+- `parseUpdateResponse` 마지막 단계에서 자동 호출 — 호출부 변경 없음. v4 활성 상태에서도 `link=null` 오탐 일부 자동 보정
+
+**단위 테스트 +21**
+- `responseParser.test.js`: `BANNED_LINK_DOMAINS` 2건 + `normalizeUpdateData` 12건 (백필 성공·차단 분기 / confidence 다운그레이드 3분기 / parseUpdateResponse 통합)
+- `promptBuilder.test.js`: v6 분기 7건 (Link–Confidence / Venue 포맷 / Draft / framer.ai 미등장 / 3순위 색인 / 자기검증 체크리스트 / dedicated_url 힌트)
+
+### Changed (PLAN-006)
+
+- `BANNED_LINK_DOMAINS` 에서 `framer.ai` 제거 — v2 등재가 단일 사례(conf_022) 과잉 일반화였음을 반영. draft 사이트는 `[Draft/초안 사이트 처리]` 섹션에서 조건부 허용으로 연성화
+- v6 금지 리스트는 `BANNED_LINK_DOMAINS` 상수를 템플릿 리터럴로 주입 — 프롬프트·파서 단일 공급원
+
 ### Added (PLAN-005, 2026-04-18)
 
 **Haiku→Sonnet 폴백 재시도**
