@@ -449,12 +449,13 @@
       "id": "ed_015",
       "conference_id": "conf_015",
       "status": "upcoming",
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2026-07-06",
+      "end_date": "2026-07-10",
       "venue": "Milan, Italy",
-      "link": "https://easychair.org/smart-program/ICCFD13/",
+      "link": "https://iccfd13.polimi.it",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:24:48.830Z"
+      "updated_at": "2026-04-17T15:52:32.134Z",
+      "confidence": "high"
     },
     {
       "id": "ed_016",
