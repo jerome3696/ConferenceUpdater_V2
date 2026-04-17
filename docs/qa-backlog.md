@@ -18,6 +18,7 @@
 
 <!-- 아래에 한 줄씩 추가 -->
 
+- [ ] 부분 정보 학회(장소만 있고 날짜 없는 케이스)에서 UpdateCard에 confidence badge + source_url 링크 표시 — ICMF처럼 신뢰도 낮은 초기 정보를 사용자가 판단하기 어려움 (2026-04-17)
 - [ ] React 19 advisory 룰 cleanup — `react-hooks/set-state-in-effect` 다수 + `react-hooks/purity` 1건 + `react-refresh/only-export-components` 2건. Step A.2에서 warn으로 완화. 별도 PR로 일괄 fix 후 룰 등급 다시 error로 복귀 (2026-04-17)
 
 ---

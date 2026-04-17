@@ -200,9 +200,15 @@
 
 ### P2. 비공식/리스팅 도메인 선호
 - **원인**: 검색 상위 결과에 리스팅 플랫폼이 자주 노출됨 (SEO·플랫폼 효과)
-- **사례**: conf_015 ICCFD (easychair, eval+실전 양쪽), conf_022 Building Sim (framer, v1 Sonnet에서만), IIR GL 2026 (iifiir.org, 실전)
-- **대응 레버**: B (블랙리스트). 임박 학회는 E 병행
-- **상태**: 미해결, v2 우선 대상
+- **사례**:
+  - conf_015 ICCFD: easychair.org (eval+실전+2026-04-17 browser eval 반복) → 정답: iccfd.org
+  - conf_019 IIR Gustav Lorentzen: iifiir.org/en/events/... (이벤트 리스팅) → 정답: iir-gl-2026.net (2026-04-17)
+  - conf_006 IIR Cryogenics: iifiir.org/en/iir-conferences-series (집계 페이지) → 정답: cryogenics-conference.eu/cryogenics2027/ (2026-04-17)
+  - conf_022 Building Sim: bs2027.framer.ai (v1 Sonnet에서만)
+  - IIR GL 2026 (실전 브라우저): iifiir.org 리스팅
+- **패턴 공통점**: 주관기관 도메인(iifiir.org)이라도 집계/리스팅 페이지(iir-conferences-series)는 전용 사이트 발굴을 막음
+- **대응 레버**: B (도메인 블랙리스트 + 링크 우선순위 명시). 임박 학회는 E 병행
+- **상태**: v2에서 레버 B 적용 중 — 결과 §5에 기록 예정
 
 ### P3. AI가 원본보다 정밀
 - **원인**: 단순 일치 채점 한계
