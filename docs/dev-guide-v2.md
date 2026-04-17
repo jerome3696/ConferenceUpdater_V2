@@ -118,15 +118,15 @@ docs/
 - **확인**: `bash scripts/verify-task.sh` → ✅ 5 ❌ 0 전항목 PASS (2026-04-17)
 
 ### Step A.6: 브랜치 전략 도입
-- [ ] main 브랜치 직접 push 금지 설정 (GitHub branch protection)
-- [ ] CLAUDE.md에 브랜치 규칙 명시:
+- [x] main 브랜치 직접 push 금지 설정 (GitHub branch protection) — A.4에서 완료
+- [x] CLAUDE.md에 브랜치 규칙 명시:
   - `feature/PLAN-xxx-설명`: 새 기능 (플랜 필수)
   - `fix/설명`: 버그 수정 (플랜 불필요)
   - `docs/설명`: 문서 수정 (플랜 불필요)
   - `chore/설명`: 설정 변경 (플랜 불필요)
-- [ ] 커밋 메시지 규칙 명시 (Conventional Commits):
+- [x] 커밋 메시지 규칙 명시 (Conventional Commits):
   - `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
-- **확인**: main에 직접 push 시도 → 거부되는가?
+- **확인**: main 직접 push → GitHub에서 거부 (branch protection 활성) ✅ (2026-04-17)
 
 ### Step A.7: 플랜 강제 Hook
 - [ ] `scripts/check-plan.sh` 작성:

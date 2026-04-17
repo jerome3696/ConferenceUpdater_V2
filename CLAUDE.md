@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.5 완료, 다음: Step A.6). 상세 진행은 `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.6 완료, 다음: Step A.7). 상세 진행은 `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
@@ -35,6 +35,8 @@ MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.5 완료, 다음: S
 ## 작업 규칙
 
 - **작업 완료 후 반드시 `bash scripts/verify-task.sh` 실행할 것.**
+- **브랜치**: `feature/PLAN-xxx-설명` | `fix/설명` | `docs/설명` | `chore/설명` (main 직접 push 금지)
+- **커밋**: Conventional Commits — `feat:` `fix:` `docs:` `refactor:` `test:` `chore:`
 - API 키 하드코딩 금지. AI 응답 파싱은 try-catch 필수.
 - **파괴적 명령 금지**: `--overwrite`, `--force`, `rm -rf`, `git reset --hard`, `git clean -fd` 등은 사용자 명시 승인 없이 실행 금지. 특히 루트·`docs/` 대상은 더더욱.
 - 스캐폴딩 도구(`npm create`, `npx create-*`)는 대상에 기존 파일 있으면 먼저 확인.
