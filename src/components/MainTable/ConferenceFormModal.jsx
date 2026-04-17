@@ -4,7 +4,7 @@ import { generateConferenceId } from '../../services/dataManager';
 const NEW_VALUE = '__new__';
 
 export const CATEGORY_OPTIONS = ['학회', '박람회'];
-export const REGION_OPTIONS = ['세계', '미주', '유럽', '아시아'];
+export const REGION_OPTIONS = ['전세계', '미주', '유럽', '아시아'];
 
 function FixedSelect({ label, required, value, options, onChange }) {
   return (
