@@ -385,10 +385,11 @@
       "status": "upcoming",
       "start_date": "2026-06-15",
       "end_date": "2026-06-18",
-      "venue": "Syracuse, New York, USA",
+      "venue": "Syracuse, New York, United States",
       "link": "https://cryocooler.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:24:35.406Z"
+      "updated_at": "2026-04-17T15:57:24.984Z",
+      "confidence": "high"
     },
     {
       "id": "ed_010",
