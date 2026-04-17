@@ -368,7 +368,8 @@
       "venue": "Vancouver, Canada",
       "link": null,
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:24:17.615Z"
+      "updated_at": "2026-04-17T16:12:17.933Z",
+      "confidence": "low"
     },
     {
       "id": "ed_008",
