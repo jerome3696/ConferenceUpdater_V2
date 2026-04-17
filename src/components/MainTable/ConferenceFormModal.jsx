@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { generateConferenceId } from '../../services/dataManager';
+import { CATEGORY_OPTIONS, REGION_OPTIONS } from './conferenceConstants';
 
 const NEW_VALUE = '__new__';
-
-export const CATEGORY_OPTIONS = ['학회', '박람회'];
-export const REGION_OPTIONS = ['전세계', '미주', '유럽', '아시아'];
 
 function FixedSelect({ label, required, value, options, onChange }) {
   return (
@@ -133,46 +131,43 @@ function emptyForm() {
   };
 }
 
+function buildInitialForm(mode, initial) {
+  if (mode === 'edit' && initial) {
+    return {
+      full_name: initial.full_name || '',
+      abbreviation: initial.abbreviation || '',
+      category: initial.category || '',
+      field: initial.field || '',
+      region: initial.region || '',
+      cycle_years: initial.cycle_years ?? '',
+      duration_days: initial.duration_days ?? '',
+      official_url: initial.official_url || '',
+      note: initial.note || '',
+      starred: initial.starred || 0,
+      upcoming: {
+        start_date: initial.upcoming?.start_date || '',
+        end_date: initial.upcoming?.end_date || '',
+        venue: initial.upcoming?.venue || '',
+        link: initial.upcoming?.link || '',
+      },
+      last: {
+        start_date: initial.last?.start_date || '',
+        end_date: initial.last?.end_date || '',
+        venue: initial.last?.venue || '',
+        link: initial.last?.link || '',
+      },
+    };
+  }
+  return emptyForm();
+}
+
 function ConferenceFormModal({
-  isOpen, mode, initial, onClose, onSubmit, onDelete, existingFields,
+  mode, initial, onClose, onSubmit, onDelete, existingFields,
 }) {
-  const [form, setForm] = useState(emptyForm());
+  // 부모(MainTable.jsx)에서 conditional render + key prop으로 리셋 보장.
+  // useState lazy init으로 mount 시 1회만 계산.
+  const [form, setForm] = useState(() => buildInitialForm(mode, initial));
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!isOpen) return;
-    if (mode === 'edit' && initial) {
-      setForm({
-        full_name: initial.full_name || '',
-        abbreviation: initial.abbreviation || '',
-        category: initial.category || '',
-        field: initial.field || '',
-        region: initial.region || '',
-        cycle_years: initial.cycle_years ?? '',
-        duration_days: initial.duration_days ?? '',
-        official_url: initial.official_url || '',
-        note: initial.note || '',
-        starred: initial.starred || 0,
-        upcoming: {
-          start_date: initial.upcoming?.start_date || '',
-          end_date: initial.upcoming?.end_date || '',
-          venue: initial.upcoming?.venue || '',
-          link: initial.upcoming?.link || '',
-        },
-        last: {
-          start_date: initial.last?.start_date || '',
-          end_date: initial.last?.end_date || '',
-          venue: initial.last?.venue || '',
-          link: initial.last?.link || '',
-        },
-      });
-    } else {
-      setForm(emptyForm());
-    }
-    setError('');
-  }, [isOpen, mode, initial]);
-
-  if (!isOpen) return null;
 
   const update = (key, val) => setForm((f) => ({ ...f, [key]: val }));
 

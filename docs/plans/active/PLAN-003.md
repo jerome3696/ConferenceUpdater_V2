@@ -71,8 +71,8 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 각 Group 후 `npm test` 통과 확인, `git commit`.
 
 - [x] Step 0 — 브랜치 생성 (`feature/PLAN-003-qa-batch1`, base: main) + 본 PLAN-003.md 작성
-- [ ] Step 1 — Group 1: Item 12-워딩 (REGION_OPTIONS 변경 + 데이터 마이그레이션 결정/실행)
-- [ ] Step 2 — Group 1: Item 2 (ESLint advisory 룰 3건 cleanup + warn → error 복귀)
+- [x] Step 1 — Group 1: Item 12-워딩 (REGION_OPTIONS 변경 + 데이터 마이그레이션 결정/실행)
+- [x] Step 2 — Group 1: Item 2 (ESLint advisory 룰 3건 cleanup + warn → error 복귀)
 - [ ] Step 3 — Group 2: Items 4, 5 (UpdateCard 변경없음 배너 + 변경있음 폰트/패딩)
 - [ ] Step 4 — Group 2: Items 1, 3 (UpdateCard confidence badge + source_url, UpdatePanel 전체 승인/거절)
 - [ ] Step 5 — Group 3: Item 11 (App.jsx에서 setView 제거, UpdatePanel overlay화)
@@ -120,3 +120,5 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 ## 9. 작업 로그
 
 - 2026-04-17: 플랜 작성. B.1 merge 직후, B.2(PLAN-002 Prompt v4)와 병행 진행.
+- 2026-04-17: Step 1 완료 — REGION '세계'→'전세계' (1 source + 10 data + 3 docs).
+- 2026-04-17: Step 2 완료 — ESLint advisory 룰 7건 cleanup. (1) `ConferenceFormModal` 인라인 export 분리 → `conferenceConstants.js` (only-export-components ×2 해소), (2) Modal 3종(`ConferenceFormModal`/`ApiKeyModal`/`GitHubTokenModal`) `isOpen` prop 제거 → 부모 conditional render + key prop 패턴 (set-state-in-effect ×3 해소), (3) `UpdatePanel` `useState(Date.now())` → lazy init (purity 1 해소), (4) `useConferences` token 변경 시 setLoading은 의도된 동기화 → eslint-disable + 사유 주석. ESLint 룰 3종 `warn → error` 승격. lint zero, 테스트 73건 그대로 통과, verify-task 5/5.

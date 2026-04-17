@@ -4,7 +4,7 @@ import VerificationCard from './VerificationCard';
 import UpdateLog from './UpdateLog';
 
 function RateLimitBanner({ until }) {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);

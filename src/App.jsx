@@ -113,20 +113,22 @@ function App() {
           <UpdatePanel queue={updateQueue} onBack={() => setView('main')} />
         )}
       </main>
-      <ApiKeyModal
-        isOpen={isKeyModalOpen}
-        currentKey={apiKey}
-        onSave={(k) => { setApiKey(k); setKeyModalOpen(false); }}
-        onClear={() => { clearApiKey(); setKeyModalOpen(false); }}
-        onClose={() => setKeyModalOpen(false)}
-      />
-      <GitHubTokenModal
-        isOpen={isTokenModalOpen}
-        currentToken={token}
-        onSave={(t) => { setToken(t); setTokenModalOpen(false); }}
-        onClear={() => { clearToken(); setTokenModalOpen(false); }}
-        onClose={() => setTokenModalOpen(false)}
-      />
+      {isKeyModalOpen && (
+        <ApiKeyModal
+          currentKey={apiKey}
+          onSave={(k) => { setApiKey(k); setKeyModalOpen(false); }}
+          onClear={() => { clearApiKey(); setKeyModalOpen(false); }}
+          onClose={() => setKeyModalOpen(false)}
+        />
+      )}
+      {isTokenModalOpen && (
+        <GitHubTokenModal
+          currentToken={token}
+          onSave={(t) => { setToken(t); setTokenModalOpen(false); }}
+          onClear={() => { clearToken(); setTokenModalOpen(false); }}
+          onClose={() => setTokenModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

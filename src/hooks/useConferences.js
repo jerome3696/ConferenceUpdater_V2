@@ -36,6 +36,8 @@ export function useConferences({ token } = {}) {
   // 초기 로드 (token 변화에 재로드: 토큰 설정 직후 최신본 fetch)
   useEffect(() => {
     let cancelled = false;
+    // 토큰 변경 시 로딩 상태로 즉시 전환해야 UI에서 깜빡임 없이 fetch 표시 가능.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     loadConferences({ token })
       .then(({ data: loaded }) => {

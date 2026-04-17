@@ -296,15 +296,17 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
       </table>
       <div className="p-3 text-xs text-slate-400">총 {sorted.length}건</div>
     </div>
-    <ConferenceFormModal
-      isOpen={modalMode !== null}
-      mode={modalMode || 'add'}
-      initial={editingRow}
-      onClose={() => { setModalMode(null); setEditingRow(null); }}
-      onSubmit={handleSubmit}
-      onDelete={editingRow ? () => deleteConference(editingRow.id) : undefined}
-      existingFields={fields}
-    />
+    {modalMode !== null && (
+      <ConferenceFormModal
+        key={editingRow?.id ?? 'new'}
+        mode={modalMode}
+        initial={editingRow}
+        onClose={() => { setModalMode(null); setEditingRow(null); }}
+        onSubmit={handleSubmit}
+        onDelete={editingRow ? () => deleteConference(editingRow.id) : undefined}
+        existingFields={fields}
+      />
+    )}
     </>
   );
 }
