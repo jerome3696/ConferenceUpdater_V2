@@ -165,12 +165,12 @@ docs/
 - **확인**: 73건 전건 통과, verify-task ✅ 5 ❌ 0 (2026-04-17)
 
 ### Step B.2: 프롬프트 v2 수동 이터레이션
-- [ ] prompteng.md의 v2 가설 (레버 A~D) 중 A(today 앵커) + B(도메인 블랙리스트) 먼저 적용
-- [ ] promptBuilder.js에 `TEMPLATES.update.v2` 추가 (v1 불변 유지)
-- [ ] eval-prompt.js로 v1/v2 비교 실행
-- [ ] 결과를 prompteng.md에 기록
-- [ ] 2~3회 이터레이션 후 v2 확정 또는 v3 설계
-- **확인**: v2 pass율이 v1(16/17) 이상인가?
+- [x] prompteng.md의 v2 가설 (레버 A~D) 중 A(today 앵커) + B(도메인 블랙리스트) 먼저 적용 — v2 pass 16/19 (P4 회귀), v3 pass 19/19 (P4 해소)
+- [x] promptBuilder.js에 `TEMPLATES.update.v2~v5` 추가 (이전 버전 불변 유지). 활성: v4
+- [x] eval-prompt.js로 v1/v2/v3 비교 실행, 결과 기록
+- [x] PLAN-005: v4 보강 (Haiku→Sonnet 폴백 + v5 `dedicated_url` 힌트 + eval 3-tier 채점) — 2026-04-18
+- [ ] v4·v5 eval 실행 및 3-tier 결과 기록 (`docs/eval/results/`)
+- **확인**: v2 pass율이 v1(16/17) 이상인가? ✅ v3 19/19 (100%) 달성
 
 ### Step B.3: 리팩토링 체크 스크립트
 - [ ] `scripts/refactor-check.sh` 작성:

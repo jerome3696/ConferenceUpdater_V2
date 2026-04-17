@@ -27,21 +27,26 @@
 ### 활성 버전
 - **앱 사용 중**: `v4` (Haiku 4.5 + Phase A 적용)
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
+  - **Haiku→Sonnet 재시도** (PLAN-005, 2026-04-18): 1차 Haiku 결과 `start_date=null`이면 Sonnet 4.6 + `web_fetch` 로 1회 재시도
+- **v5 휴면**: `dedicated_url` 힌트 라인 추가 버전. `DEFAULT_UPDATE_VERSION=v4` 유지. eval 통과 후 활성 검토
 - **마지막 측정(v3)**: 2026-04-17 / pass **19/19 (100%)** / avg input 41,651 · output 722 토큰
   - 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
-- **v4 eval**: 미실행 — `npm run eval -- --version v4` 로 확인 필요
+- **v4 / v5 eval**: 미실행 — `npm run eval -- --version v4` / `--version v5` 로 확인 필요. 3-tier 채점(pass/partial/fail) 적용됨 — URL만 맞고 `start_date=null` 은 partial로 드러남
 
 ### 잔존 실패 (다음 개선 타겟)
-- **[P2 부분 미해결] conf_006 IIR Cryogenics, conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만, 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net) 미발굴. 레버 E(임박 학회 재검증) 필요.
-- **[P5·P6 신규] 브라우저 실사용 발견** — ICMF(부분정보 confidence 과대), ICCFD(날짜 미추출), TPTPR(시리즈 페이지 링크) → v4에서 수정
+- **[P2 해소] conf_006 IIR Cryogenics** — `official_url` 이 금지 도메인(iir-conferences-series)이었음. 2026-04-18 `cryogenics-conference.eu` 로 교체 (PLAN-005 Part 1). 브라우저 확인 필요
+- **[P6 대응] conf_015 ICCFD** — Haiku `web_search` 가 홈페이지 평문 날짜 누락 → Sonnet 4.6 + `web_fetch` 재시도로 보정 (PLAN-005 Part 3). `dedicated_url=https://iccfd13.polimi.it` 힌트도 v5 에 추가
+- **[P2 부분 미해결] conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만 전용 사이트(iir-gl-2026.net) 미발굴. 레버 E(임박 학회 재검증) 필요
 
 ### 다음 시도 (next levers)
 - [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
 - [x] **A'. today 앵커 정밀화** — v3 적용 완료 (2026-04-17). 19/19 pass, P4 완전 해소
 - [x] **활성 전환**: `DEFAULT_UPDATE_VERSION` v3 → v4 (2026-04-17)
 - [x] **C. 부분정보 처리 규칙** — v4: confidence 기준 명시 + link 4순위 + 날짜 탐색 강화 + 시리즈 null 강화
-- [ ] **v4 eval 확인**: `npm run eval -- --version v4` → 19/19 유지 확인
-- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. P2 부분 미해결 대응. MVP 후 본격 검토
+- [x] **F. Haiku→Sonnet 재시도** — PLAN-005: `start_date=null` 트리거, 1회 제한 (2026-04-18)
+- [x] **G. dedicated_url 힌트** — v5 옵션: `conferences.json` 에 `dedicated_url` 있으면 프롬프트에 한 줄 주입 (2026-04-18)
+- [ ] **v4 / v5 eval 확인**: 3-tier 채점 → 이전 "19/19 pass" 착시 해소, partial 분리 측정
+- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. MVP 후 본격 검토
 
 ---
 
@@ -73,6 +78,8 @@
 | v1 | 2026-04-16 | Haiku 4.5 + Phase A | **16/17 (94%)** | 34,510 / 649 | `max_uses 5` 캡 효과로 품질 상승 (의외) |
 | v2 | 2026-04-17 | Haiku 4.5 + Phase A | **16/19 (84%)** | 39,954 / 677 | 레버 A+B 적용. P1·P2 일부 해결. P4(today 앵커 과잉 교정) 신규 발생 |
 | v3 | 2026-04-17 | Haiku 4.5 + Phase A | **19/19 (100%)** | 41,651 / 722 | 레버 A' 적용. P4 3건 완전 해소 (IEA HPC·ICBCHT·IHTC), P1·P2 유지 |
+| v4 | 2026-04-17 | Haiku 4.5 + Phase A | (미측정) | — | 레버 C: confidence 기준·link 4순위·하위 페이지 탐색 의무 |
+| v5 | 2026-04-18 | Haiku + Phase A + (`dedicated_url` 힌트) + Sonnet 4.6 폴백 | (미측정) | — | 레버 F·G. v4 system 동일, user에 `dedicated_url` 있을 때만 힌트 1줄 + 사용 지침 추가 |
 
 ---
 
@@ -87,6 +94,8 @@
 | **C. 조기 종료** | "공식 페이지 찾으면 추가 검색 금지" | 검색 호출↓ → input 토큰↓ | `max_uses: 5` 캡으로 부분 검증 — 품질 상승 동반 |
 | **D. JSON-only** | "JSON 블록 1개만. preamble/후기 금지" | output 토큰↓ | 미실측 |
 | **E. 임박 학회 공식사이트 추종** | 시작일 ≤ N일(예: 90일)이면 link가 있어도 공식 도메인 재검증 | 리스팅 사이트 우회 (품질) | **프롬프트 단독 불가** — `updateLogic.shouldSearch`에 imminent 판단 확장 필요 |
+| **F. Haiku→Sonnet 재시도** | 1차 Haiku 결과 `start_date=null` 이면 Sonnet 4.6 + `web_fetch` 로 1회 재호출 (동일 프롬프트) | 평문 날짜 누락 보정 (품질) | **프롬프트 밖** — `useUpdateQueue`에 구현 (PLAN-005). maxTokens=2048 |
+| **G. dedicated_url 힌트** | `conferences.json` 에 `dedicated_url` 있으면 v5 user 프롬프트에 "회차 전용 사이트(힌트): …" + 사용 지침 1줄 주입 | 탐색 스텝 단축 (품질·토큰) | 옵트인: 필드 비면 v4와 동일. eval 측정 전 |
 
 > 새 레버를 추가할 땐 알파벳 다음 글자(F, G…)를 부여해 §6 패턴과 cross-ref 가능하게.
 
@@ -273,6 +282,31 @@
 
 ---
 
+### 2026-04-18 — PLAN-005: eval 3-tier + Haiku→Sonnet 재시도 + v5 (dedicated_url 힌트)
+
+#### 변경 내용
+1. **Part 1: conf_006 `official_url` 교체** — `iifiir.org/en/iir-conferences-series`(v4 금지 도메인) → `cryogenics-conference.eu/`. 금지 도메인을 마스터 링크로 보관하던 모순 제거. golden-set.csv 도 동기화
+2. **Part 2: eval 3-tier 채점 (`scripts/eval-prompt.js` `scoreUrl`)** — URL 매치 + `aiData.start_date` 있음 → `pass` / URL 매치 but `start_date=null` → **`partial`** / URL 불일치 → `fail`. 이전 "19/19 pass" 착시 제거. 결과 JSON에 `summary.partial` 추가
+3. **Part 3-a: `MODELS.updateFallback='claude-sonnet-4-6'`** 신규 (`src/config/models.js`)
+4. **Part 3-b: `callClaude` `webFetch` 옵션** — `web_fetch_20250910` tool push (`src/services/claudeApi.js`). Haiku는 호출 금지 (책임은 호출부)
+5. **Part 3-c: `useUpdateQueue` 재시도 블록** — `parsed.ok && !parsed.data.start_date` 조건에서 Sonnet 4.6 + `web_fetch` 로 1회 재호출. 2차 파싱 성공 시 결과 교체, 실패면 1차 유지. `retry` 필드로 관찰성 확보(`'sonnet' | 'sonnet_parse_fail' | 'sonnet_error:<kind>'`)
+6. **Part 3-d: v5 템플릿 + `dedicated_url` 필드** — `UPDATE_SYSTEM_V5=UPDATE_SYSTEM_V4` 복사, `buildUpdateUserV5` 에서 `conference.dedicated_url` 있을 때만 "회차 전용 사이트(힌트): …" + 사용 지침 1줄 주입. `conferences.json` conf_015 에 `https://iccfd13.polimi.it` 기록. `DEFAULT_UPDATE_VERSION=v4` 유지
+
+#### 결과
+- eval: **미실행** — v4·v5 각각 측정 필요 (3-tier 집계 확인)
+- 단위 테스트: v5 힌트 주입 + Haiku/Sonnet 재시도 분기 5종 (`useUpdateQueue.test.js` 신규, 100/100 통과)
+
+#### 가설 (측정 대기)
+- Part 1 효과: conf_006 `partial` → `pass` 전환 (cryogenics-conference.eu 에서 날짜 직접 추출)
+- Part 3 효과: conf_015 가 1차 Haiku에서 `start_date=null` 이어도 Sonnet+web_fetch 재시도로 2026-07-06 추출 → `pass`
+- 비용: Sonnet 재시도 호출만 Sonnet 요금 (1M token 기준 입력 $3 / 출력 $15). 대부분 Haiku로 끝나야 함
+
+#### 잔존 과제
+- P5 `ICMF`: 여전히 open — v4 confidence 지침이 충분한지 측정 필요
+- P2 `conf_019 Gustav`: 전용 사이트 미발굴 문제. 필요하면 `dedicated_url` 로 보조하거나 레버 E 진행
+
+---
+
 ## §6. 실패 패턴 카탈로그
 
 루프를 돌릴수록 같은 패턴이 반복된다. 패턴 단위로 누적하여 다음 가설의 인풋으로 사용.
@@ -312,13 +346,19 @@
 - **원인**: confidence 판정 기준 미명시 → AI 재량으로 medium/high 사용
 - **사례**: ICMF (날짜 미확인인데 confidence=medium, 출처 URL만 있는데 link=null) — 2026-04-17 브라우저
 - **대응 레버**: confidence 기준 명시(low: start_date 미확인), link 4순위(출처 URL + confidence=low 강제)
-- **상태**: v4에서 대응 ✅
+- **상태**: v4에서 대응 ✅ (측정 대기)
 
 ### P6. 공식사이트 홈 탐색 후 하위 페이지 미진입
 - **원인**: AI가 공식 홈에서 날짜를 못 찾으면 null 반환, 하위 페이지(Important Dates 등) 미탐색
 - **사례**: ICCFD (iccfd.org 발견 후 날짜 미추출, Milan만 반환) — 2026-04-17 브라우저
-- **대응 레버**: 공식사이트 발견 후 하위 페이지 탐색 의무 지침
-- **상태**: v4에서 대응 ✅
+- **대응 레버**: 공식사이트 발견 후 하위 페이지 탐색 의무 지침 + **F(Sonnet+web_fetch 재시도)** + **G(dedicated_url 힌트)**
+- **상태**: v4 지침 + PLAN-005 다층 대응 (재시도·힌트·eval partial 가시화). 측정 대기
+
+### P7. `official_url` 에 금지 도메인 등록 (자기 모순)
+- **원인**: DB 마스터 링크가 v4 프롬프트 금지 리스트(`iifiir.org/en/iir-conferences-series` 등)인 상태로 저장되어 있음 → AI가 "공식사이트" 힌트를 신뢰하여 금지 도메인을 재사용
+- **사례**: conf_006 IIR Cryogenics — 전용 사이트 `cryogenics-conference.eu` 존재함에도 금지 집계 페이지만 참조 (partial: 날짜 null)
+- **대응**: DB 쪽 교정 (2026-04-18 conf_006 swap, PLAN-005 Part 1). 운영 규칙: `official_url` 에 금지 도메인 저장 금지
+- **상태**: conf_006 해소 ✅. 다른 학회도 스크리닝 필요 (후속 QA)
 
 > 신규 패턴은 P{n}. 으로 추가하고, 사례에 [날짜·버전·id]를 함께 기록.
 
@@ -353,8 +393,13 @@
 - [x] v2 프롬프트 구현 (레버 A + B) 및 v1/v2 비교 실행 (2026-04-17) — 16/19(84%). P4 신규 발생
 - [x] v3 프롬프트 구현: 레버 A' (today 앵커 정밀화 — 부등호 + 검증 예시) (2026-04-17)
 - [x] v3 eval 실행 → P4 해결 여부 검증 (2026-04-17) — 19/19 (100%), P4 3건 완전 해소
-- [ ] 활성 전환 의사결정: `DEFAULT_UPDATE_VERSION` v1 → v3
+- [x] 활성 전환 의사결정: `DEFAULT_UPDATE_VERSION` v3 → v4 (2026-04-17)
 - [x] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가 (2026-04-16)
+- [x] eval 3-tier 채점(pass/partial/fail) (PLAN-005, 2026-04-18) — URL만 맞고 start_date=null인 착시 드러냄
+- [x] Haiku→Sonnet 재시도 인프라 (PLAN-005, 2026-04-18)
+- [x] v5 `dedicated_url` 힌트 옵션 (PLAN-005, 2026-04-18) — `DEFAULT_UPDATE_VERSION=v4` 유지, 측정 후 활성 전환 검토
+- [ ] v4·v5 eval 실행 및 3-tier 결과 기록
+- [ ] conf_006 외 `official_url`에 금지 도메인 저장된 학회 스크리닝 (P7 확장)
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
 - [ ] (장기) 정답지 채점 정밀화 — "허용 범위" 필드 추가 등 (P3 패턴 대응)

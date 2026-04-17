@@ -51,6 +51,10 @@ function scoreUrl(goldenCase, aiData) {
   const candidates = [goldenCase.link, goldenCase.source_url].filter(Boolean);
   for (const c of candidates) {
     if (urlMatch(aiLink, c)) {
+      // URL은 맞지만 start_date 미추출이면 partial — 콘텐츠 품질 드러내기
+      if (!aiData?.start_date) {
+        return { status: 'partial', reason: 'date_missing', matchedAgainst: c, aiLink };
+      }
       return { status: 'pass', matchedAgainst: c, aiLink };
     }
   }
@@ -163,6 +167,7 @@ async function main() {
       summary = {
         id: c.id,
         status: score.status,
+        reason: score.reason || null,
         aiLink: score.aiLink,
         matchedAgainst: score.matchedAgainst || null,
         expected: score.expected || null,
@@ -171,10 +176,10 @@ async function main() {
         usage: r.usage,
         stop_reason: r.stop_reason,
       };
-      const icon = score.status === 'pass' ? '✅' : '❌';
-      const tail = score.status === 'pass'
-        ? `matched ${normalizeUrl(score.matchedAgainst)}`
-        : `ai=${normalizeUrl(score.aiLink)}`;
+      const icon = score.status === 'pass' ? '✅' : score.status === 'partial' ? '⚠️' : '❌';
+      const tail = score.status === 'fail'
+        ? `ai=${normalizeUrl(score.aiLink)}`
+        : `matched ${normalizeUrl(score.matchedAgainst)}${score.status === 'partial' ? ' but date=null' : ''}`;
       const usageStr = r.usage ? ` [in=${r.usage.input_tokens} out=${r.usage.output_tokens}]` : '';
       console.log(`${icon} ${tail} (${r.elapsedMs}ms)${usageStr}`);
     }
@@ -183,8 +188,9 @@ async function main() {
 
   console.log('\n=== 요약 ===');
   const passed = results.filter((r) => r.status === 'pass').length;
-  const failed = results.length - passed;
-  console.log(`pass: ${passed}  fail/error: ${failed}  (총 ${results.length})`);
+  const partialCnt = results.filter((r) => r.status === 'partial').length;
+  const failed = results.length - passed - partialCnt;
+  console.log(`pass: ${passed}  partial: ${partialCnt}  fail/error: ${failed}  (총 ${results.length})`);
 
   const withUsage = results.filter((r) => r.usage);
   const totalIn = withUsage.reduce((s, r) => s + (r.usage.input_tokens || 0), 0);
@@ -225,7 +231,7 @@ async function main() {
   const outPath = join(resultsDir, `${timestamp}-${args.version}.json`);
   await writeFile(outPath, JSON.stringify({
     meta: { timestamp, version: args.version, snapshot_date: golden.snapshot_date, case_count: results.length },
-    summary: { pass: passed, fail_or_error: failed, tokens: tokenSummary },
+    summary: { pass: passed, partial: partialCnt, fail_or_error: failed, tokens: tokenSummary },
     results,
   }, null, 2));
   console.log(`\n📝 저장: ${outPath.replace(ROOT + '\\', '').replace(ROOT + '/', '')}\n`);

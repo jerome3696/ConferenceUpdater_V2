@@ -286,6 +286,63 @@ function buildUpdateUserV4(conference, lastEdition) {
 \`\`\``;
 }
 
+const UPDATE_SYSTEM_V5 = UPDATE_SYSTEM_V4;
+
+function buildUpdateUserV5(conference, lastEdition) {
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    full_name = '',
+    abbreviation = '',
+    cycle_years = 0,
+    official_url = '',
+    dedicated_url = '',
+  } = conference;
+  const dedicatedLine = dedicated_url ? `\n회차 전용 사이트(힌트): ${dedicated_url}` : '';
+  const dedicatedHint = dedicated_url
+    ? '\n- "회차 전용 사이트(힌트)"가 제공된 경우: 그 URL을 직접 방문·탐색하여 날짜/장소를 확보하라. 힌트 URL이 유효(해당 회차 공식 페이지)하면 link로 우선 사용. 힌트가 오래되었거나 잘못된 경우에만 일반 검색으로 보정.'
+    : '';
+  return `다음 학회의 다음(upcoming) 개최 정보를 찾아주세요.
+
+오늘: ${today}
+
+학회명: ${full_name}
+약칭: ${abbreviation || '없음'}
+주기: ${cycle_years ? `${cycle_years}년` : '미상'}
+공식사이트: ${official_url || '없음'}${dedicatedLine}
+마지막 개최: ${formatLastEdition(lastEdition)}
+
+[upcoming 판별 — 반환 직전 필수 검증]
+찾은 학회의 start_date를 오늘(${today})과 YYYY-MM-DD 문자열로 비교하세요.
+- start_date > ${today} → upcoming. 그대로 반환.
+- start_date <= ${today} → 반환 금지 (과거 또는 당일). 주기를 고려해 다음 회차를 탐색하되, 정보가 없으면 start_date/end_date/venue/link 모두 null로 둘 것.
+
+비교는 연·월·일 자릿수 단위. 같은 연도라도 start_date의 월·일이 오늘(${today})보다 뒤라면 미래입니다. "같은 연도니까 이미 지났다"는 판단 금지.
+
+[기타 주의]
+- 해당 회차 전용 사이트를 최우선으로 찾으세요. 리스팅/집계 사이트(easychair.org 등)는 사용 금지.
+- 공식사이트를 발견했으나 홈페이지에 날짜가 없을 경우, 사이트 내 하위 페이지(Important Dates / Program / Venue / About / Registration 등)를 추가 탐색하라. 날짜가 사이트 어딘가에 있다면 반드시 추출해야 한다.${dedicatedHint}
+
+찾아야 할 정보:
+- 시작일 (YYYY-MM-DD)
+- 종료일 (YYYY-MM-DD)
+- 장소 (도시, 국가)
+- 공식 링크 (링크 우선순위 1→4순위 적용)
+
+반드시 아래 JSON 형식으로만 응답하세요. 설명 문장은 JSON 뒤에 붙여도 되지만, JSON 블록은 반드시 포함되어야 합니다. 확인 불가 필드는 null로 두세요.
+
+\`\`\`json
+{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "venue": "City, Country",
+  "link": "https://...",
+  "source_url": "근거가 된 출처 URL",
+  "confidence": "high" | "medium" | "low",
+  "notes": "부가 설명 (선택)"
+}
+\`\`\``;
+}
+
 function buildVerifyUserV1(conference) {
   const {
     full_name = '',
@@ -327,6 +384,7 @@ const TEMPLATES = {
     v2: { system: UPDATE_SYSTEM_V2, user: buildUpdateUserV2 },
     v3: { system: UPDATE_SYSTEM_V3, user: buildUpdateUserV3 },
     v4: { system: UPDATE_SYSTEM_V4, user: buildUpdateUserV4 },
+    v5: { system: UPDATE_SYSTEM_V5, user: buildUpdateUserV5 },
   },
   verify: {
     v1: { system: VERIFY_SYSTEM_V1, user: buildVerifyUserV1 },

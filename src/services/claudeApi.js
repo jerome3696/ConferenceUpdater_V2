@@ -23,6 +23,7 @@ export class ClaudeApiError extends Error {
  * @param {string} opts.prompt                 사용자 메시지 텍스트
  * @param {string} [opts.system]               시스템 프롬프트
  * @param {boolean} [opts.webSearch=false]     web_search 도구 활성화
+ * @param {boolean} [opts.webFetch=false]      web_fetch 도구 활성화 (Sonnet 4.6+ 전용 — Haiku 4.5 미지원)
  * @param {number} [opts.maxTokens=1024]
  * @param {number} [opts.maxWebSearches=5]     web_search 도구의 max_uses 캡 (input 토큰 상한 예측용)
  * @param {string} [opts.model]
@@ -34,6 +35,7 @@ export async function callClaude({
   prompt,
   system,
   webSearch = false,
+  webFetch = false,
   maxTokens = 1024,
   maxWebSearches = 5,
   model = DEFAULT_MODEL,
@@ -49,13 +51,21 @@ export async function callClaude({
     messages: [{ role: 'user', content: prompt }],
   };
   if (system) body.system = system;
+  const tools = [];
   if (webSearch) {
-    body.tools = [{
+    tools.push({
       type: 'web_search_20250305',
       name: 'web_search',
       max_uses: maxWebSearches,
-    }];
+    });
   }
+  if (webFetch) {
+    tools.push({
+      type: 'web_fetch_20250910',
+      name: 'web_fetch',
+    });
+  }
+  if (tools.length) body.tools = tools;
 
   let res;
   try {

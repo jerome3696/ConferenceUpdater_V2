@@ -88,12 +88,49 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
           maxTokens: item.kind === 'verify' ? 1536 : 1024,
           signal: controller.signal,
         });
-        const text = extractText(res);
-        const parsed = parse(text);
+        let text = extractText(res);
+        let parsed = parse(text);
+        let retry = null;
+
+        // PLAN-005: update에서 start_date 미추출이면 Sonnet 4.6 + web_fetch로 1회 재시도.
+        // Haiku web_search가 홈페이지 평문 날짜를 놓치는 케이스(ICCFD 등) 대응.
+        if (
+          item.kind === 'update' &&
+          parsed.ok &&
+          !parsed.data?.start_date &&
+          MODELS.updateFallback
+        ) {
+          try {
+            const res2 = await callClaude({
+              apiKey,
+              prompt: user,
+              system,
+              model: MODELS.updateFallback,
+              webSearch: true,
+              webFetch: true,
+              maxTokens: 2048,
+              signal: controller.signal,
+            });
+            const text2 = extractText(res2);
+            const parsed2 = parse(text2);
+            if (parsed2.ok) {
+              text = text2;
+              parsed = parsed2;
+              retry = 'sonnet';
+            } else {
+              retry = 'sonnet_parse_fail';
+            }
+          } catch (retryErr) {
+            if (retryErr?.name === 'AbortError') throw retryErr;
+            // 재시도 실패는 치명적이지 않음 — 1차 결과 유지
+            retry = `sonnet_error:${retryErr?.kind || 'unknown'}`;
+          }
+        }
+
         if (!parsed.ok) {
-          card = { ...item, status: 'error', error: `응답 파싱 실패 (${parsed.reason})`, raw: parsed.raw };
+          card = { ...item, status: 'error', error: `응답 파싱 실패 (${parsed.reason})`, raw: parsed.raw, retry };
         } else {
-          card = { ...item, status: 'ready', result: parsed.data, raw: text };
+          card = { ...item, status: 'ready', result: parsed.data, raw: text, retry };
         }
       } catch (err) {
         if (err?.name === 'AbortError') {
