@@ -31,12 +31,12 @@
   - 결과 파일: `docs/eval/results/2026-04-17T05-46-34-v2.json`
 
 ### 잔존 실패 (다음 개선 타겟)
-- **[P4] conf_013 IEA HPC, conf_014 ICBCHT, conf_016 IHTC** — 레버 A 과잉 교정. AI가 미래(5월·6월·8월) 학회를 "이미 지나간 것"으로 오인. v3 우선 대상 → 날짜 비교 지시 명확화
+- **[P4] conf_013 IEA HPC, conf_014 ICBCHT, conf_016 IHTC** — v2에서 레버 A 과잉 교정. v3에서 부등호 명시·예시·동적 힌트로 차단 시도. eval 필요.
 - **[P2] conf_006 IIR Cryogenics, conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만, 전용 사이트(cryogenics-conference.eu, iir-gl-2026.net) 미발굴. 레버 B 효과 부분적.
 
 ### 다음 시도 (next levers)
 - [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
-- [ ] **A'. today 앵커 정밀화** — "시작일(YYYY-MM-DD) > 오늘(YYYY-MM-DD)이면 upcoming" 명시적 부등호 표현으로 교체 → P4 해결 목표, v3 우선
+- [x] **A'. today 앵커 정밀화** — v3 구현 완료 (2026-04-17). 부등호(start_date > today) + 검증 예시(system) + 동적 힌트(user). eval 대기
 - [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장 필요. MVP 후 본격 검토
 
 ---
@@ -68,6 +68,7 @@
 | v1 | 2026-04-15 | Sonnet 4 | 13/17 (76%) | (미계측) | 초기. past 회차 + 비공식 도메인 4건 fail |
 | v1 | 2026-04-16 | Haiku 4.5 + Phase A | **16/17 (94%)** | 34,510 / 649 | `max_uses 5` 캡 효과로 품질 상승 (의외) |
 | v2 | 2026-04-17 | Haiku 4.5 + Phase A | **16/19 (84%)** | 39,954 / 677 | 레버 A+B 적용. P1·P2 일부 해결. P4(today 앵커 과잉 교정) 신규 발생 |
+| v3 | 미실행 | (예정) | — | — | 레버 A' 적용. 부등호(start_date > today) 명시 + 검증 예시로 P4 차단 시도 |
 
 ---
 
@@ -285,7 +286,8 @@
 ## §8. 미해결 과제
 
 - [x] v2 프롬프트 구현 (레버 A + B) 및 v1/v2 비교 실행 (2026-04-17) — 16/19(84%). P4 신규 발생
-- [ ] v3 프롬프트: 레버 A' (today 앵커 정밀화 — 부등호 명시) → P4 해결 검증
+- [x] v3 프롬프트 구현: 레버 A' (today 앵커 정밀화 — 부등호 + 검증 예시) (2026-04-17)
+- [ ] v3 eval 실행 → P4 해결 여부 검증
 - [x] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가 (2026-04-16)
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
