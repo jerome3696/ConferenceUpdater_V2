@@ -349,12 +349,13 @@
       "id": "ed_006",
       "conference_id": "conf_006",
       "status": "upcoming",
-      "start_date": null,
-      "end_date": null,
+      "start_date": "2027-04-01",
+      "end_date": "2027-04-30",
       "venue": "Dresden, Germany",
-      "link": "https://iifiir.org/en/iir-conferences-series",
+      "link": null,
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:23:46.637Z"
+      "updated_at": "2026-04-17T15:51:32.735Z",
+      "confidence": "medium"
     },
     {
       "id": "ed_007",
