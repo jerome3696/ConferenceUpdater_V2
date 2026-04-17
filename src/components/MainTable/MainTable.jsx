@@ -17,7 +17,7 @@ const GROUPS = [
       { key: 'field', label: '분야', cellClass: 'min-w-[4.5rem]' },
       { key: 'abbreviation', label: '약칭' },
       { key: 'full_name', label: '학회명' },
-      { key: 'cycle_years', label: '주기(년)' },
+      { key: 'cycle_years', label: <>주기<br />(년)</> },
       { key: 'duration_days', label: <>기간<br />(일)</> },
       { key: 'region', label: '지역', cellClass: 'min-w-[4.5rem]' },
       { key: 'official_url', label: '링크' },
