@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.7 완료, 다음: Step A.8). 상세 진행은 `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 완료, B.2 prompt v4 진행). 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
@@ -48,7 +48,7 @@ MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.7 완료, 다음: S
 - 대화형 프롬프트 우회용으로 파괴 플래그 쓰지 말고 사용자에게 `!<command>` 직접 실행 요청.
 
 ## 비자명한 코드 제약
-- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2·v3 공존, 활성: v3)
+- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2·v3·v4 공존, 활성: v4)
 - `src/services/claudeApi.js`는 브라우저·Node 양쪽에서 사용 (브라우저 전용 API 금지)
 - `responseParser.js` ↔ `UpdateCard.jsx`/`VerificationCard.jsx`의 JSON 구조 일치 필수 — 하나 바꾸면 나머지 확인
 
