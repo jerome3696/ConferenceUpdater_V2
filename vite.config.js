@@ -5,4 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/ConferenceUpdater_V2/',
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test-setup.js',
+  },
 })
