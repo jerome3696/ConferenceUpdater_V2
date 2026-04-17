@@ -4,7 +4,7 @@ import VerificationCard from './VerificationCard';
 import UpdateLog from './UpdateLog';
 
 function RateLimitBanner({ until }) {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
@@ -31,8 +31,26 @@ export default function UpdatePanel({ queue, onBack }) {
     rateLimitUntil,
     accept,
     reject,
+    acceptAll,
+    rejectAll,
     stopAll,
   } = queue;
+
+  const readyCount = pending.filter((c) => c.status === 'ready' && c.result).length;
+
+  const handleAcceptAll = () => {
+    if (readyCount === 0) return;
+    if (window.confirm(`승인 대기 중인 ${readyCount}건을 모두 수용할까요?`)) {
+      acceptAll();
+    }
+  };
+
+  const handleRejectAll = () => {
+    if (pending.length === 0) return;
+    if (window.confirm(`승인 대기 중인 ${pending.length}건을 모두 거절할까요?`)) {
+      rejectAll();
+    }
+  };
 
   const doneCount = log.length;
   const total = doneCount + pendingCount + queuedCount + (searching ? 1 : 0);
@@ -55,8 +73,9 @@ export default function UpdatePanel({ queue, onBack }) {
           <button
             onClick={onBack}
             className="px-3 py-1.5 text-sm border border-slate-300 rounded hover:bg-slate-100"
+            aria-label="닫기"
           >
-            ← 메인으로
+            ✕ 닫기
           </button>
           <h2 className="text-lg font-bold text-slate-800">업데이트 현황</h2>
         </div>
@@ -117,7 +136,24 @@ export default function UpdatePanel({ queue, onBack }) {
 
       {pending.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-slate-700">승인 대기 ({pending.length})</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-slate-700">승인 대기 ({pending.length})</h3>
+            <div className="flex gap-2">
+              <button
+                onClick={handleAcceptAll}
+                disabled={readyCount === 0}
+                className="px-3 py-1 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400"
+              >
+                전체 승인 ({readyCount})
+              </button>
+              <button
+                onClick={handleRejectAll}
+                className="px-3 py-1 text-xs border border-slate-300 text-slate-700 rounded hover:bg-slate-100"
+              >
+                전체 거절 ({pending.length})
+              </button>
+            </div>
+          </div>
           {pending.map((card) => {
             const Card = card.kind === 'verify' ? VerificationCard : UpdateCard;
             return (

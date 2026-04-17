@@ -159,6 +159,35 @@ describe('필터 동작', () => {
   });
 });
 
+// --- QA #6, #7 (작업 첫 열, Last/참고 접힘) ---
+
+describe('레이아웃 (QA #6, #7)', () => {
+  it('isAdmin 시 작업 그룹 헤더가 첫 열', () => {
+    render(<MainTable conferences={makeConferences()} isAdmin={true} />);
+    const groupHeaders = screen.getAllByRole('columnheader')
+      .filter((th) => th.getAttribute('colspan'));
+    expect(groupHeaders[0].textContent).toContain('작업');
+    expect(groupHeaders[1].textContent).toContain('학회 마스터');
+  });
+
+  it('Last/참고 그룹은 기본 접힘 (▶ 표시)', () => {
+    render(<MainTable conferences={makeConferences()} />);
+    const lastHeader = screen.getByText((_, el) => el?.tagName === 'TH' && el.textContent.startsWith('Last'));
+    const noteHeader = screen.getByText((_, el) => el?.tagName === 'TH' && el.textContent.startsWith('참고'));
+    expect(lastHeader.textContent).toContain('▶');
+    expect(noteHeader.textContent).toContain('▶');
+  });
+
+  it('Last 그룹 클릭 → 펼침 (▼) → 시작일/종료일/장소/링크 헤더 노출', () => {
+    render(<MainTable conferences={makeConferences()} />);
+    const lastHeader = screen.getByText((_, el) => el?.tagName === 'TH' && el.textContent.startsWith('Last'));
+    fireEvent.click(lastHeader);
+    expect(lastHeader.textContent).toContain('▼');
+    // Upcoming + Last 두 그룹 모두 '시작일' 헤더 가짐 → 2개
+    expect(screen.getAllByText('시작일', { selector: 'th' })).toHaveLength(2);
+  });
+});
+
 // --- 정렬 ---
 
 describe('정렬', () => {

@@ -18,6 +18,13 @@ function isEditionEmpty(e) {
   return !e.start_date && !e.end_date && !e.venue && !e.link;
 }
 
+function editionFieldsEqual(a, b) {
+  return (a?.start_date || '') === (b?.start_date || '')
+    && (a?.end_date || '') === (b?.end_date || '')
+    && (a?.venue || '') === (b?.venue || '')
+    && (a?.link || '') === (b?.link || '');
+}
+
 export function useConferences({ token } = {}) {
   const [data, setData] = useState({ conferences: [], editions: [] });
   const [loading, setLoading] = useState(true);
@@ -36,6 +43,8 @@ export function useConferences({ token } = {}) {
   // 초기 로드 (token 변화에 재로드: 토큰 설정 직후 최신본 fetch)
   useEffect(() => {
     let cancelled = false;
+    // 토큰 변경 시 로딩 상태로 즉시 전환해야 UI에서 깜빡임 없이 fetch 표시 가능.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     loadConferences({ token })
       .then(({ data: loaded }) => {
@@ -100,6 +109,10 @@ export function useConferences({ token } = {}) {
     });
   };
 
+  // QA #13: source 갱신은 upcoming 필드가 실제로 변경된 경우에만.
+  // - 기존 edition: 필드 변경 없으면 source 그대로 (편집 모달 단순 저장으로 ai_search → user_input
+  //   덮어쓰기 방지). status='upcoming' 이고 변경된 경우에만 user_input 으로 승격.
+  // - 신규 edition: 사용자가 명시적으로 입력한 것이므로 user_input.
   const upsertEdition = (next, conferenceId, existingEditionId, status, editionData) => {
     const now = new Date().toISOString();
     const empty = isEditionEmpty(editionData);
@@ -113,11 +126,13 @@ export function useConferences({ token } = {}) {
       }
       return {
         ...next,
-        editions: next.editions.map((e) =>
-          e.id === existingEditionId
-            ? { ...e, ...editionData, status, source: 'user_input', updated_at: now }
-            : e
-        ),
+        editions: next.editions.map((e) => {
+          if (e.id !== existingEditionId) return e;
+          const changed = !editionFieldsEqual(e, editionData);
+          if (!changed) return e;
+          const newSource = status === 'upcoming' ? 'user_input' : e.source;
+          return { ...e, ...editionData, status, source: newSource, updated_at: now };
+        }),
       };
     }
     if (empty) return next;
@@ -177,6 +192,8 @@ export function useConferences({ token } = {}) {
       end_date: proposed.end_date || null,
       venue: proposed.venue || null,
       link: proposed.link || null,
+      // QA #14 — 메인 테이블 출처 셀 inline 표시용. 신뢰도 미제공 시 null.
+      confidence: proposed.confidence || null,
     };
 
     let editions;

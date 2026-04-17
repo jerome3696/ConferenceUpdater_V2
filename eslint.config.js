@@ -24,11 +24,10 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', caughtErrors: 'none' }],
-      // React 19 신규 advisory 룰들 — 대형 리팩토링 트리거. 일단 warn으로 두고 별도 cleanup PR로 처리 (qa-backlog 참조).
-      'react-hooks/set-state-in-effect': 'warn',
-      'react-hooks/purity': 'warn',
-      // Fast refresh 최적화 권고 — 정확성 문제 아님.
-      'react-refresh/only-export-components': 'warn',
+      // React 19 advisory 룰 — cleanup 완료 후 error로 승격. 회귀 방지.
+      'react-hooks/set-state-in-effect': 'error',
+      'react-hooks/purity': 'error',
+      'react-refresh/only-export-components': 'error',
     },
   },
   {

@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* QA #8, #12 — 한글은 어절 경계로 줄바꿈. 긴 영문/URL은 anywhere로 폴백. */
+.cell-text {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* QA #9 — 학회명·메모 5줄 truncation + ellipsis. */
+.line-clamp-5 {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

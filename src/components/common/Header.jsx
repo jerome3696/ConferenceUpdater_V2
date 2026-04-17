@@ -40,7 +40,7 @@ function Header({
   hasKey, onOpenKeyModal,
   hasToken, onOpenTokenModal,
   syncStatus, lastSavedAt, onRetryCommit,
-  pendingUpdateCount = 0, onOpenUpdatePanel, view = 'main',
+  pendingUpdateCount = 0, onOpenUpdatePanel,
 }) {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
@@ -68,7 +68,7 @@ function Header({
             열람자 모드
           </span>
         )}
-        {hasKey && view === 'main' && pendingUpdateCount > 0 && (
+        {hasKey && pendingUpdateCount > 0 && (
           <button
             onClick={onOpenUpdatePanel}
             className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"

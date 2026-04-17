@@ -22,7 +22,8 @@ function App() {
 
   const [isKeyModalOpen, setKeyModalOpen] = useState(false);
   const [isTokenModalOpen, setTokenModalOpen] = useState(false);
-  const [view, setView] = useState('main'); // 'main' | 'update'
+  // 개별 업데이트는 큐에만 쌓고 메인 화면 유지(QA #11). 일괄 작업과 헤더 버튼은 overlay 자동 오픈.
+  const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
 
   const handleRequestUpdate = (row) => {
     if (!hasKey) {
@@ -31,7 +32,6 @@ function App() {
       return;
     }
     updateQueue.enqueue([row]);
-    setView('update');
   };
 
   const handleRequestUpdateAll = (rows) => {
@@ -53,7 +53,7 @@ function App() {
     );
     if (!ok) return;
     updateQueue.enqueue(targets, 'update');
-    setView('update');
+    setUpdatePanelOpen(true);
   };
 
   const handleRequestVerify = (row) => {
@@ -63,7 +63,6 @@ function App() {
       return;
     }
     updateQueue.enqueue([row], 'verify');
-    setView('update');
   };
 
   const handleRequestVerifyAll = (rows) => {
@@ -82,7 +81,7 @@ function App() {
     );
     if (!ok) return;
     updateQueue.enqueue(rows, 'verify');
-    setView('update');
+    setUpdatePanelOpen(true);
   };
 
   return (
@@ -96,37 +95,47 @@ function App() {
         lastSavedAt={conferences.lastSavedAt}
         onRetryCommit={conferences.retryCommit}
         pendingUpdateCount={updateQueue.totalRemaining}
-        onOpenUpdatePanel={() => setView('update')}
-        view={view}
+        onOpenUpdatePanel={() => setUpdatePanelOpen(true)}
       />
       <main className="p-4">
-        {view === 'main' ? (
-          <MainTable
-            isAdmin={hasKey}
-            conferences={conferences}
-            onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
-            onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
-            onRequestVerify={hasKey ? handleRequestVerify : undefined}
-            onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
-          />
-        ) : (
-          <UpdatePanel queue={updateQueue} onBack={() => setView('main')} />
-        )}
+        <MainTable
+          isAdmin={hasKey}
+          conferences={conferences}
+          onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
+          onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
+          onRequestVerify={hasKey ? handleRequestVerify : undefined}
+          onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
+        />
       </main>
-      <ApiKeyModal
-        isOpen={isKeyModalOpen}
-        currentKey={apiKey}
-        onSave={(k) => { setApiKey(k); setKeyModalOpen(false); }}
-        onClear={() => { clearApiKey(); setKeyModalOpen(false); }}
-        onClose={() => setKeyModalOpen(false)}
-      />
-      <GitHubTokenModal
-        isOpen={isTokenModalOpen}
-        currentToken={token}
-        onSave={(t) => { setToken(t); setTokenModalOpen(false); }}
-        onClear={() => { clearToken(); setTokenModalOpen(false); }}
-        onClose={() => setTokenModalOpen(false)}
-      />
+      {isUpdatePanelOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto"
+          onClick={() => setUpdatePanelOpen(false)}
+        >
+          <div
+            className="bg-white rounded-lg shadow-xl w-full max-w-5xl my-4 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <UpdatePanel queue={updateQueue} onBack={() => setUpdatePanelOpen(false)} />
+          </div>
+        </div>
+      )}
+      {isKeyModalOpen && (
+        <ApiKeyModal
+          currentKey={apiKey}
+          onSave={(k) => { setApiKey(k); setKeyModalOpen(false); }}
+          onClear={() => { clearApiKey(); setKeyModalOpen(false); }}
+          onClose={() => setKeyModalOpen(false)}
+        />
+      )}
+      {isTokenModalOpen && (
+        <GitHubTokenModal
+          currentToken={token}
+          onSave={(t) => { setToken(t); setTokenModalOpen(false); }}
+          onClear={() => { clearToken(); setTokenModalOpen(false); }}
+          onClose={() => setTokenModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

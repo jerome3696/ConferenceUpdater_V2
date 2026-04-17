@@ -126,7 +126,7 @@
       "full_name": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants",
       "cycle_years": 4,
       "duration_days": 4,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
       "note": ""
     },
@@ -139,7 +139,7 @@
       "full_name": "International Conference on Efficiency, Cost, Optmization, Simulation and Environmental Impact of Energy Systems",
       "cycle_years": 1,
       "duration_days": 5,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://ecos2023.com/",
       "note": ""
     },
@@ -165,7 +165,7 @@
       "full_name": "IEA Heat Pump Conference",
       "cycle_years": 3,
       "duration_days": 4,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
       "note": ""
     },
@@ -178,7 +178,7 @@
       "full_name": "International Conference On Boiling & Condensation Heat Transfer",
       "cycle_years": 3,
       "duration_days": 3,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://sites.mit.edu/icbcht12/",
       "note": ""
     },
@@ -191,7 +191,7 @@
       "full_name": "International Conference on Computational Fluid Dynamics",
       "cycle_years": 2,
       "duration_days": 5,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://www.iccfd.org/",
       "note": ""
     },
@@ -204,7 +204,7 @@
       "full_name": "International Heat Transfer Conference",
       "cycle_years": 4,
       "duration_days": 5,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://www.astfe.org/conferences/",
       "note": ""
     },
@@ -230,7 +230,7 @@
       "full_name": "IIR International Congress of Refrigeration",
       "cycle_years": 4,
       "duration_days": 6,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
       "note": "IIR 시리즈"
     },
@@ -243,7 +243,7 @@
       "full_name": "IIR Gustav Lorentzen Conference on Natural Refrigerants",
       "cycle_years": 2,
       "duration_days": 4,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
       "note": "IIR 시리즈"
     },
@@ -269,7 +269,7 @@
       "full_name": "International Heat Pipe Conferences and Symposia",
       "cycle_years": 1,
       "duration_days": 5,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "",
       "note": ""
     },
@@ -282,7 +282,7 @@
       "full_name": "Building Simulation",
       "cycle_years": 2,
       "duration_days": 4,
-      "region": "세계",
+      "region": "전세계",
       "official_url": "https://ibpsa.org/",
       "note": "",
       "source": "user_input"

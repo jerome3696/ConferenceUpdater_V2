@@ -159,6 +159,54 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
     setPending((p) => p.filter((c) => c.id !== cardId));
   }, [pending, pushLog]);
 
+  // 승인 대기 카드 일괄 수용. status='ready' + result 있는 카드만 적용.
+  // error 카드는 건너뛰고 그대로 둠 (사용자가 개별 닫기).
+  const acceptAll = useCallback(() => {
+    setPending((p) => {
+      const remain = [];
+      for (const card of p) {
+        if (card.status !== 'ready' || !card.result) {
+          remain.push(card);
+          continue;
+        }
+        if (card.kind === 'verify') {
+          applyVerifyUpdate?.(card.conferenceId, card.result);
+        } else {
+          applyAiUpdate(card.conferenceId, card.result);
+        }
+        pushLog({
+          id: card.id,
+          kind: card.kind,
+          conferenceId: card.conferenceId,
+          abbrev: card.row.abbreviation,
+          fullName: card.row.full_name,
+          action: 'accepted',
+          result: card.result,
+        });
+      }
+      return remain;
+    });
+  }, [applyAiUpdate, applyVerifyUpdate, pushLog]);
+
+  // 승인 대기 카드 일괄 거절. ready·error 모두 정리.
+  const rejectAll = useCallback(() => {
+    setPending((p) => {
+      for (const card of p) {
+        pushLog({
+          id: card.id,
+          kind: card.kind,
+          conferenceId: card.conferenceId,
+          abbrev: card.row.abbreviation,
+          fullName: card.row.full_name,
+          action: card.status === 'error' ? 'error' : 'rejected',
+          result: card.result,
+          error: card.error,
+        });
+      }
+      return [];
+    });
+  }, [pushLog]);
+
   // 검색 전체 중단: 대기 큐 비우기 + 현재 호출 abort.
   // pending(승인 대기)은 유지 — 이미 찾아둔 결과이므로.
   const stopAll = useCallback(() => {
@@ -185,6 +233,8 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
     enqueue,
     accept,
     reject,
+    acceptAll,
+    rejectAll,
     stopAll,
   };
 }

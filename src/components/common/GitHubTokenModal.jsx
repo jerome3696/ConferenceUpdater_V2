@@ -1,18 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { maskToken } from '../../hooks/useGitHubToken';
 
-function GitHubTokenModal({ isOpen, currentToken, onSave, onClear, onClose }) {
+// 부모(App.jsx)에서 conditional render로 매번 새로 mount → 입력값 자동 리셋.
+function GitHubTokenModal({ currentToken, onSave, onClear, onClose }) {
   const [input, setInput] = useState('');
   const [warning, setWarning] = useState('');
-
-  useEffect(() => {
-    if (isOpen) {
-      setInput('');
-      setWarning('');
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
 
   const handleSave = () => {
     const trimmed = input.trim();
