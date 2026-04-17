@@ -9,6 +9,27 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (PLAN-005, 2026-04-18)
+
+**Haiku→Sonnet 폴백 재시도**
+- `useUpdateQueue`: 1차 Haiku 결과가 `parsed.ok && start_date == null` 이면 Sonnet 4.6 + `web_fetch` 로 1회 재호출 (maxTokens 2048). 2차 파싱 성공 시 결과 교체, 실패면 1차 유지. 카드에 `retry` 필드로 관찰성 확보
+- `claudeApi.callClaude`: `webFetch: boolean` 파라미터 — true 시 `web_fetch_20250910` tool push (Haiku 비호환 — 호출부 책임)
+- `src/config/models.js`: `MODELS.updateFallback = 'claude-sonnet-4-6'` 신규
+
+**프롬프트 v5 + `dedicated_url` 힌트 (옵트인)**
+- `conferences.json` conf_015 에 `dedicated_url: https://iccfd13.polimi.it` 기록
+- `promptBuilder.buildUpdateUserV5`: `dedicated_url` 있을 때만 "회차 전용 사이트(힌트): …" + 사용 지침 1줄 주입. 필드 비면 v4와 동일
+- `DEFAULT_UPDATE_VERSION='v4'` 유지 — v5 는 eval 측정 후 활성 전환 검토
+
+**eval 3-tier 채점**
+- `scripts/eval-prompt.js` `scoreUrl`: URL 매치 + `start_date` 있음 → pass / URL 매치 but `start_date=null` → **partial** / URL 불일치 → fail. 결과 JSON `summary.partial` 추가
+- 배경: 이전 v3 "19/19 pass"는 URL 매칭만 확인하여 conf_006·conf_015 `start_date=null` 를 숨기고 있던 착시
+
+### Changed (PLAN-005)
+
+- `public/data/conferences.json` conf_006 `official_url`: `https://iifiir.org/en/iir-conferences-series` (v4 금지 도메인) → `https://www.cryogenics-conference.eu/`. 금지 도메인을 마스터 링크로 보관하던 모순 제거
+- `docs/eval/golden-set.csv` conf_006 `source_url`/`verified_at` 동기화 (2026-04-18)
+
 ### Changed (QA Batch 2 — PLAN-004, 2026-04-18)
 
 - `.cell-text`에서 `overflow-wrap: anywhere` 폴백 제거 — 좁은 폭에서 '박람/회'·'아시/아' 재발 차단. 대신 분류·분야·지역 열에 `min-w-[4.5rem]`로 한글 3자 수용 보장

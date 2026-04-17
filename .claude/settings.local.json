@@ -40,7 +40,9 @@
       "Bash(bash scripts/check-plan.sh)",
       "Bash(echo \"exit: $?\")",
       "Bash(gh pr create --title 'chore: Step A.7 — 플랜 강제 hook 추가' --body ' *)",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "Bash(git checkout *)",
+      "Bash(npx vitest *)"
     ]
   }
 }
