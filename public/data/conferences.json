@@ -374,10 +374,11 @@
       "status": "upcoming",
       "start_date": "2026-05-26",
       "end_date": "2026-05-29",
-      "venue": "Orlando, Florida, United States",
-      "link": "https://www.ieee-itherm.net/",
+      "venue": "Orlando, United States",
+      "link": "https://www.ieee-itherm.net/may-26-29-2026-conference/",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:24:33.448Z"
+      "updated_at": "2026-04-17T15:57:37.455Z",
+      "confidence": "high"
     },
     {
       "id": "ed_009",
@@ -532,9 +533,10 @@
       "start_date": "2026-04-20",
       "end_date": "2026-04-24",
       "venue": "Hannover, Germany",
-      "link": "https://www.hannovermesse.de/en/hannover-messe-2026/",
+      "link": "https://www.hannovermesse.de",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:23:42.615Z"
+      "updated_at": "2026-04-17T15:57:35.090Z",
+      "confidence": "high"
     },
     {
       "id": "ed_mo1ihhw0",
