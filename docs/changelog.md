@@ -3,7 +3,57 @@
 ConferenceFinder의 변경 이력. [Keep a Changelog](https://keepachangelog.com/) 형식.
 
 MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경·디자인 변경을 기록.
-디자인 결정의 *이유*는 `docs/DESIGN.md`, 프롬프트 실행 이력은 `docs/PROMPT_LOG.md` 참조.
+디자인 결정의 *이유*는 `docs/design.md`, 프롬프트 실행 이력은 `docs/prompteng.md` 참조.
+
+---
+
+## [Unreleased] — Post-MVP
+
+### Changed (QA Batch 2 — PLAN-004, 2026-04-18)
+
+- `.cell-text`에서 `overflow-wrap: anywhere` 폴백 제거 — 좁은 폭에서 '박람/회'·'아시/아' 재발 차단. 대신 분류·분야·지역 열에 `min-w-[4.5rem]`로 한글 3자 수용 보장
+- LinkCell("열기") 담는 td 3곳(official_url/upcoming.link/last.link)에 `whitespace-nowrap` — '열/기' 절단 방지
+- 이중 헤더 하위: "기간(일)" → 두 줄 "기간<br>(일)", "주기" → "주기(년)", 하위 헤더 정렬 `text-left` → `text-center`
+
+### Removed (QA Batch 2 — PLAN-004)
+
+- 메인 테이블 행별 '검증' 버튼 — 개별/전체의 프롬프트·모델·파서·적용 로직이 동일하고 직관성이 낮아 상단 '전체 검증'만 유지. 부분집합 검증은 필터 후 전체 검증으로 대체 (App.jsx `handleRequestVerify`, MainTable `onRequestVerify` prop 삭제)
+
+### Added (Track B / QA Batch 1)
+
+**프롬프트 v2~v4 (PLAN-002, 2026-04-17)**
+- v2: today 앵커 + 도메인 블랙리스트 — pass 16/19 (84%)
+- v3: today 앵커 정밀화 — pass 19/19 (100%), P4 완전 해소
+- v4: 부분정보 처리 규칙 (confidence 기준 명시 + link 4순위 + 시리즈 null 강화) — 활성 전환 후 eval 결과 불만족, 추가 이터레이션 보류
+- `src/utils/promptBuilder.js`에 v1·v2·v3·v4 공존, `DEFAULT_UPDATE_VERSION = 'v4'`
+
+**테스트 커버리지 확대 (PLAN-001 / Step B.1, 2026-04-17)**
+- MainTable 컴포넌트 / useConferences 훅 / dataManager 서비스 단위 테스트 73건
+- 총 90건 (이전 17 + 신규 73), verify-task 5/5 통과
+
+**QA Batch 1 — UI/UX 일괄 (PLAN-003, 2026-04-17)**
+- UpdateCard: confidence badge(고/중/저 색상), source_url 링크, 변경없음·정보없음 한 줄 배너, 폰트·패딩 컴팩트화
+- UpdatePanel: '전체 승인' / '전체 거절' 일괄 버튼
+- 개별 업데이트 흐름: 메인 화면 유지 + UpdatePanel을 overlay로 띄움 (즉시 페이지 전환 제거)
+- MainTable: 작업 버튼 → 첫 열(★ 앞), Last·참고 그룹 기본 접힘 + 토글, 출처 셀에 신뢰도 inline ("AI검색 (고/중/저)")
+- 한글 word-break 교정 (`keep-all` + `overflow-wrap: anywhere`) — '박람/회'·'아시/아' 음절 절단 방지
+- 학회명·메모 5줄 line-clamp + ellipsis
+- `src/utils/locationFormatter.js` 신규 — US "City, State, USA" / 그 외 "City, Country"
+- 지역 워딩 '세계' → '전세계' + 데이터 마이그레이션
+- React 19 advisory 룰 3종(`react-hooks/set-state-in-effect`·`purity`·`react-refresh/only-export-components`) 24건 cleanup → `error` 등급 복귀
+
+### Fixed
+
+- 편집 모달 저장 시 `ai_search` source가 `user_input`으로 덮어써지던 버그 — Upcoming 필드 실제 변경 시에만 source 갱신 (PLAN-003 #13)
+
+### Infrastructure (Track A)
+
+- Husky pre-commit hook + lint-staged + secret pattern 차단
+- Vitest 도입
+- GitHub Actions CI (lint/test/build) + main 브랜치 보호
+- `scripts/verify-task.sh` 5-gate 검증
+- 브랜치 전략 (`feature/PLAN-xxx-*`, `fix/*`, `docs/*`, `chore/*`) + Conventional Commits
+- 플랜 강제 hook (`scripts/check-plan.sh`) + post-merge auto-archive
 
 ---
 
