@@ -287,6 +287,20 @@
       "official_url": "https://ibpsa.org/",
       "note": "",
       "source": "user_input"
+    },
+    {
+      "id": "user_mo342nwc",
+      "starred": 0,
+      "category": "학회",
+      "field": "열전달",
+      "abbreviation": "MNHMT2027",
+      "full_name": "Micro/Nanoscale Heat & Mass Transfer International Conference",
+      "cycle_years": 3,
+      "duration_days": 3,
+      "region": "전세계",
+      "official_url": "https://www.ichmt.org/",
+      "note": "",
+      "source": "user_input"
     }
   ],
   "editions": [
