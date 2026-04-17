@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# 머지 후 feature/PLAN-xxx 플랜 문서를 active/ → completed/ 자동 이동
+
+MERGE_MSG=$(git log -1 --pretty=%s)
+
+# 머지 메시지에서 PLAN ID 추출
+# 예: "Merge pull request #X from jerome3696/feature/PLAN-001-..."
+# 예: "Merge branch 'feature/PLAN-001-...'"
+if [[ "$MERGE_MSG" =~ PLAN-([0-9]+) ]]; then
+  PLAN_ID="PLAN-${BASH_REMATCH[1]}"
+  PLAN_FILE="docs/plans/active/${PLAN_ID}.md"
+  DEST_FILE="docs/plans/completed/${PLAN_ID}.md"
+
+  if [[ -f "$PLAN_FILE" ]]; then
+    echo ""
+    echo "📦 플랜 아카이브: $PLAN_ID → completed/"
+    git mv "$PLAN_FILE" "$DEST_FILE"
+    git commit -m "chore: move ${PLAN_ID} to completed"
+    echo "✅ $PLAN_ID 완료 처리됨"
+    echo ""
+  elif [[ -f "$DEST_FILE" ]]; then
+    echo "ℹ️  $PLAN_ID 이미 completed/ 에 있음 — 건너뜀"
+  fi
+fi
