@@ -129,17 +129,17 @@ docs/
 - **확인**: main 직접 push → GitHub에서 거부 (branch protection 활성) ✅ (2026-04-17)
 
 ### Step A.7: 플랜 강제 Hook
-- [ ] `scripts/check-plan.sh` 작성:
+- [x] `scripts/check-plan.sh` 작성:
   - 현재 브랜치명에서 PLAN ID 추출
   - `docs/plans/active/`에 해당 ID 파일 존재 확인
   - 없으면 에러 + 커밋 차단
   - fix/docs/chore 브랜치는 건너뜀
-- [ ] `.husky/pre-commit`에 check-plan.sh 연결
-- [ ] `.husky/post-merge` 작성:
+- [x] `.husky/pre-commit`에 check-plan.sh 연결
+- [x] `.husky/post-merge` 작성:
   - 머지된 브랜치의 PLAN ID 추출
   - `docs/plans/active/PLAN-xxx.md` → `docs/plans/completed/` 이동
   - 자동 커밋
-- **확인**: `feature/PLAN-999-test` 브랜치에서 플랜 없이 커밋 → 차단되는가?
+- **확인**: `feature/PLAN-999-test` 브랜치에서 플랜 없이 커밋 → 차단됨 ✅ (2026-04-17)
 
 ### Step A.8: CLAUDE.md 전면 갱신
 - [ ] "필수 참조 문서" → v2 문서 구조 반영
