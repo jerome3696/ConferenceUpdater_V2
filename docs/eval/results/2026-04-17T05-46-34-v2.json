@@ -1,0 +1,711 @@
+{
+  "meta": {
+    "timestamp": "2026-04-17T05-46-34",
+    "version": "v2",
+    "snapshot_date": "2026-04-17",
+    "case_count": 19
+  },
+  "summary": {
+    "pass": 16,
+    "fail_or_error": 3,
+    "tokens": {
+      "samples": 19,
+      "total_input": 759120,
+      "total_output": 12857,
+      "avg_input": 39954,
+      "avg_output": 677,
+      "stop_reason_max_tokens": 0
+    }
+  },
+  "results": [
+    {
+      "id": "conf_001",
+      "status": "pass",
+      "aiLink": "https://www.ashrae.org/conferences/2027-winter-conference",
+      "matchedAgainst": "https://www.ashrae.org/conferences/2027-winter-conference",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-01-23",
+        "end_date": "2027-01-27",
+        "venue": "Chicago, Illinois, USA",
+        "link": "https://www.ashrae.org/conferences/2027-winter-conference",
+        "source_url": "https://www.ashrae.org/conferences/2027-winter-conference",
+        "confidence": "high",
+        "notes": "해당 회차 전용 공식 사이트 확인. 초록 접수 마감: 2026-05-27"
+      },
+      "elapsedMs": 4700,
+      "usage": {
+        "input_tokens": 12633,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 364,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 2,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ASHRAE Winter Conference의 다음 개최 정보를 찾기 위해 공식 소스를 검색하겠습니다.완벽한 정보를 찾았습니다. 2027 ASHRAE Winter Conference는 Chicago, Illinois에서 January 23–27, 2027에 개최됩니다.\n\n```json\n{\n  \"start_date\": \"2027-01-23\",\n  \"end_date\": \"2027-01-27\",\n  \"venue\": \"Chicago, Illinois, USA\",\n  \"link\": \"https://www.ashrae.org/conferences/2027-winter-conference\",\n  \"source_url\": \"https://www.ashrae.org/conferences/2027-winter-conference\",\n  \"confidence\": \"high\",\n  \"notes\": \"해당 회차 전용 공식 사이트 확인. 초록 접수 마감: 2026-05-27\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_003",
+      "status": "pass",
+      "aiLink": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "matchedAgainst": "https://ish.messefrankfurt.com/frankfurt/en.html",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-03-15",
+        "end_date": "2027-03-19",
+        "venue": "Frankfurt am Main, Germany",
+        "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "source_url": "https://ish.messefrankfurt.com/frankfurt/en.html",
+        "confidence": "high",
+        "notes": "<cite index=\"9-1\">다음 ISH Frankfurt는 2027년 3월 15일부터 19일까지 개최됩니다</cite>. <cite index=\"1-10\">행사는 Messe Frankfurt에서 개최됩니다</cite>."
+      },
+      "elapsedMs": 4490,
+      "usage": {
+        "input_tokens": 24160,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 399,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 2,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ISH Frankfurt의 다음 개최 정보를 찾겠습니다.완벽한 정보를 찾았습니다. ISH Frankfurt 2027의 공식 사이트(ish.messefrankfurt.com)에서 모든 상세 정보를 확인했습니다.\n\n```json\n{\n  \"start_date\": \"2027-03-15\",\n  \"end_date\": \"2027-03-19\",\n  \"venue\": \"Frankfurt am Main, Germany\",\n  \"link\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"source_url\": \"https://ish.messefrankfurt.com/frankfurt/en.html\",\n  \"confidence\": \"high\",\n  \"notes\": \"<cite index=\\\"9-1\\\">다음 ISH Frankfurt는 2027년 3월 15일부터 19일까지 개최됩니다</cite>. <cite index=\\\"1-10\\\">행사는 Messe Frankfurt에서 개최됩니다</cite>.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_004",
+      "status": "pass",
+      "aiLink": "https://www.etc17.eu/",
+      "matchedAgainst": "https://www.etc17.eu/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-04-19",
+        "end_date": "2027-04-23",
+        "venue": "Gdansk, Poland",
+        "link": "https://www.etc17.eu/",
+        "source_url": "https://www.etc17.eu/",
+        "confidence": "high",
+        "notes": "ETC17 is the 17th edition of the European Turbomachinery Conference, organized by Euroturbo in collaboration with EVI-GTI."
+      },
+      "elapsedMs": 4692,
+      "usage": {
+        "input_tokens": 21574,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 361,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 2,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "European Turbomachinery Conference의 다음 개최 정보를 검색하겠습니다.완벽한 정보를 찾았습니다. ETC17(17번째 European Turbomachinery Conference)은 2027년 4월 19-23일 폴란드 그단스크에서 개최됩니다.\n\n```json\n{\n  \"start_date\": \"2027-04-19\",\n  \"end_date\": \"2027-04-23\",\n  \"venue\": \"Gdansk, Poland\",\n  \"link\": \"https://www.etc17.eu/\",\n  \"source_url\": \"https://www.etc17.eu/\",\n  \"confidence\": \"high\",\n  \"notes\": \"ETC17 is the 17th edition of the European Turbomachinery Conference, organized by Euroturbo in collaboration with EVI-GTI.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_005",
+      "status": "pass",
+      "aiLink": "https://www.hannovermesse.de/en",
+      "matchedAgainst": "https://www.hannovermesse.de/en/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-04-20",
+        "end_date": "2026-04-24",
+        "venue": "Hannover, Germany",
+        "link": "https://www.hannovermesse.de/en",
+        "source_url": "https://www.hannovermesse.de/en/for-visitors/opening-hours/",
+        "confidence": "high",
+        "notes": "시작일이 요청하신 오늘(2026-04-17)보다 후이므로 upcoming 회차입니다. 공식 사이트에서 명확히 확인된 정보입니다."
+      },
+      "elapsedMs": 5741,
+      "usage": {
+        "input_tokens": 14646,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 396,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 1,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "Hannover Messe의 다음 개최 정보를 찾겠습니다.제공하신 조건에 맞게 공식 사이트에서 찾은 정보를 정리했습니다.\n\n```json\n{\n  \"start_date\": \"2026-04-20\",\n  \"end_date\": \"2026-04-24\",\n  \"venue\": \"Hannover, Germany\",\n  \"link\": \"https://www.hannovermesse.de/en\",\n  \"source_url\": \"https://www.hannovermesse.de/en/for-visitors/opening-hours/\",\n  \"confidence\": \"high\",\n  \"notes\": \"시작일이 요청하신 오늘(2026-04-17)보다 후이므로 upcoming 회차입니다. 공식 사이트에서 명확히 확인된 정보입니다.\"\n}\n```\n\n**확인된 정보:**\n- 행사는 2026년 4월 20-24일 Hannover 전시장에서 개최\n- 주소: Messegelände 30521 Hannover",
+      "version": "v2"
+    },
+    {
+      "id": "conf_006",
+      "status": "pass",
+      "aiLink": "https://iifiir.org/en/iir-conferences-series",
+      "matchedAgainst": "https://iifiir.org/en",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": "Dresden, Germany",
+        "link": "https://iifiir.org/en/iir-conferences-series",
+        "source_url": "https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference",
+        "confidence": "medium",
+        "notes": "<cite index=\"32-1\">19th Cryogenics IIR International Conference will take place in April 2027 in Dresden, Germany</cite>. 역사적으로 이 학회는 4월 중순에 개최되며(2023년: 4월 25-28, 2025년: 4월 7-11), 격년 개최되는 행사입니다. 하지만 현재 정확한 시작/종료 날짜는 공식 발표되지 않았습니다. 해당 회차 전용 사이트(예: cryogenics2027.eu)는 아직 활성화되지 않았습니다."
+      },
+      "elapsedMs": 13819,
+      "usage": {
+        "input_tokens": 99095,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 894,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "IIR Conference on Cryogenics의 다음 개최 정보를 찾겠습니다.이제 2027년 4월 드레스덴 개최에 대한 더 자세한 정보를 찾겠습니다.정확한 시작/종료 날짜를 확인하기 위해 cryogenics-conference.eu 공식 사이트를 더 자세히 검색하겠습니다.검색 결과를 종합하면 정확한 시작/종료 날짜는 아직 공식 발표되지 않았습니다. 마지막 한 번의 검색으로 IIR 공식 이벤트 페이지에서 2027년 행사를 직접 확인하겠습니다.검색 결과를 종합한 결과를 정리하겠습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": \"Dresden, Germany\",\n  \"link\": \"https://iifiir.org/en/iir-conferences-series\",\n  \"source_url\": \"https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference\",\n  \"confidence\": \"medium\",\n  \"notes\": \"<cite index=\\\"32-1\\\">19th Cryogenics IIR International Conference will take place in April 2027 in Dresden, Germany</cite>. 역사적으로 이 학회는 4월 중순에 개최되며(2023년: 4월 25-28, 2025년: 4월 7-11), 격년 개최되는 행사입니다. 하지만 현재 정확한 시작/종료 날짜는 공식 발표되지 않았습니다. 해당 회차 전용 사이트(예: cryogenics2027.eu)는 아직 활성화되지 않았습니다.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_008",
+      "status": "pass",
+      "aiLink": "https://www.ieee-itherm.net/",
+      "matchedAgainst": "https://www.ieee-itherm.net/",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": null,
+        "link": "https://www.ieee-itherm.net/",
+        "source_url": "https://www.ieee-itherm.net/",
+        "confidence": "low",
+        "notes": "2027년 26번째 IEEE ITherm 회차에 대한 공식 정보가 아직 공개되지 않았습니다. 공식 사이트에서는 2026년 회차(5월 26-29일, Orlando)까지의 정보만 제공 중입니다. 2028년 회차는 Dallas에서 개최될 예정입니다."
+      },
+      "elapsedMs": 11838,
+      "usage": {
+        "input_tokens": 56655,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1061,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "공식 웹사이트와 관련 정보를 검색하겠습니다.현재 검색 결과에서 ITherm 2026 정보는 보이지만, 2027 정보를 찾아야 합니다. 공식 웹사이트에서 2027 정보를 더 검색하겠습니다.공식 웹사이트의 2027 회차 페이지를 직접 찾아보겠습니다.공식 웹사이트에서 2027 정보를 찾을 수 없으므로, 한 번 더 검색해보겠습니다.검색 결과를 분석하면, 공식 IEEE ITherm 웹사이트(ieee-itherm.net)에서는 현재 2026 회차 정보까지만 제공하고 있으며, 2027년 회차(26번째)에 대한 구체적인 정보가 아직 게시되지 않은 것으로 보입니다. \n\n다만, 다음 정보들을 확인할 수 있습니다:\n- ITherm 2026은 5월 26-29일에 Orlando, FL에서 개최됩니다\n- 2028년에는 Dallas에서 27번째 IEEE ITherm이 개최될 예정입니다\n\nITherm은 매년 개최되므로 2027년 회차(26번째)가 있을 것으로 예상되나, 현재 공식 사이트에서는 구체적인 개최 날짜, 장소 등의 정보가 공개되지 않았습니다. 공식 웹사이트 및 주요 출처들을 통해서도 2027년 회차에 대한 상세 정보를 확인할 수 없습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": null,\n  \"link\": \"https://www.ieee-itherm.net/\",\n  \"source_url\": \"https://www.ieee-itherm.net/\",\n  \"confidence\": \"low\",\n  \"notes\": \"2027년 26번째 IEEE ITherm 회차에 대한 공식 정보가 아직 공개되지 않았습니다. 공식 사이트에서는 2026년 회차(5월 26-29일, Orlando)까지의 정보만 제공 중입니다. 2028년 회차는 Dallas에서 개최될 예정입니다.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_009",
+      "status": "pass",
+      "aiLink": "https://cryocooler.org/",
+      "matchedAgainst": "https://www.cryocooler.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-06-15",
+        "end_date": "2026-06-18",
+        "venue": "Syracuse, New York, USA",
+        "link": "https://cryocooler.org/",
+        "source_url": "https://cryocooler.org/Conference",
+        "confidence": "high",
+        "notes": "Hosted by Bluefors at Everson Museum of Arts. Call for Papers opened January 5, 2026 with abstract submission deadline February 1, 2026."
+      },
+      "elapsedMs": 5564,
+      "usage": {
+        "input_tokens": 15645,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 395,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 2,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "공식사이트와 관련 정보를 검색하겠습니다.완벽한 정보를 찾았습니다. ICC24는 2026년 6월 15-18일 미국 뉴욕 시러큐스에서 개최될 예정입니다. 이 날짜는 오늘(2026-04-17)보다 이후이므로 조건을 만족합니다.\n\n```json\n{\n  \"start_date\": \"2026-06-15\",\n  \"end_date\": \"2026-06-18\",\n  \"venue\": \"Syracuse, New York, USA\",\n  \"link\": \"https://cryocooler.org/\",\n  \"source_url\": \"https://cryocooler.org/Conference\",\n  \"confidence\": \"high\",\n  \"notes\": \"Hosted by Bluefors at Everson Museum of Arts. Call for Papers opened January 5, 2026 with abstract submission deadline February 1, 2026.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_010",
+      "status": "pass",
+      "aiLink": "https://iifiir.org/en/iir-conferences-series",
+      "matchedAgainst": "https://iifiir.org/en",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": null,
+        "link": "https://iifiir.org/en/iir-conferences-series",
+        "source_url": "https://iifiir.org/en/iir-conferences-series",
+        "confidence": "low",
+        "notes": "7th TPTPR는 2025년 6월 15-18일 College Park, USA에서 개최되었습니다. TPTPR는 4년 주기로 개최되므로 다음 회차(8th)는 2029년으로 예상되나, 현재 공식 발표된 정보가 없습니다. IIR 공식 컨퍼런스 시리즈 페이지에서 향후 공지를 확인할 수 있습니다."
+      },
+      "elapsedMs": 12397,
+      "usage": {
+        "input_tokens": 54786,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1102,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants의 다음 개최 정보를 찾겠습니다.검색 결과를 분석하면, TPTPR 학회는 4년마다 개최되는 학회입니다. 최근 개최 정보:\n- 6th TPTPR: 2021년 9월 (Vicenza, Italy)\n- 7th TPTPR: 2025년 6월 (College Park, Maryland, USA) - 이미 개최됨\n\n다음 회차인 8th TPTPR(2029년)의 정보를 찾기 위해 추가 검색이 필요합니다.아직 8th TPTPR(2029년) 정보를 찾지 못했습니다. IIR 공식 이벤트 페이지를 직접 확인해봅시다.검색 결과를 종합하면, 현재 IIR 공식 사이트와 신뢰할 수 있는 출처에서 2029년의 8th TPTPR 회차 정보는 공개되지 않은 상태입니다. 다음으로 확인된 정보는:\n\n- 7th TPTPR: 2025년 6월 15-18일, College Park, United States\n- TPTPR는 IIR Commission B1에서 4년마다 개최하는 학회\n\n6차(2021년)와 7차(2025년) 이후 8차 개최 예정은 2029년이지만, 현 시점(2026년 4월)에서 아직 8th TPTPR의 구체적 정보(날짜, 장소, 전용 웹사이트)가 공식 채널에 발표되지 않았습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": null,\n  \"link\": \"https://iifiir.org/en/iir-conferences-series\",\n  \"source_url\": \"https://iifiir.org/en/iir-conferences-series\",\n  \"confidence\": \"low\",\n  \"notes\": \"7th TPTPR는 2025년 6월 15-18일 College Park, USA에서 개최되었습니다. TPTPR는 4년 주기로 개최되므로 다음 회차(8th)는 2029년으로 예상되나, 현재 공식 발표된 정보가 없습니다. IIR 공식 컨퍼런스 시리즈 페이지에서 향후 공지를 확인할 수 있습니다.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_011",
+      "status": "pass",
+      "aiLink": "https://ecos2026.insae.ro/",
+      "matchedAgainst": "https://ecos2026.insae.ro/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-06-28",
+        "end_date": "2026-07-03",
+        "venue": "Constanța, Romania",
+        "link": "https://ecos2026.insae.ro/",
+        "source_url": "https://ecos2026.insae.ro/",
+        "confidence": "high",
+        "notes": "39th International Conference on Efficiency, Cost, Optimization, Simulation and Environmental Impact of Energy Systems. 공식 웹사이트에서 확인됨."
+      },
+      "elapsedMs": 6650,
+      "usage": {
+        "input_tokens": 36756,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 545,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 4,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ECOS 학회의 다음 개최 정보를 찾아보겠습니다.ECOS 2025가 확인되었습니다. 이제 ECOS 2026 또는 2027 정보를 찾아보겠습니다.완벽한 정보를 찾았습니다. ECOS 2026이 2026년 6월 28일부터 7월 3일까지 루마니아 콘스탄차에서 개최될 예정입니다. 이는 오늘 날짜(2026-04-17) 이후의 upcoming 회차입니다.\n\n```json\n{\n  \"start_date\": \"2026-06-28\",\n  \"end_date\": \"2026-07-03\",\n  \"venue\": \"Constanța, Romania\",\n  \"link\": \"https://ecos2026.insae.ro/\",\n  \"source_url\": \"https://ecos2026.insae.ro/\",\n  \"confidence\": \"high\",\n  \"notes\": \"39th International Conference on Efficiency, Cost, Optimization, Simulation and Environmental Impact of Energy Systems. 공식 웹사이트에서 확인됨.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_012",
+      "status": "pass",
+      "aiLink": "https://therminic.eu/",
+      "matchedAgainst": "https://therminic.eu/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-09-16",
+        "end_date": "2026-09-18",
+        "venue": "Berlin, Germany",
+        "link": "https://therminic.eu/",
+        "source_url": "https://ipcei-me-ct.eu/events/the-32nd-therminic-workshop-will-be-held-in-berlin-koepenick-germany/",
+        "confidence": "high",
+        "notes": "32nd THERMINIC Workshop. Venue: NYX Hotel Berlin-Köpenick (Grünauer Str. 1, 12557 Berlin, Germany). Conference office contact: mcc Agentur für Kommunikation GmbH, +49/30/61 28 88 87"
+      },
+      "elapsedMs": 8291,
+      "usage": {
+        "input_tokens": 29944,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 723,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 3,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "THERMINIC 학회의 다음 개최 정보를 찾겠습니다.공식 사이트와 신뢰할 수 있는 출처에서 THERMINIC 2026의 정보를 찾았습니다. 날짜 정보를 확인하기 위해 한 번 더 검색하겠습니다.완벽한 정보를 찾았습니다. THERMINIC 2026의 다음 개최 정보를 제공합니다.\n\n```json\n{\n  \"start_date\": \"2026-09-16\",\n  \"end_date\": \"2026-09-18\",\n  \"venue\": \"Berlin, Germany\",\n  \"link\": \"https://therminic.eu/\",\n  \"source_url\": \"https://ipcei-me-ct.eu/events/the-32nd-therminic-workshop-will-be-held-in-berlin-koepenick-germany/\",\n  \"confidence\": \"high\",\n  \"notes\": \"32nd THERMINIC Workshop. Venue: NYX Hotel Berlin-Köpenick (Grünauer Str. 1, 12557 Berlin, Germany). Conference office contact: mcc Agentur für Kommunikation GmbH, +49/30/61 28 88 87\"\n}\n```\n\n**검색 결과 요약:**\n\n32nd THERMINIC Workshop은 2026년 9월 16-18일 Berlin-Koepenick, Berlin, Germany에서 개최됩니다. 개최 장소는 NYX Hotel Berlin-Köpenick (Grünauer Str. 1, 12557 Berlin, Germany)입니다. 초록 제출 마감일은 2026년 4월 15일입니다.\n\n공식 사이트(https://therminic.eu/)에서 확인 가능합니다.",
+      "version": "v2"
+    },
+    {
+      "id": "conf_013",
+      "status": "fail",
+      "aiLink": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
+      "matchedAgainst": null,
+      "expected": [
+        "https://hpc2026.org/",
+        "https://www.iea.org/"
+      ],
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": null,
+        "link": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
+        "source_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
+        "confidence": "low",
+        "notes": "2029년 회차 개최 정보는 아직 공식 발표되지 않았습니다. 컨퍼런스는 매 3년마다 미국-유럽-아시아에서 순회 개최됩니다."
+      },
+      "elapsedMs": 14489,
+      "usage": {
+        "input_tokens": 61542,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1076,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 4,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "제공하신 공식사이트와 관련 정보를 바탕으로 IEA Heat Pump Conference의 다음 개최 정보를 검색하겠습니다.검색 결과를 정리했습니다. 다만 IEA Heat Pump Conference는 2026년 5월에 개최되는데, 오늘이 2026-04-17이므로 이미 시작 날짜가 경과한 상황입니다. 다음(upcoming) 회차는 3년 후인 2029년입니다. 2029년 개최 정보를 추가로 검색하겠습니다.IEA Heat Pump Conference는 2026년 5월 26-29일 빈에서 개최되는데, 오늘(2026-04-17)이 이미 시작 날짜 이전이므로 이것은 \"과거\" 회차입니다. \n\n다음 회차인 2029년 개최 정보는 현재 공개되지 않았습니다. 공식사이트 검색을 통해 확인해 보겠습니다.## 검색 결과\n\n안타깝게도, **IEA Heat Pump Conference의 다음(upcoming) 회차는 아직 발표되지 않았습니다.**\n\n### 상황 설명:\n\n1. **현재 개최 예정 회차**: 15th IEA Heat Pump Conference는 2026년 5월 26-29일 오스트리아 빈에서 개최되지만, 오늘(2026-04-17)이 이미 시작 날짜보다 이전이므로 이는 \"과거\" 회차입니다.\n\n2. **다음 회차(2029년)**: 매 3년마다 IEA Heat Pump Conference가 개최되므로, 다음 회차는 2029년이 될 것입니다. 그러나 현재 공식 사이트(heatpumpingtechnologies.org)에는 2029년 회차에 대한 개최 정보가 아직 공개되지 않았습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": null,\n  \"link\": \"https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/\",\n  \"source_url\": \"https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/\",\n  \"confidence\": \"low\",\n  \"notes\": \"2029년 회차 개최 정보는 아직 공식 발표되지 않았습니다. 컨퍼런스는 매 3년마다 미국-유럽-아시아에서 순회 개최됩니다.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_014",
+      "status": "fail",
+      "aiLink": null,
+      "matchedAgainst": null,
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": null,
+        "link": null,
+        "source_url": null,
+        "confidence": "low",
+        "notes": "ICBCHT13은 3년 주기에 따라 2029년에 개최될 예정이나, 현재(2026년 4월 17일) 공식 사이트에 발표된 정보가 없습니다. 개최 확정 후 공식 사이트를 확인해주세요."
+      },
+      "elapsedMs": 11017,
+      "usage": {
+        "input_tokens": 56252,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 878,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 4,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ICBCHT의 다음 개최 정보를 찾기 위해 검색하겠습니다.ICBCHT12는 이미 진행 중입니다 (2026년 6월 14-17일). 3년 주기이므로, 다음(upcoming) 회차인 ICBCHT13의 정보를 찾겠습니다.ICBCHT12가 2026년 6월이고, 3년 주기이므로 ICBCHT13은 2029년에 열려야 합니다. 아직 공식 발표가 없는지 확인하겠습니다.검색 결과를 정리하면:\n\n현재 상황:\n- ICBCHT 12는 2026년 6월 14-17일 MIT in Cambridge, USA에서 개최되었습니다.\n- ICBCHT는 대략 3년마다 개최됩니다.\n\n다음 회차(ICBCHT13)에 대한 정보:\n- ICBCHT13는 3년 주기에 따라 2029년에 열릴 예정이지만, 현재 공식적으로 발표된 개최 정보를 찾을 수 없습니다.\n- MIT 공식 사이트(https://sites.mit.edu/icbcht12/)와 이전 ICBCHT11 사이트(https://icbcht11.eng.ed.ac.uk/)에도 ICBCHT13에 대한 정보가 아직 없습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": null,\n  \"link\": null,\n  \"source_url\": null,\n  \"confidence\": \"low\",\n  \"notes\": \"ICBCHT13은 3년 주기에 따라 2029년에 개최될 예정이나, 현재(2026년 4월 17일) 공식 사이트에 발표된 정보가 없습니다. 개최 확정 후 공식 사이트를 확인해주세요.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_015",
+      "status": "pass",
+      "aiLink": "https://www.iccfd.org/",
+      "matchedAgainst": "https://www.iccfd.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": "Milan, Italy",
+        "link": "https://www.iccfd.org/",
+        "source_url": "https://www.iccfd.org/",
+        "confidence": "low",
+        "notes": "ICCFD13 is the upcoming 13th edition to be held in Milan at Politecnico di Milano. The conference is biennial and ICCFD12 was held in July 2024, suggesting ICCFD13 would be in 2026. However, exact start and end dates could not be verified from official sources. The preliminary ICCFD13 website referenced on the main ICCFD page was not directly accessible to confirm specific dates."
+      },
+      "elapsedMs": 11977,
+      "usage": {
+        "input_tokens": 70354,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 962,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "공식 사이트와 신뢰할 수 있는 출처에서 ICCFD의 다음 개최 정보를 검색하겠습니다.공식 사이트에서 ICCFD13에 대한 예비 정보를 발견했습니다. 더 자세한 정보를 찾겠습니다.공식 사이트의 ICCFD13 예비 웹사이트 링크가 있으므로 직접 방문하여 더 정확한 정보를 찾겠습니다.제가 찾은 정보를 종합하면:\n\n공식 사이트(iccfd.org)에서 다음(upcoming) 회차는 **ICCFD13**이며, Politecnico di Milano(밀라노)에서 개최될 예정입니다. 그러나 검색 결과에서 **정확한 개최 날짜(시작일/종료일)**를 찾을 수 없었습니다. \n\neasychair.org는 제3자 리스팅 사이트이므로 피해야 하는 출처이고, 공식 ICCFD13 사이트(\"preliminary ICCFD13 website\")의 정확한 URL도 직접 확인되지 않았습니다. 마지막 ICCFD12는 2024년 7월 14-19일 일본 고베에서 개최되었고, ICCFD는 2년 주기이므로 ICCFD13은 2026년경이 맞지만, 정확한 날짜를 공식 출처에서 확인할 수 없습니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": \"Milan, Italy\",\n  \"link\": \"https://www.iccfd.org/\",\n  \"source_url\": \"https://www.iccfd.org/\",\n  \"confidence\": \"low\",\n  \"notes\": \"ICCFD13 is the upcoming 13th edition to be held in Milan at Politecnico di Milano. The conference is biennial and ICCFD12 was held in July 2024, suggesting ICCFD13 would be in 2026. However, exact start and end dates could not be verified from official sources. The preliminary ICCFD13 website referenced on the main ICCFD page was not directly accessible to confirm specific dates.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_016",
+      "status": "fail",
+      "aiLink": "https://www.astfe.org/conferences/",
+      "matchedAgainst": null,
+      "expected": [
+        "https://ihtc18.org/"
+      ],
+      "aiData": {
+        "start_date": null,
+        "end_date": null,
+        "venue": "London, United Kingdom",
+        "link": "https://www.astfe.org/conferences/",
+        "source_url": "https://aihtc.org/aboutus.html",
+        "confidence": "low",
+        "notes": "IHTC-19은 2030년 런던에서 개최될 예정이나, 현재 공식 웹사이트와 정확한 개최 날짜(시작일/종료일)는 아직 확정되지 않음. 과거 IHTC 회의들은 대부분 8월에 개최되었음."
+      },
+      "elapsedMs": 18828,
+      "usage": {
+        "input_tokens": 102003,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1174,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 5,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "International Heat Transfer Conference (IHTC)의 다음 개최 정보를 찾겠습니다.검색 결과에서 IHTC-18이 2026년 8월 2-7일에 리우데자네이루에서 열린다는 것을 확인했습니다. 하지만 오늘 날짜가 2026-04-17이므로 이 회의는 이미 지나간 것입니다. 4년 주기인 IHTC의 다음 회의(IHTC-19)를 찾아야 합니다.좋습니다! IHTC-19가 2030년 런던에서 열린다는 것을 확인했습니다. 이제 IHTC-19의 구체적인 날짜와 공식 사이트를 찾겠습니다.IHTC-19의 정확한 개최 날짜를 아직 찾지 못했습니다. IHTC Digital Library의 Future Meetings 페이지를 더 자세히 확인해보겠습니다.마지막 검색으로 IHTC-19의 전용 공식 사이트가 있는지 확인하겠습니다.저는 IHTC-19에 대해 수집한 정보를 정리하겠습니다.\n\nIHTC-19은 2030년 런던에서 개최될 예정이며, 주최자는 Tassos G. Karayiannis(Queen Mary University of London, UK)입니다. \n\n하지만 현재 시점(2026-04-17)에서는 IHTC-19의 정확한 개최 날짜와 전용 공식 사이트를 아직 확인할 수 없습니다. 과거 IHTC 회의들이 대부분 8월에 개최되었던 점을 고려하면, IHTC-19도 2030년 8월경에 개최될 가능성이 높으나, 공식 확정 정보가 필요합니다.\n\n```json\n{\n  \"start_date\": null,\n  \"end_date\": null,\n  \"venue\": \"London, United Kingdom\",\n  \"link\": \"https://www.astfe.org/conferences/\",\n  \"source_url\": \"https://aihtc.org/aboutus.html\",\n  \"confidence\": \"low\",\n  \"notes\": \"IHTC-19은 2030년 런던에서 개최될 예정이나, 현재 공식 웹사이트와 정확한 개최 날짜(시작일/종료일)는 아직 확정되지 않음. 과거 IHTC 회의들은 대부분 8월에 개최되었음.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_017",
+      "status": "pass",
+      "aiLink": "https://www.prtec2027.org/",
+      "matchedAgainst": "https://www.prtec2027.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-03-14",
+        "end_date": "2027-03-18",
+        "venue": "Honolulu, Hawaii, USA",
+        "link": "https://www.prtec2027.org/",
+        "source_url": "https://www.prtec2027.org/",
+        "confidence": "high",
+        "notes": "The 4th Pacific Rim Thermal Engineering Conference. Jointly organized by KSME, JSME, and ASTFE."
+      },
+      "elapsedMs": 5325,
+      "usage": {
+        "input_tokens": 20828,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 436,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 3,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "Pacific Rim Thermal Engineering Conference (PRTEC)의 다음 개최 정보를 검색하겠습니다.완벽한 정보를 찾았습니다. PRTEC 2027은 2027년 3월 14일부터 18일까지 미국 하와이 호놀룰루의 Ala Moana Hotel by Mantra에서 개최됩니다.\n\n```json\n{\n  \"start_date\": \"2027-03-14\",\n  \"end_date\": \"2027-03-18\",\n  \"venue\": \"Honolulu, Hawaii, USA\",\n  \"link\": \"https://www.prtec2027.org/\",\n  \"source_url\": \"https://www.prtec2027.org/\",\n  \"confidence\": \"high\",\n  \"notes\": \"The 4th Pacific Rim Thermal Engineering Conference. Jointly organized by KSME, JSME, and ASTFE.\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_018",
+      "status": "pass",
+      "aiLink": "https://www.icr2027.org/",
+      "matchedAgainst": "https://www.icr2027.org/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2027-08-21",
+        "end_date": "2027-08-27",
+        "venue": "Seoul, Republic of Korea",
+        "link": "https://www.icr2027.org/",
+        "source_url": "https://iifiir.org/en/events/27th-iir-international-congress-of-refrigeration",
+        "confidence": "high",
+        "notes": "27th IIR International Congress of Refrigeration (ICR 2027) - 개최지는 COEX Center, Seoul, Korea"
+      },
+      "elapsedMs": 5121,
+      "usage": {
+        "input_tokens": 16380,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 523,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 2,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ICR (International Congress of Refrigeration) 정보를 검색하겠습니다.검색 결과에서 ICR (IIR International Congress of Refrigeration)의 다음 개최 정보를 확인했습니다.\n\n```json\n{\n  \"start_date\": \"2027-08-21\",\n  \"end_date\": \"2027-08-27\",\n  \"venue\": \"Seoul, Republic of Korea\",\n  \"link\": \"https://www.icr2027.org/\",\n  \"source_url\": \"https://iifiir.org/en/events/27th-iir-international-congress-of-refrigeration\",\n  \"confidence\": \"high\",\n  \"notes\": \"27th IIR International Congress of Refrigeration (ICR 2027) - 개최지는 COEX Center, Seoul, Korea\"\n}\n```\n\n**확인 내용:**\n- ICR 2027은 2027년 8월 21일~27일 서울의 COEX Center에서 개최됩니다.\n- 공식 일정은 2027년 8월 21일~27일 서울, 대한민국입니다.\n- 공식 사이트는 https://www.icr2027.org/이며, IIR 공식 이벤트 페이지에서도 확인 가능합니다.",
+      "version": "v2"
+    },
+    {
+      "id": "conf_019",
+      "status": "pass",
+      "aiLink": "https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026",
+      "matchedAgainst": "https://iifiir.org/en",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-08-23",
+        "end_date": "2026-08-26",
+        "venue": "Hamilton, New Zealand",
+        "link": "https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026",
+        "source_url": "https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026",
+        "confidence": "high",
+        "notes": "IIR 공식 이벤트 페이지에서 확인된 정보"
+      },
+      "elapsedMs": 4457,
+      "usage": {
+        "input_tokens": 11638,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 381,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 1,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "다음 개최 정보를 찾아드리겠습니다.완벽한 정보를 찾았습니다. 17th IIR Gustav Lorentzen Conference on Natural Refrigerants은 2026년 8월 23-26일 뉴질랜드 해밀턴의 와이카토 대학교에서 개최됩니다.\n\n```json\n{\n  \"start_date\": \"2026-08-23\",\n  \"end_date\": \"2026-08-26\",\n  \"venue\": \"Hamilton, New Zealand\",\n  \"link\": \"https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026\",\n  \"source_url\": \"https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026\",\n  \"confidence\": \"high\",\n  \"notes\": \"IIR 공식 이벤트 페이지에서 확인된 정보\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_020",
+      "status": "pass",
+      "aiLink": "https://sites.google.com/view/hvac-acra2026/",
+      "matchedAgainst": "https://sites.google.com/view/hvac-acra2026/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-05-17",
+        "end_date": "2026-05-20",
+        "venue": "Taichung, Taiwan",
+        "link": "https://sites.google.com/view/hvac-acra2026/",
+        "source_url": "https://sites.google.com/view/hvac-acra2026/",
+        "confidence": "high",
+        "notes": "12th ACRA (Asian Conference on Refrigeration and Air-conditioning). 장소: Evergreen Laurel Hotel, Taichung"
+      },
+      "elapsedMs": 7618,
+      "usage": {
+        "input_tokens": 32109,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 694,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 4,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "ACRA(Asian Conference on Refrigeration and Air-conditioning)의 다음 개최 정보를 찾겠습니다. 3년 주기이고 마지막 공식사이트가 2018년이므로, 2021, 2024, 2027 등을 확인해야 합니다.좋은 소식입니다! ACRA 2026의 정보를 찾았습니다. 하지만 Google Sites 페이지의 정보를 확인하기 위해 추가 검색을 진행하겠습니다.완벽합니다! ACRA(Asian Conference on Refrigeration and Air-conditioning)의 다음 개최 정보를 확인했습니다.\n\n제12차 ACRA 2026은 5월 17-20일, 2026년에 대만 타이중의 Evergreen Laurel Hotel에서 개최됩니다. 이 날짜는 오늘(2026-04-17) 이후이므로 조건을 만족합니다.\n\n```json\n{\n  \"start_date\": \"2026-05-17\",\n  \"end_date\": \"2026-05-20\",\n  \"venue\": \"Taichung, Taiwan\",\n  \"link\": \"https://sites.google.com/view/hvac-acra2026/\",\n  \"source_url\": \"https://sites.google.com/view/hvac-acra2026/\",\n  \"confidence\": \"high\",\n  \"notes\": \"12th ACRA (Asian Conference on Refrigeration and Air-conditioning). 장소: Evergreen Laurel Hotel, Taichung\"\n}\n```",
+      "version": "v2"
+    },
+    {
+      "id": "conf_021",
+      "status": "pass",
+      "aiLink": "https://ihpcs.org/ihpcs2026/",
+      "matchedAgainst": "https://ihpcs.org/ihpcs2026/",
+      "expected": null,
+      "aiData": {
+        "start_date": "2026-05-24",
+        "end_date": "2026-05-28",
+        "venue": "Gdańsk, Poland",
+        "link": "https://ihpcs.org/ihpcs2026/",
+        "source_url": "https://ihpcs.org/2025/06/11/the-2026-conference-have-a-date/",
+        "confidence": "high",
+        "notes": "23th International Heat Pipe Conference (IHPC) & 17th International Heat Pipe Symposium (IHPS) jointly held. Official conference-specific page available at ihpcs.org/ihpcs2026/"
+      },
+      "elapsedMs": 6071,
+      "usage": {
+        "input_tokens": 22120,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 493,
+        "service_tier": "standard",
+        "inference_geo": "not_available",
+        "server_tool_use": {
+          "web_search_requests": 3,
+          "web_fetch_requests": 0
+        }
+      },
+      "stop_reason": "end_turn",
+      "rawText": "International Heat Pipe Conferences and Symposia (IHPC&S)의 다음 개최 정보를 검색하겠습니다.완벽한 정보를 찾았습니다. International Heat Pipe Conferences and Symposia의 다음 개최는 23rd International Heat Pipe Conference (IHPC)과 17th International Heat Pipe Symposium (IHPS)으로 2026년 5월 24-28일 폴란드 그단스크에서 개최됩니다.\n\n```json\n{\n  \"start_date\": \"2026-05-24\",\n  \"end_date\": \"2026-05-28\",\n  \"venue\": \"Gdańsk, Poland\",\n  \"link\": \"https://ihpcs.org/ihpcs2026/\",\n  \"source_url\": \"https://ihpcs.org/2025/06/11/the-2026-conference-have-a-date/\",\n  \"confidence\": \"high\",\n  \"notes\": \"23th International Heat Pipe Conference (IHPC) & 17th International Heat Pipe Symposium (IHPS) jointly held. Official conference-specific page available at ihpcs.org/ihpcs2026/\"\n}\n```",
+      "version": "v2"
+    }
+  ]
+}
