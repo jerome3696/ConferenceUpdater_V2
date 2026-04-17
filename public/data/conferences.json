@@ -577,6 +577,18 @@
       "link": "https://ihpcs.org/ihpcs2026/",
       "source": "ai_search",
       "updated_at": "2026-04-16T13:25:03.634Z"
+    },
+    {
+      "id": "ed_mo342x2j",
+      "conference_id": "user_mo342nwc",
+      "status": "upcoming",
+      "start_date": "2027-01-09",
+      "end_date": "2027-01-11",
+      "venue": "Napoli, Italy",
+      "link": "https://www.ichmt.org/mnhmt-2027",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-17T16:17:19.339Z"
     }
   ]
 }
