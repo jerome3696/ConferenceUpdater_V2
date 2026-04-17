@@ -1,6 +1,6 @@
 # PLAN-001: 테스트 커버리지 확대 (Track B.1)
 
-> **상태**: active
+> **상태**: completed
 > **생성일**: 2026-04-17
 > **브랜치**: `feature/PLAN-001-test-coverage`
 > **트랙**: B(품질)
@@ -40,11 +40,11 @@ dev-guide-v2.md Step B.1에서 이 레이어 추가를 명시.
 
 ## 5. 단계 (Steps)
 
-- [ ] Step 1 — @testing-library/react, @testing-library/user-event, jsdom 설치 + vite.config.js test 환경 설정
-- [ ] Step 2 — `src/services/dataManager.test.js` 작성 (3경로 + 저장 + GitHub 커밋 mock)
-- [ ] Step 3 — `src/hooks/useConferences.test.js` 작성 (로드, 날짜 전환, applyAiUpdate)
-- [ ] Step 4 — `src/components/MainTable/MainTable.test.jsx` 작성 (렌더링, 필터, 정렬)
-- [ ] Step 5 — `bash scripts/verify-task.sh` 전건 통과 확인
+- [x] Step 1 — @testing-library/react, @testing-library/user-event, jsdom 설치 + vite.config.js test 환경 설정
+- [x] Step 2 — `src/services/dataManager.test.js` 작성 (3경로 + 저장 + GitHub 커밋 mock)
+- [x] Step 3 — `src/hooks/useConferences.test.js` 작성 (로드, 날짜 전환, applyAiUpdate)
+- [x] Step 4 — `src/components/MainTable/MainTable.test.jsx` 작성 (렌더링, 필터, 정렬)
+- [x] Step 5 — `bash scripts/verify-task.sh` 전건 통과 확인
 
 ## 6. 검증 (Verification)
 
