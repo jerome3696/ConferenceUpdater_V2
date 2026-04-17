@@ -192,6 +192,8 @@ export function useConferences({ token } = {}) {
       end_date: proposed.end_date || null,
       venue: proposed.venue || null,
       link: proposed.link || null,
+      // QA #14 — 메인 테이블 출처 셀 inline 표시용. 신뢰도 미제공 시 null.
+      confidence: proposed.confidence || null,
     };
 
     let editions;

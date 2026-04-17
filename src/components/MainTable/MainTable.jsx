@@ -5,7 +5,7 @@ import StarRating from '../common/StarRating';
 import { exportAsJson, exportAsXlsx } from '../../services/exportService';
 import { formatLocation } from '../../utils/locationFormatter';
 
-// 그룹별 컬럼 정의 (이중 헤더용)
+// 그룹별 컬럼 정의 (이중 헤더용). Last/참고는 기본 접힘(QA #7).
 const GROUPS = [
   {
     label: '학회 마스터',
@@ -36,6 +36,7 @@ const GROUPS = [
   {
     label: 'Last',
     className: 'bg-slate-100',
+    collapsible: true,
     columns: [
       { key: 'last_start', label: '시작일' },
       { key: 'last_end', label: '종료일' },
@@ -46,6 +47,7 @@ const GROUPS = [
   {
     label: '참고',
     className: 'bg-amber-50',
+    collapsible: true,
     columns: [{ key: 'note', label: '메모' }],
   },
 ];
@@ -55,6 +57,17 @@ const ACTION_GROUP = {
   className: 'bg-slate-50',
   columns: [{ key: 'actions', label: '작업' }],
 };
+
+const CONFIDENCE_LABEL = { 고: '고', 중: '중', 저: '저', high: '고', medium: '중', med: '중', low: '저' };
+
+function formatSourceLabel(source, confidence) {
+  if (source === 'ai_search') {
+    const c = confidence ? CONFIDENCE_LABEL[String(confidence).toLowerCase()] || CONFIDENCE_LABEL[confidence] : null;
+    return c ? `AI검색 (${c})` : 'AI검색';
+  }
+  if (source === 'user_input') return '수동입력';
+  return source || '';
+}
 
 function getSortValue(row, key) {
   switch (key) {
@@ -87,6 +100,13 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
   const [filters, setFilters] = useState({ category: '', field: '', region: '', query: '' });
   const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
   const [editingRow, setEditingRow] = useState(null);
+  // QA #7: Last/참고는 기본 접힘. 사용자가 그룹 헤더 클릭으로 토글.
+  const [collapsed, setCollapsed] = useState(() => new Set(['Last', '참고']));
+  const toggleGroup = (label) => setCollapsed((prev) => {
+    const next = new Set(prev);
+    if (next.has(label)) next.delete(label); else next.add(label);
+    return next;
+  });
 
   const { categories, fields, regions } = useMemo(() => {
     const uniq = (key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))].sort();
@@ -133,7 +153,15 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
   if (loading) return <div className="p-8 text-slate-500">로딩 중...</div>;
   if (error) return <div className="p-8 text-red-600">오류: {error.message}</div>;
 
-  const groups = isAdmin ? [...GROUPS, ACTION_GROUP] : GROUPS;
+  // QA #6: 작업 컬럼을 첫 열로(★ 앞).
+  const groups = isAdmin ? [ACTION_GROUP, ...GROUPS] : GROUPS;
+  // 접힘 그룹은 columns를 단일 토글 컬럼으로 치환.
+  const renderedGroups = groups.map((g) => {
+    if (g.collapsible && collapsed.has(g.label)) {
+      return { ...g, _collapsed: true, columns: [{ key: `_toggle_${g.label}`, label: '▶' }] };
+    }
+    return { ...g, _collapsed: false };
+  });
 
   const handleSubmit = (payload) => {
     if (modalMode === 'add') {
@@ -199,19 +227,33 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
       <table className="min-w-full text-sm border-collapse">
         <thead className="sticky top-0 z-10">
           <tr>
-            {groups.map((g) => (
+            {renderedGroups.map((g) => (
               <th
                 key={g.label}
                 colSpan={g.columns.length}
-                className={`px-3 py-2 text-center font-bold text-slate-700 border border-slate-300 ${g.className}`}
+                onClick={g.collapsible ? () => toggleGroup(g.label) : undefined}
+                className={`px-3 py-2 text-center font-bold text-slate-700 border border-slate-300 ${g.className} ${g.collapsible ? 'cursor-pointer hover:bg-opacity-80' : ''}`}
+                title={g.collapsible ? (g._collapsed ? '펼치기' : '접기') : undefined}
               >
                 {g.label}
+                {g.collapsible && <span className="ml-1 text-xs">{g._collapsed ? '▶' : '▼'}</span>}
               </th>
             ))}
           </tr>
           <tr>
-            {groups.flatMap((g) =>
-              g.columns.map((c) => (
+            {renderedGroups.flatMap((g) => {
+              if (g._collapsed) {
+                return [(
+                  <th
+                    key={g.columns[0].key}
+                    onClick={() => toggleGroup(g.label)}
+                    className={`px-2 py-2 text-center font-semibold text-slate-500 border border-slate-300 cursor-pointer select-none hover:bg-slate-200 ${g.className}`}
+                  >
+                    ▶
+                  </th>
+                )];
+              }
+              return g.columns.map((c) => (
                 <th
                   key={c.key}
                   onClick={() => onSort(c.key)}
@@ -220,51 +262,16 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                   {c.label}
                   {sortKey === c.key && <span className="ml-1">{sortDir === 'asc' ? '▲' : '▼'}</span>}
                 </th>
-              ))
-            )}
+              ));
+            })}
           </tr>
         </thead>
         <tbody>
           {sorted.map((r) => (
             <tr key={r.id} className="hover:bg-slate-50 border-b border-slate-200">
-              {/* 마스터 */}
-              <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap">
-                <StarRating
-                  value={r.starred || 0}
-                  readOnly={!isAdmin}
-                  onChange={(v) => updateStarred(r.id, v)}
-                />
-              </td>
-              <td className="px-3 py-2 border-r border-slate-200">{r.category}</td>
-              <td className="px-3 py-2 border-r border-slate-200">{r.field}</td>
-              <td className="px-3 py-2 font-mono border-r border-slate-200">{r.abbreviation}</td>
-              <td className="px-3 py-2 border-r border-slate-200">{r.full_name}</td>
-              <td className="px-3 py-2 text-center border-r border-slate-200">{r.cycle_years || ''}</td>
-              <td className="px-3 py-2 text-center border-r border-slate-200">{r.duration_days || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200">{r.region}</td>
-              <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.official_url} /></td>
-              {/* Upcoming */}
-              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.start_date || ''}</td>
-              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.end_date || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200">{formatLocation(r.upcoming?.venue)}</td>
-              <td className="px-3 py-2 border-r border-slate-200"><LinkCell href={r.upcoming?.link} /></td>
-              <td className="px-3 py-2 border-r-2 border-slate-400">
-                {r.upcoming?.source && (
-                  <span className={`px-2 py-0.5 rounded text-xs ${r.upcoming.source === 'ai_search' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
-                    {r.upcoming.source === 'ai_search' ? 'AI검색' : '수동입력'}
-                  </span>
-                )}
-              </td>
-              {/* Last */}
-              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.start_date || ''}</td>
-              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.end_date || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200 text-slate-500">{formatLocation(r.last?.venue)}</td>
-              <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.last?.link} /></td>
-              {/* 메모 */}
-              <td className="px-3 py-2 text-slate-500">{r.note}</td>
-              {/* 작업 */}
+              {/* 작업 (admin: 첫 열, QA #6) */}
               {isAdmin && (
-                <td className="px-3 py-2 whitespace-nowrap">
+                <td className="px-3 py-2 whitespace-nowrap border-r-2 border-slate-400">
                   <div className="flex gap-1">
                     <button
                       onClick={() => { setEditingRow(r); setModalMode('edit'); }}
@@ -289,6 +296,63 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
                       </button>
                     )}
                   </div>
+                </td>
+              )}
+              {/* 마스터 */}
+              <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap">
+                <StarRating
+                  value={r.starred || 0}
+                  readOnly={!isAdmin}
+                  onChange={(v) => updateStarred(r.id, v)}
+                />
+              </td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.category}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.field}</td>
+              <td className="px-3 py-2 font-mono border-r border-slate-200">{r.abbreviation}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text max-w-xs">
+                <div className="line-clamp-5" title={r.full_name}>{r.full_name}</div>
+              </td>
+              <td className="px-3 py-2 text-center border-r border-slate-200">{r.cycle_years || ''}</td>
+              <td className="px-3 py-2 text-center border-r border-slate-200">{r.duration_days || ''}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text">{r.region}</td>
+              <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.official_url} /></td>
+              {/* Upcoming */}
+              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.start_date || ''}</td>
+              <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.end_date || ''}</td>
+              <td className="px-3 py-2 border-r border-slate-200 cell-text">{formatLocation(r.upcoming?.venue)}</td>
+              <td className="px-3 py-2 border-r border-slate-200"><LinkCell href={r.upcoming?.link} /></td>
+              <td className="px-3 py-2 border-r-2 border-slate-400">
+                {r.upcoming?.source && (
+                  <span className={`px-2 py-0.5 rounded text-xs whitespace-nowrap ${r.upcoming.source === 'ai_search' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
+                    {formatSourceLabel(r.upcoming.source, r.upcoming.confidence)}
+                  </span>
+                )}
+              </td>
+              {/* Last (collapsible) */}
+              {collapsed.has('Last') ? (
+                <td
+                  className="px-2 py-2 text-center text-slate-300 border-r-2 border-slate-400 cursor-pointer hover:bg-slate-100"
+                  onClick={() => toggleGroup('Last')}
+                  title="펼치기"
+                >▶</td>
+              ) : (
+                <>
+                  <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.start_date || ''}</td>
+                  <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.end_date || ''}</td>
+                  <td className="px-3 py-2 border-r border-slate-200 text-slate-500 cell-text">{formatLocation(r.last?.venue)}</td>
+                  <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.last?.link} /></td>
+                </>
+              )}
+              {/* 메모 (collapsible) */}
+              {collapsed.has('참고') ? (
+                <td
+                  className="px-2 py-2 text-center text-slate-300 cursor-pointer hover:bg-slate-100"
+                  onClick={() => toggleGroup('참고')}
+                  title="펼치기"
+                >▶</td>
+              ) : (
+                <td className="px-3 py-2 text-slate-500 cell-text max-w-xs">
+                  <div className="line-clamp-5" title={r.note}>{r.note}</div>
                 </td>
               )}
             </tr>
