@@ -301,6 +301,20 @@
       "official_url": "https://www.ichmt.org/",
       "note": "",
       "source": "user_input"
+    },
+    {
+      "id": "user_mo347qjj",
+      "starred": 0,
+      "category": "학회",
+      "field": "건물공조",
+      "abbreviation": "",
+      "full_name": "Greensys",
+      "cycle_years": 2,
+      "duration_days": 5,
+      "region": "전세계",
+      "official_url": "https://ishs.org/",
+      "note": "",
+      "source": "user_input"
     }
   ],
   "editions": [
