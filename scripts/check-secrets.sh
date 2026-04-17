@@ -10,7 +10,7 @@ PATTERNS='sk-ant-|github_pat_|ghp_[A-Za-z0-9]{36}'
 # --diff-filter=ACMR: Added/Copied/Modified/Renamed
 # 제외: 자기 자신(.sh) + 모든 .md 문서 (패턴 예시·검증 기록은 정상 컨텐츠)
 MATCHES=$(git diff --cached --diff-filter=ACMR -U0 \
-  -- ':(exclude)scripts/check-secrets.sh' ':(exclude)*.md' \
+  -- ':(exclude)scripts/check-secrets.sh' ':(exclude)scripts/verify-task.sh' ':(exclude)*.md' \
   | grep -E "^\+" \
   | grep -E "$PATTERNS" \
   || true)

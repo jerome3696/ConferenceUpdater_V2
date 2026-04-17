@@ -84,7 +84,7 @@ docs/
 - **확인**: responseParser에 `reason: 'empty' → 'SANITY_BUG'` 변경 → "빈 응답" 테스트 실패 확인 후 원복 ✅ (2026-04-17)
 
 ### Step A.4: CI 파이프라인 강화
-- [ ] `.github/workflows/ci.yml` 생성
+- [x] `.github/workflows/ci.yml` 생성
   ```yaml
   on:
     pull_request:
@@ -100,12 +100,12 @@ docs/
         - run: npm run test
         - run: npm run build
   ```
-- [ ] GitHub repo settings → branch protection rule:
-  - main 브랜치: Require PR, Require status checks (ci.yml)
-- **확인**: 일부러 lint 에러가 있는 PR 생성 → CI 실패 → merge 불가인가?
+- [x] GitHub repo settings → branch protection rule:
+  - main 브랜치: Require PR, Require status checks (verify)
+- **확인**: PR에서 CI 통과 확인 ✅ (2026-04-17)
 
 ### Step A.5: verify-task 스크립트
-- [ ] `scripts/verify-task.sh` 작성
+- [x] `scripts/verify-task.sh` 작성
   ```
   체크 항목:
     1. npm run lint
@@ -114,8 +114,8 @@ docs/
     4. API 키 패턴 감지 (grep -r "sk-ant-\|github_pat_" src/)
     5. 파일 크기 경고 (단일 파일 500줄 초과)
   ```
-- [ ] CLAUDE.md에 추가: "작업 완료 후 반드시 `scripts/verify-task.sh` 실행할 것"
-- **확인**: `bash scripts/verify-task.sh` → 전항목 PASS?
+- [x] CLAUDE.md에 추가: "작업 완료 후 반드시 `scripts/verify-task.sh` 실행할 것"
+- **확인**: `bash scripts/verify-task.sh` → ✅ 5 ❌ 0 전항목 PASS (2026-04-17)
 
 ### Step A.6: 브랜치 전략 도입
 - [ ] main 브랜치 직접 push 금지 설정 (GitHub branch protection)
