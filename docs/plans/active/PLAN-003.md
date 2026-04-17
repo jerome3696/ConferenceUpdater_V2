@@ -77,7 +77,7 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 - [x] Step 4 — Group 2: Items 1, 3 (UpdateCard confidence badge + source_url, UpdatePanel 전체 승인/거절)
 - [x] Step 5 — Group 3: Item 11 (App.jsx에서 setView 제거, UpdatePanel overlay화)
 - [x] Step 6 — Group 4: Item 13 (useConferences upsertEdition source 조건 + 테스트)
-- [ ] Step 7 — Group 5: Item 10 (locationFormatter 신규 + 테스트)
+- [x] Step 7 — Group 5: Item 10 (locationFormatter 신규 + 테스트)
 - [ ] Step 8 — Group 6: Items 8, 9, 12-css (CSS — word-break, line-clamp)
 - [ ] Step 9 — Group 6: Item 14 (출처 셀 신뢰도 inline)
 - [ ] Step 10 — Group 6: Items 6, 7 (액션 버튼 첫 열 + LAST/메모 접기) + MainTable.test.jsx 갱신
@@ -125,3 +125,4 @@ B.1로 추가된 `MainTable.test.jsx`의 정렬·헤더 가정(line 169-202, 184
 - 2026-04-17: Step 3·4 완료 — UpdateCard 폰트/패딩 축소(text-sm → text-xs, p-4 → p-3, 그리드 100px → 80px), 변경없음 케이스 두 종(노정보·동일) 한 줄 `CompactBanner`로 분기, `ConfidenceBadge` 컬러(고/중/저 = emerald/amber/rose) 도입, source_url을 인라인 "출처 ↗" 링크로 정리. UpdatePanel에 "전체 승인 (ready건수)"/"전체 거절 (전체건수)" 버튼 추가, `useUpdateQueue.acceptAll/rejectAll` 신규 — error 카드는 acceptAll에서 제외, rejectAll은 모두 정리. verify-task 5/5.
 - 2026-04-17: Step 5 완료 — Item 11 (UpdatePanel overlay化, Option B). `view` state → `isUpdatePanelOpen` 단일 boolean. App.jsx는 항상 MainTable 렌더, UpdatePanel은 모달 overlay(`fixed inset-0 bg-black/40`, max-w-5xl)로 표시. 개별 업데이트(`handleRequestUpdate`/`handleRequestVerify`) 클릭은 큐에만 추가하고 자동 오픈하지 않음 — 헤더의 "업데이트 현황 (n)" 버튼이 진입점. 일괄 작업(`handleRequestUpdateAll`/`handleRequestVerifyAll`)은 즉시 overlay 오픈. UpdatePanel "← 메인으로" → "✕ 닫기" 라벨 변경. Header `view` prop 제거.
 - 2026-04-17: Step 6 완료 — Item 13. `upsertEdition`에서 `editionFieldsEqual` 비교로 (1) 변경 없을 때 source/updated_at 그대로 유지 → 편집 모달 단순 저장이 ai_search → user_input 덮어쓰기 방지, (2) 변경 있을 때도 status==='past'면 기존 source 유지 (Last 편집은 출처 변경 안 함). 신규 edition은 사용자가 명시적으로 입력한 것이므로 user_input 유지. `useConferences.test.js`에 4건 추가 (변경 없음 유지 / 변경 있음 승격 / Past 변경 시 유지 / 신규 user_input). 73 → 77건.
+- 2026-04-17: Step 7 완료 — Item 10. `src/utils/locationFormatter.js` 신규. US 별칭(USA/US/U.S./U.S.A./United States/United States of America) → 'USA'로 정규화, 비-US는 그대로 (City, Country). 공백·중복 콤마 정리. MainTable Upcoming/Last venue 셀에서 사용. 단위 테스트 10건. 77 → 87건.

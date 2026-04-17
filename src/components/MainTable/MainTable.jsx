@@ -3,6 +3,7 @@ import FilterBar from './FilterBar';
 import ConferenceFormModal from './ConferenceFormModal';
 import StarRating from '../common/StarRating';
 import { exportAsJson, exportAsXlsx } from '../../services/exportService';
+import { formatLocation } from '../../utils/locationFormatter';
 
 // 그룹별 컬럼 정의 (이중 헤더용)
 const GROUPS = [
@@ -245,7 +246,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
               {/* Upcoming */}
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.start_date || ''}</td>
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.end_date || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200">{r.upcoming?.venue || ''}</td>
+              <td className="px-3 py-2 border-r border-slate-200">{formatLocation(r.upcoming?.venue)}</td>
               <td className="px-3 py-2 border-r border-slate-200"><LinkCell href={r.upcoming?.link} /></td>
               <td className="px-3 py-2 border-r-2 border-slate-400">
                 {r.upcoming?.source && (
@@ -257,7 +258,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
               {/* Last */}
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.start_date || ''}</td>
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200 text-slate-500">{r.last?.end_date || ''}</td>
-              <td className="px-3 py-2 border-r border-slate-200 text-slate-500">{r.last?.venue || ''}</td>
+              <td className="px-3 py-2 border-r border-slate-200 text-slate-500">{formatLocation(r.last?.venue)}</td>
               <td className="px-3 py-2 border-r-2 border-slate-400"><LinkCell href={r.last?.link} /></td>
               {/* 메모 */}
               <td className="px-3 py-2 text-slate-500">{r.note}</td>
