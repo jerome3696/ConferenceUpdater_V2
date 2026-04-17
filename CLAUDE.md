@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP **Track A 진행 중** (A.1~A.7 완료, 다음: Step A.8). 상세 진행은 `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (다음: B.1). 상세 진행은 `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
