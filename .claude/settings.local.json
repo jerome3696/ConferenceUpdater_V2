@@ -35,7 +35,12 @@
       "Bash(chmod +x scripts/check-secrets.sh .husky/pre-commit)",
       "Bash(git restore *)",
       "Bash(npm test *)",
-      "Bash(bash scripts/verify-task.sh)"
+      "Bash(bash scripts/verify-task.sh)",
+      "Bash(chmod +x scripts/check-plan.sh .husky/post-merge)",
+      "Bash(bash scripts/check-plan.sh)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(gh pr create --title 'chore: Step A.7 — 플랜 강제 hook 추가' --body ' *)",
+      "Bash(git reset *)"
     ]
   }
 }
