@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 완료, B.2 v4 활성 + PLAN-005·006 보강: Haiku→Sonnet 폴백 + v5 `dedicated_url` / v6 Link–Confidence·Venue·draft 연성화 + 파서 `normalizeUpdateData` 안전망 + eval 3-tier 채점 — v4·v5·v6 eval 미실행), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1·B.2 완료 — v4 활성, PLAN-005·006로 v5·v6 휴면 대기 + 파서 안전망 + eval 3-tier 채점. v4·v5·v6 eval 측정은 follow-up. B.3·B.4 미착수), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 

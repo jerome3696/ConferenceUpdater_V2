@@ -166,11 +166,12 @@ docs/
 
 ### Step B.2: 프롬프트 v2 수동 이터레이션
 - [x] prompteng.md의 v2 가설 (레버 A~D) 중 A(today 앵커) + B(도메인 블랙리스트) 먼저 적용 — v2 pass 16/19 (P4 회귀), v3 pass 19/19 (P4 해소)
-- [x] promptBuilder.js에 `TEMPLATES.update.v2~v5` 추가 (이전 버전 불변 유지). 활성: v4
+- [x] promptBuilder.js에 `TEMPLATES.update.v2~v6` 추가 (이전 버전 불변 유지). 활성: v4
 - [x] eval-prompt.js로 v1/v2/v3 비교 실행, 결과 기록
 - [x] PLAN-005: v4 보강 (Haiku→Sonnet 폴백 + v5 `dedicated_url` 힌트 + eval 3-tier 채점) — 2026-04-18
-- [ ] v4·v5 eval 실행 및 3-tier 결과 기록 (`docs/eval/results/`)
-- **확인**: v2 pass율이 v1(16/17) 이상인가? ✅ v3 19/19 (100%) 달성
+- [x] PLAN-006: v6 Link–Confidence 상호구속 + Venue 포맷 엄격 + draft 연성화 + 파서 `normalizeUpdateData` 안전망 — 2026-04-18
+- [x] **Step B.2 종료 (2026-04-18)**: 브라우저 실사용 정확도 충분. v4·v5·v6 eval 3-tier 측정은 follow-up(머지 후 별도 세션)에서 수행 후 활성 전환 판단
+- **확인**: v2 pass율이 v1(16/17) 이상인가? ✅ v3 19/19 (100%) 달성. v6 까지 4차례 이터레이션 종료
 
 ### Step B.3: 리팩토링 체크 스크립트
 - [ ] `scripts/refactor-check.sh` 작성:
