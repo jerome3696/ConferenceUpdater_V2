@@ -181,6 +181,129 @@ describe('applyAiUpdate', () => {
   });
 });
 
+// --- saveConferenceEdit / upsertEdition source 조건 (QA #13) ---
+
+const EDITION_UPCOMING_AI = {
+  id: 'edA', conference_id: 'c1', status: 'upcoming',
+  start_date: '2026-09-01', end_date: '2026-09-05', venue: 'Paris', link: 'https://x',
+  source: 'ai_search', updated_at: '2026-04-01T00:00:00Z',
+};
+
+describe('saveConferenceEdit — source 조건 (QA #13)', () => {
+  it('Upcoming 변경 없으면 source ai_search 유지', async () => {
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], [EDITION_UPCOMING_AI]),
+      sha: null,
+    });
+
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.saveConferenceEdit(
+        'c1',
+        {
+          master: { full_name: 'Thermal Conf Updated' },
+          starred: 1,
+          upcoming: { start_date: '2026-09-01', end_date: '2026-09-05', venue: 'Paris', link: 'https://x' },
+          last: { start_date: '', end_date: '', venue: '', link: '' },
+        },
+        'edA',
+        null,
+      );
+    });
+
+    const ed = result.current.data.editions.find((e) => e.id === 'edA');
+    expect(ed.source).toBe('ai_search');
+    expect(result.current.data.conferences[0].full_name).toBe('Thermal Conf Updated');
+  });
+
+  it('Upcoming 변경 있으면 source user_input으로 승격', async () => {
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], [EDITION_UPCOMING_AI]),
+      sha: null,
+    });
+
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.saveConferenceEdit(
+        'c1',
+        {
+          master: {},
+          starred: 0,
+          upcoming: { start_date: '2026-09-02', end_date: '2026-09-05', venue: 'Paris', link: 'https://x' },
+          last: { start_date: '', end_date: '', venue: '', link: '' },
+        },
+        'edA',
+        null,
+      );
+    });
+
+    const ed = result.current.data.editions.find((e) => e.id === 'edA');
+    expect(ed.source).toBe('user_input');
+    expect(ed.start_date).toBe('2026-09-02');
+  });
+
+  it('Last(past) 에디션 변경 있어도 source 유지', async () => {
+    const pastAi = { ...EDITION_PAST, source: 'ai_search' };
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], [pastAi]),
+      sha: null,
+    });
+
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.saveConferenceEdit(
+        'c1',
+        {
+          master: {},
+          starred: 0,
+          upcoming: { start_date: '', end_date: '', venue: '', link: '' },
+          last: { start_date: '2025-09-01', end_date: '2025-09-05', venue: 'Munich', link: '' },
+        },
+        null,
+        pastAi.id,
+      );
+    });
+
+    const ed = result.current.data.editions.find((e) => e.id === pastAi.id);
+    expect(ed.source).toBe('ai_search');
+    expect(ed.venue).toBe('Munich');
+  });
+
+  it('신규 Upcoming(없던 학회에 추가) → source user_input', async () => {
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], []),
+      sha: null,
+    });
+
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.saveConferenceEdit(
+        'c1',
+        {
+          master: {},
+          starred: 0,
+          upcoming: { start_date: '2027-01-01', end_date: '2027-01-05', venue: 'NYC', link: '' },
+          last: { start_date: '', end_date: '', venue: '', link: '' },
+        },
+        null,
+        null,
+      );
+    });
+
+    const upc = result.current.data.editions.find((e) => e.status === 'upcoming');
+    expect(upc).toBeDefined();
+    expect(upc.source).toBe('user_input');
+  });
+});
+
 // --- rows 계산 ---
 
 describe('rows 계산', () => {
