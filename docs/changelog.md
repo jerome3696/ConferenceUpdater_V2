@@ -9,6 +9,14 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Changed (docs 체계, 2026-04-18)
+
+**dev-guide v2 → v3 전환**
+- `docs/dev-guide-v2.md` → `docs/legacy/dev-guide-v2.md` (Track A·B·C 완료 상태 보존)
+- `docs/dev-guide-v3.md` 신규 — 병렬 트랙 구조 skeleton (D=Infra / E=Extend / F=Ops)
+- v2까지의 선형 Step 시퀀스를 v3는 병렬 트랙 전제로 전환. 현재 phase = "할일 list up 및 상세 계획 수립 예정"
+- `CLAUDE.md` 현재 상태·문서 맵 갱신
+
 ### Added (PLAN-010, 2026-04-18)
 
 **캘린더 scope UX 3-option 전환 + ICS 외부 내보내기**

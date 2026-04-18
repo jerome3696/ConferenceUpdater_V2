@@ -217,9 +217,11 @@ docs/
 ### Step C.1: 캘린더 뷰 구현 **[완료]**
 - [x] PLAN-009 — 연간 타임라인 + 월간 그리드, Header 토글, starred/filter 스코프, date-fns 기반 (PR merge 2026-04-18)
 
-### Step C.1.5: 캘린더 scope UX + ICS 내보내기 **[완료]**
+### Step C.1.5: 캘린더 scope UX + ICS 내보내기 + 즐겨찾기 이진화 **[완료]**
 - [x] PLAN-010 — scope 3-option 토글(전체/즐겨찾기/테이블필터), RFC 5545 ICS export 순수함수 + 다운로드 버튼 (2026-04-18)
+- [x] `starred` 중요도 평점(0~3) → 이진 즐겨찾기(0|1) 단순화. StarRating 단일 토글, 폼/엑셀 라벨 "중요도" → "즐겨찾기"
 - 상업화 코어(사용자별 ICS 구독 URL)는 서버 도입(Option 2) 이후 Step C.2.5로 예약 — `buildIcs`는 그때 서버에서 재사용
+- PR: https://github.com/jerome3696/ConferenceUpdater_V2/pull/new/feature/PLAN-009-calendar-view (PLAN-009·010 통합)
 
 ### 예정 기능 (우선순위 §7.2 기준)
 - 2순위: 다기기 편집 아키텍처 — Option 2 (Cloudflare Worker) 먼저, 이후 Option 4 (Firebase/Supabase)
