@@ -28,7 +28,7 @@ export function exportAsJson(data) {
 // rows: MainTable에서 사용하는 형태 (conferences + upcoming/last 병합)
 export function exportAsXlsx(rows) {
   const sheetData = rows.map((r) => ({
-    '중요도': r.starred || 0,
+    '즐겨찾기': r.starred ? 1 : 0,
     '분류': r.category || '',
     '분야': r.field || '',
     '약칭': r.abbreviation || '',

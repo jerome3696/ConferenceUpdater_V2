@@ -40,7 +40,7 @@ vi.mock('../common/StarRating', () => ({
 
 const ROW_HEAT = {
   id: 'c1', full_name: 'Thermal Engineering Conf', abbreviation: 'TEC',
-  category: 'heat', field: 'HT', region: 'Asia', starred: 3, official_url: null,
+  category: 'heat', field: 'HT', region: 'Asia', starred: 1, official_url: null,
   upcoming: { start_date: '2026-09-01', end_date: '2026-09-05', venue: 'Tokyo', link: null, source: 'ai_search' },
   last: null,
 };

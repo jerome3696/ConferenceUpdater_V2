@@ -12,7 +12,7 @@ vi.mock('./MonthGrid', () => ({
 const ROWS = [
   { id: 'a', full_name: 'A', starred: 1, upcoming: { start_date: '2026-03-05', end_date: '2026-03-08' } },
   { id: 'b', full_name: 'B', starred: 0, upcoming: { start_date: '2026-04-10', end_date: '2026-04-12' } },
-  { id: 'c', full_name: 'C', starred: 2, upcoming: { start_date: '2026-05-01' } },
+  { id: 'c', full_name: 'C', starred: 1, upcoming: { start_date: '2026-05-01' } },
 ];
 
 describe('CalendarView', () => {

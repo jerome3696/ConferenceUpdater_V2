@@ -285,18 +285,18 @@ function ConferenceFormModal({
           {mode === 'edit' && (
             <>
               <div className="col-span-2">
-                <FieldLabel>중요도</FieldLabel>
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((n) => (
-                    <button
-                      key={n} type="button"
-                      onClick={() => update('starred', form.starred === n ? 0 : n)}
-                      className={`text-2xl leading-none ${n <= form.starred ? 'text-yellow-500' : 'text-slate-300'} hover:text-yellow-400`}
-                    >
-                      ★
-                    </button>
-                  ))}
-                  <span className="text-xs text-slate-500 self-center ml-2">({form.starred}/3)</span>
+                <FieldLabel>즐겨찾기</FieldLabel>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => update('starred', form.starred ? 0 : 1)}
+                    className={`text-2xl leading-none ${form.starred ? 'text-yellow-500' : 'text-slate-300'} hover:text-yellow-400`}
+                    aria-pressed={!!form.starred}
+                    aria-label={form.starred ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+                  >
+                    ★
+                  </button>
+                  <span className="text-xs text-slate-500">{form.starred ? '즐겨찾기' : '일반'}</span>
                 </div>
               </div>
 

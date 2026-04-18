@@ -3,9 +3,9 @@ import { renderHook, act } from '@testing-library/react';
 import { useFiltering } from './useFiltering';
 
 const ROWS = [
-  { id: 1, full_name: 'Thermal Conf', abbreviation: 'TEC', category: 'heat', field: 'HT', region: 'Asia', starred: 3 },
+  { id: 1, full_name: 'Thermal Conf', abbreviation: 'TEC', category: 'heat', field: 'HT', region: 'Asia', starred: 1 },
   { id: 2, full_name: 'Fluid Dynamics', abbreviation: 'FD', category: 'fluid', field: 'FM', region: 'EU', starred: 0 },
-  { id: 3, full_name: 'HVAC Intl', abbreviation: 'HVAC', category: 'heat', field: 'HT', region: 'NA', starred: 2 },
+  { id: 3, full_name: 'HVAC Intl', abbreviation: 'HVAC', category: 'heat', field: 'HT', region: 'NA', starred: 1 },
 ];
 
 describe('useFiltering', () => {
