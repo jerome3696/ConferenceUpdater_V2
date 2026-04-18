@@ -9,6 +9,26 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (PLAN-010, 2026-04-18)
+
+**캘린더 scope UX 3-option 전환 + ICS 외부 내보내기**
+- Header 캘린더 모드의 "테이블 필터와 동기화" 체크박스 → **3단 세그먼트 토글** (`전체` / `즐겨찾기` / `테이블필터`). `src/components/common/Header.jsx`의 `ScopeToggle` 컴포넌트 신규
+- `calendarScope` 상태 타입 `'starred' | 'filter'` → `'all' | 'starred' | 'filter'`. `CalendarView` `sourceRows` 에 `'all'` 분기 추가
+- **`src/utils/icsExport.js` 신규** — RFC 5545 iCalendar 생성 순수 함수
+  - `buildIcs(rows, opts)`: VCALENDAR 헤더/푸터 + VEVENT(UID·DTSTAMP·DTSTART/DTEND·SUMMARY·LOCATION·URL·DESCRIPTION). all-day 이벤트는 DTEND 배타적(+1일) 규약 준수. 텍스트 필드는 RFC 5545 §3.3.11 이스케이프(`\ ; ,` / 개행 `\n`), 75옥텟 folding 적용
+  - `toIcsFilename(scope)`: `conferencefinder_{scope}_YYYYMMDD.ics`
+  - `downloadIcs(ics, filename)`: Blob + `<a download>` 트리거 (브라우저 전용 얇은 래퍼)
+- CalendarView 우상단 "캘린더로 내보내기 (.ics)" 버튼 추가 — 현재 scope의 학회만 내보냄. 빈 결과는 disabled
+
+**단위 테스트 +11**
+- `icsExport.test.js` 10건: 헤더·푸터·PRODID / upcoming 없는 행 스킵 / DTEND 배타적 / end_date 미기재 1일짜리 / 특수문자 이스케이프 / UID 형식 / DTSTAMP UTC ZULU / LOCATION·URL·DESCRIPTION 포함 / calName 옵션 / 빈 rows
+- `CalendarView.test.jsx` +2건: `scope=all` 전체 전달 / 다운로드 버튼 rows 유무에 따른 enable·disable
+
+### Changed (PLAN-010)
+
+- `docs/blueprint.md` §3.4: scope 2옵션 → 3옵션 설명으로 교체, 외부 캘린더 내보내기(ICS) 섹션 신규, **상업화 방향의 캘린더 통합 전략** 3계층 서술 (현재=다운로드 / 서버 후 메인=구독 URL / 보조=pre-filled URL). §7.2 우선순위 표에 1.5(ICS 다운로드 완료)·2.5(구독 URL — 서버 도입 이후) 행 추가
+- `docs/design.md`: PLAN-010 로그 — scope 3옵션 배경, ICS 버튼 위치/톤, 순수 함수 분리 이유(서버 재사용)
+
 ### Added (PLAN-009, 2026-04-18)
 
 **캘린더 뷰 — 연간 타임라인 + 월간 그리드** (Track C.0 1순위)

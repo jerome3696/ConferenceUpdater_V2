@@ -55,6 +55,21 @@ Step 4.2 착수 시점의 현재 상태 스냅샷.
 - 사유: MVP 단순화. 네이티브의 검증된 접근성·키보드 지원 우선. 커스텀 디자인 일관성은 후순위.
 - 여지: 디자인 통일 필요성이 커지면 컴포넌트화 (MVP 후 과제).
 
+### 2026-04-18 — PLAN-010 캘린더 scope UX 3-option + ICS 내보내기
+
+- **scope 선택 방식**: Header 체크박스 ("테이블 필터와 동기화") → **3단 세그먼트 토글 (전체 / 즐겨찾기 / 테이블필터)**
+  - 왜: 초기 2옵션(starred 기본 + 필터 동기화 체크박스)은 "전체"를 볼 길이 없었음. 사용자가 "그냥 전부 깔아서 보고싶을 때도 있다"는 자연스러운 니즈 → scope를 평평한 3옵션으로 펼침.
+  - 영향: `src/components/common/Header.jsx` `ScopeToggle`, `src/App.jsx:33` 주석 (`'all' | 'starred' | 'filter'`), `src/components/Calendar/CalendarView.jsx` sourceRows
+
+- **"캘린더로 내보내기 (.ics)" 버튼**: 캘린더 뷰 우상단, scope+subView 토글 옆 배치
+  - 왜: 구글·애플·아웃룩 어느 플랫폼 사용자든 자신의 개인 캘린더에 학회 일정을 병합해서 보고싶음. OAuth 통합 없이도 **ICS 가져오기**가 모든 플랫폼에서 네이티브 지원됨. 현재 정적 호스팅 아키텍처와 정합(서버 불요).
+  - 스타일: outline 톤 (`border-slate-300`), disabled 시 opacity-50 — 주요 액션(`blue-600`) 대비 낮은 강도. "주요 동작"이 아니라 "편의 기능"임을 시각적으로 표현.
+  - 영향: `src/components/Calendar/CalendarView.jsx`, `src/utils/icsExport.js` (신규)
+
+- **ICS 생성 순수함수 분리**: 브라우저 다운로드 로직(`downloadIcs`)은 얇은 DOM wrapper, 핵심 생성(`buildIcs`)은 입출력 모두 문자열
+  - 왜: 상업화 방향(blueprint §3.4 외부 캘린더 통합 전략)에서 **서버측 구독 URL 엔드포인트가 핵심**이 될 것. 그때 Cloudflare Worker에서 같은 `buildIcs(rows, opts)`를 import해 `GET /u/{token}/calendar.ics` 응답으로 그대로 재사용 가능하도록 지금부터 분리.
+  - 영향: `src/utils/icsExport.js` — `buildIcs` / `toIcsFilename` / `downloadIcs` 분리
+
 ### 2026-04-18 — PLAN-009 캘린더 뷰 UI 결정
 
 - **뷰 전환 방식**: 별도 페이지(라우터) 대신 **Header 우측 세그먼트 토글** ("테이블 / 캘린더")

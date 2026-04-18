@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A·B 완료**, **Track C.0·C.1 완료** (PLAN-009 캘린더 뷰, blueprint 우선순위 갱신), **QA Batch 1~2 완료**. 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A·B 완료**, **Track C.0·C.1·C.1.5 완료** (PLAN-009 캘린더, PLAN-010 scope 3-option + ICS 내보내기), **QA Batch 1~2 완료**. 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 

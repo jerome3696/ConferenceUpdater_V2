@@ -217,8 +217,13 @@ docs/
 ### Step C.1: 캘린더 뷰 구현 **[완료]**
 - [x] PLAN-009 — 연간 타임라인 + 월간 그리드, Header 토글, starred/filter 스코프, date-fns 기반 (PR merge 2026-04-18)
 
+### Step C.1.5: 캘린더 scope UX + ICS 내보내기 **[완료]**
+- [x] PLAN-010 — scope 3-option 토글(전체/즐겨찾기/테이블필터), RFC 5545 ICS export 순수함수 + 다운로드 버튼 (2026-04-18)
+- 상업화 코어(사용자별 ICS 구독 URL)는 서버 도입(Option 2) 이후 Step C.2.5로 예약 — `buildIcs`는 그때 서버에서 재사용
+
 ### 예정 기능 (우선순위 §7.2 기준)
 - 2순위: 다기기 편집 아키텍처 — Option 2 (Cloudflare Worker) 먼저, 이후 Option 4 (Firebase/Supabase)
+- 2.5순위: 사용자별 ICS 구독 URL (서버 도입과 함께 활성화)
 - 3순위: 신규 학회 발굴 (키워드 기반 AI 검색)
 - 4순위: 서버 기반 구조 전환 — 사용자별 DB·다중 편집 포함
 - 지속 작업: 프롬프트 반자동 log analyzer (결과 10회+ 축적 후), E2E 테스트 (Playwright)
