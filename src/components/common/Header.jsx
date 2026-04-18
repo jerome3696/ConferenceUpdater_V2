@@ -96,6 +96,7 @@ function Header({
   hasToken, onOpenTokenModal,
   syncStatus, lastSavedAt, onRetryCommit,
   pendingUpdateCount = 0, onOpenUpdatePanel,
+  onOpenDiscoveryPanel,
   viewMode = 'table', onChangeViewMode,
   calendarScope = 'starred', onChangeCalendarScope,
 }) {
@@ -137,6 +138,15 @@ function Header({
             className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             업데이트 현황 ({pendingUpdateCount})
+          </button>
+        )}
+        {hasKey && onOpenDiscoveryPanel && (
+          <button
+            onClick={onOpenDiscoveryPanel}
+            className="px-3 py-1.5 text-sm border border-purple-300 text-purple-700 rounded hover:bg-purple-50"
+            title="키워드 기반 신규 학회 발굴 (PLAN-011)"
+          >
+            🔍 발굴
           </button>
         )}
         {hasKey && (
