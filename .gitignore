@@ -25,3 +25,8 @@ dist-ssr
 
 # Local data/samples
 *.xlsx
+
+# Env files (never commit secrets)
+.env
+.env.*
+!.env.example

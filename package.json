@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "eval": "node scripts/eval-prompt.js",
+    "eval": "node --env-file-if-exists=.env scripts/eval-prompt.js",
     "eval:sync": "node scripts/csv-to-golden.js",
     "eval:refresh": "node scripts/refresh-golden.js",
     "test": "vitest run",
