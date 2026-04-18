@@ -24,6 +24,14 @@ describe('CalendarView', () => {
     expect(screen.getByText(/즐겨찾기/)).toBeInTheDocument();
   });
 
+  it('scope=all: rows 전체 전달', () => {
+    render(
+      <CalendarView rows={ROWS} filtering={null} scope="all" subView="year" onChangeSubView={() => {}} />
+    );
+    expect(screen.getByTestId('year-view').textContent).toBe('year:3');
+    expect(screen.getByText(/전체 학회/)).toBeInTheDocument();
+  });
+
   it('scope=filter: filtering.filtered 전달', () => {
     const filtering = { filtered: [ROWS[1]] };
     render(
@@ -48,5 +56,18 @@ describe('CalendarView', () => {
     );
     expect(screen.getByTestId('month-view')).toBeInTheDocument();
     expect(screen.queryByTestId('year-view')).not.toBeInTheDocument();
+  });
+
+  it('ICS 다운로드 버튼: rows 있으면 활성, 없으면 비활성', () => {
+    const { rerender } = render(
+      <CalendarView rows={ROWS} filtering={null} scope="starred" subView="year" onChangeSubView={() => {}} />
+    );
+    const btn = screen.getByRole('button', { name: /캘린더로 내보내기/ });
+    expect(btn).not.toBeDisabled();
+
+    rerender(
+      <CalendarView rows={[]} filtering={null} scope="all" subView="year" onChangeSubView={() => {}} />
+    );
+    expect(screen.getByRole('button', { name: /캘린더로 내보내기/ })).toBeDisabled();
   });
 });

@@ -60,6 +60,37 @@ function ViewToggle({ viewMode, onChangeViewMode }) {
   );
 }
 
+const SCOPE_OPTIONS = [
+  { value: 'all', label: '전체' },
+  { value: 'starred', label: '즐겨찾기' },
+  { value: 'filter', label: '테이블필터' },
+];
+
+function ScopeToggle({ scope, onChange }) {
+  const base = 'px-2.5 py-1 text-xs border border-slate-300';
+  const active = 'bg-slate-700 text-white';
+  const inactive = 'bg-white text-slate-700 hover:bg-slate-50';
+  return (
+    <div className="inline-flex rounded overflow-hidden" role="group" aria-label="캘린더 범위">
+      {SCOPE_OPTIONS.map((opt, i) => {
+        const on = scope === opt.value;
+        const radius = i === 0 ? 'rounded-l' : i === SCOPE_OPTIONS.length - 1 ? 'rounded-r border-l-0' : 'border-l-0';
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={`${base} ${radius} ${on ? active : inactive}`}
+            aria-pressed={on}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Header({
   hasKey, onOpenKeyModal,
   hasToken, onOpenTokenModal,
@@ -79,15 +110,7 @@ function Header({
           <ViewToggle viewMode={viewMode} onChangeViewMode={onChangeViewMode} />
         )}
         {viewMode === 'calendar' && onChangeCalendarScope && (
-          <label className="inline-flex items-center gap-1.5 text-xs text-slate-600 select-none">
-            <input
-              type="checkbox"
-              className="rounded border-slate-300"
-              checked={calendarScope === 'filter'}
-              onChange={(e) => onChangeCalendarScope(e.target.checked ? 'filter' : 'starred')}
-            />
-            테이블 필터와 동기화
-          </label>
+          <ScopeToggle scope={calendarScope} onChange={onChangeCalendarScope} />
         )}
         {hasKey && (
           <SyncBadge

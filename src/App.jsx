@@ -30,7 +30,7 @@ function App() {
   // PLAN-009: 테이블/캘린더 뷰 전환. useFiltering은 App 레벨에서 호출해 양쪽 뷰가 동일 필터 상태 공유.
   const filtering = useFiltering(conferences.rows);
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'calendar'
-  const [calendarScope, setCalendarScope] = useState('starred'); // 'starred' | 'filter'
+  const [calendarScope, setCalendarScope] = useState('starred'); // 'all' | 'starred' | 'filter'
   const [calendarSubView, setCalendarSubView] = useState('year'); // 'year' | 'month'
 
   const handleRequestUpdate = (row) => {
