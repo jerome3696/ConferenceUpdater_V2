@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import FilterBar from './FilterBar';
 import ConferenceFormModal from './ConferenceFormModal';
 import StarRating from '../common/StarRating';
 import { exportAsJson, exportAsXlsx } from '../../services/exportService';
 import { formatLocation } from '../../utils/locationFormatter';
+import { useSorting } from '../../hooks/useSorting';
+import { useFiltering } from '../../hooks/useFiltering';
 
 // 그룹별 컬럼 정의 (이중 헤더용). Last/참고는 기본 접힘(QA #7).
 // cellClass: th·td에 공통 적용할 클래스 (예: min-w로 좁은 폭에서 한글 절단 방지).
@@ -96,9 +98,6 @@ function LinkCell({ href }) {
 
 export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll, onRequestVerifyAll }) {
   const { rows, loading, error, data, addConference, updateStarred, saveConferenceEdit, deleteConference } = conferences;
-  const [sortKey, setSortKey] = useState('upcoming_start');
-  const [sortDir, setSortDir] = useState('asc');
-  const [filters, setFilters] = useState({ category: '', field: '', region: '', query: '' });
   const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
   const [editingRow, setEditingRow] = useState(null);
   // QA #7: Last/참고는 기본 접힘. 사용자가 그룹 헤더 클릭으로 토글.
@@ -109,47 +108,8 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
     return next;
   });
 
-  const { categories, fields, regions } = useMemo(() => {
-    const uniq = (key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))].sort();
-    return { categories: uniq('category'), fields: uniq('field'), regions: uniq('region') };
-  }, [rows]);
-
-  const filtered = useMemo(() => {
-    const q = filters.query.trim().toLowerCase();
-    return rows.filter((r) => {
-      if (filters.category && r.category !== filters.category) return false;
-      if (filters.field && r.field !== filters.field) return false;
-      if (filters.region && r.region !== filters.region) return false;
-      if (q) {
-        const hay = `${r.full_name || ''} ${r.abbreviation || ''}`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [rows, filters]);
-
-  const sorted = useMemo(() => {
-    const arr = [...filtered];
-    arr.sort((a, b) => {
-      const av = getSortValue(a, sortKey);
-      const bv = getSortValue(b, sortKey);
-      const aEmpty = av === '' || av == null;
-      const bEmpty = bv === '' || bv == null;
-      if (aEmpty && !bEmpty) return 1;
-      if (!aEmpty && bEmpty) return -1;
-      if (aEmpty && bEmpty) return a.full_name.localeCompare(b.full_name);
-      let cmp;
-      if (typeof av === 'number' && typeof bv === 'number') cmp = av - bv;
-      else cmp = String(av).localeCompare(String(bv));
-      return sortDir === 'asc' ? cmp : -cmp;
-    });
-    return arr;
-  }, [filtered, sortKey, sortDir]);
-
-  const onSort = (key) => {
-    if (sortKey === key) setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
-    else { setSortKey(key); setSortDir('asc'); }
-  };
+  const { filters, setFilters, filtered, options: { categories, fields, regions } } = useFiltering(rows);
+  const { sortKey, sortDir, onSort, sorted } = useSorting(filtered, getSortValue, 'upcoming_start');
 
   if (loading) return <div className="p-8 text-slate-500">로딩 중...</div>;
   if (error) return <div className="p-8 text-red-600">오류: {error.message}</div>;
