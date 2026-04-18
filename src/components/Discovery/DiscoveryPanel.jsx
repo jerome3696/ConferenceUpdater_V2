@@ -27,14 +27,25 @@ function parseSeed(input) {
     .filter(Boolean);
 }
 
-function dedupCi(arr) {
+// 시드 문자열 → {ko, en} 페어. 폴백 en=ko.
+// 한글 포함이면 ko 면을 채우고 en=ko (Stage 2 system 이 영문 위주 web_search 안내).
+function seedToPair(s) {
+  return { ko: s, en: s };
+}
+
+function pairKey(p) {
+  return `${(p.ko || '').trim().toLowerCase()}::${(p.en || '').trim().toLowerCase()}`;
+}
+
+function dedupPairs(arr) {
   const seen = new Set();
   const out = [];
-  for (const x of arr) {
-    const k = x.toLowerCase();
+  for (const p of arr) {
+    if (!p?.ko || !p?.en) continue;
+    const k = pairKey(p);
     if (seen.has(k)) continue;
     seen.add(k);
-    out.push(x);
+    out.push(p);
   }
   return out;
 }
@@ -77,9 +88,10 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
         setExpandError(`응답 파싱 실패 (${parsed.reason})`);
         return;
       }
-      // 시드도 자동 선택 풀에 포함. 새 확장은 미선택 상태로.
-      setExpanded(dedupCi([...seeds, ...parsed.keywords]));
-      setSelected((prev) => dedupCi([...prev, ...seeds]));
+      // 시드 페어 + AI 확장 페어 병합. 시드는 자동 선택, 확장은 미선택.
+      const seedPairs = seeds.map(seedToPair);
+      setExpanded(dedupPairs([...seedPairs, ...parsed.keywords]));
+      setSelected((prev) => dedupPairs([...prev, ...seedPairs]));
     } catch (e) {
       const msg = e instanceof ClaudeApiError ? e.message : `오류: ${e?.message || e}`;
       setExpandError(msg);
@@ -88,18 +100,24 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
     }
   };
 
-  const handleToggle = (kw) => {
-    setSelected((prev) => prev.includes(kw) ? prev.filter((k) => k !== kw) : [...prev, kw]);
+  const isSamePair = (a, b) => pairKey(a) === pairKey(b);
+
+  const handleToggle = (pair) => {
+    setSelected((prev) =>
+      prev.some((p) => isSamePair(p, pair))
+        ? prev.filter((p) => !isSamePair(p, pair))
+        : [...prev, pair]
+    );
   };
 
-  const handleAddCustom = (kw) => {
-    setCustomKeywords((prev) => prev.includes(kw) ? prev : [...prev, kw]);
-    setSelected((prev) => prev.includes(kw) ? prev : [...prev, kw]);
+  const handleAddCustom = (pair) => {
+    setCustomKeywords((prev) => (prev.some((p) => isSamePair(p, pair)) ? prev : [...prev, pair]));
+    setSelected((prev) => (prev.some((p) => isSamePair(p, pair)) ? prev : [...prev, pair]));
   };
 
-  const handleRemoveCustom = (kw) => {
-    setCustomKeywords((prev) => prev.filter((k) => k !== kw));
-    setSelected((prev) => prev.filter((k) => k !== kw));
+  const handleRemoveCustom = (pair) => {
+    setCustomKeywords((prev) => prev.filter((p) => !isSamePair(p, pair)));
+    setSelected((prev) => prev.filter((p) => !isSamePair(p, pair)));
   };
 
   const handleSearch = async () => {

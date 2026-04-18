@@ -1,27 +1,40 @@
-// Stage 1 UI: 시드 키워드 입력 → AI 확장 → 체크박스 선택 + 자유 입력 추가/제거.
+// Stage 1 UI: 시드 키워드 입력 → AI 확장(ko/en 페어) → 칩 선택 + 자유 입력 추가/제거.
 // 호출은 부모(DiscoveryPanel)가 담당. 본 컴포넌트는 입력·선택 상태만 관리.
+//
+// 011-B.1: 모든 키워드는 {ko, en} 페어. 칩은 메인 한국어 + 보조 영어 2-line.
+//          자유 입력은 en=ko 폴백 (자동 번역 없음 — MVP).
 
 import { useState } from 'react';
 
 const MAX_SELECTED = 7;
 
-function Chip({ label, on, onToggle, onRemove }) {
+// ko+en 정규화 키 — 대소문자/공백 무시한 동치 비교용
+function pairKey(p) {
+  return `${(p.ko || '').trim().toLowerCase()}::${(p.en || '').trim().toLowerCase()}`;
+}
+
+function Chip({ pair, on, onToggle, onRemove }) {
+  const sameKoEn = pair.ko === pair.en;
   return (
     <span
-      className={`inline-flex items-center gap-1 pl-2 pr-1 py-0.5 rounded-full text-xs border ${
+      className={`inline-flex items-stretch gap-1 pl-2 pr-1 py-0.5 rounded-md text-xs border ${
         on
           ? 'bg-blue-50 border-blue-300 text-blue-700'
           : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50'
       }`}
+      title={sameKoEn ? pair.ko : `${pair.ko} / ${pair.en}`}
     >
-      <button type="button" onClick={onToggle} className="font-medium">
-        {label}
+      <button type="button" onClick={onToggle} className="text-left leading-tight py-0.5">
+        <div className="font-medium">{pair.ko}</div>
+        {!sameKoEn && (
+          <div className="text-[10px] text-slate-400 font-normal">{pair.en}</div>
+        )}
       </button>
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="text-slate-400 hover:text-rose-500 px-1"
+          className="text-slate-400 hover:text-rose-500 px-1 self-center"
           title="제거"
         >
           ×
@@ -37,12 +50,12 @@ export default function KeywordExpansion({
   onExpand,
   expanding,
   expandError,
-  expanded,             // string[] — AI 제안
-  selected,             // string[] — 사용자가 선택한 키워드 (시드 + 확장 + 직접 입력 통합)
-  onToggle,             // (keyword) => void
-  onAddCustom,          // (keyword) => void
-  onRemoveCustom,       // (keyword) => void
-  customKeywords,       // string[] — 사용자가 직접 추가한 것 (제거 가능)
+  expanded,             // {ko,en}[] — AI 제안
+  selected,             // {ko,en}[] — 사용자가 선택한 키워드 (시드 + 확장 + 직접 입력 통합)
+  onToggle,             // (pair) => void
+  onAddCustom,          // (pair) => void
+  onRemoveCustom,       // (pair) => void
+  customKeywords,       // {ko,en}[] — 사용자가 직접 추가한 것 (제거 가능)
   onSearch,
   searching,
 }) {
@@ -51,11 +64,14 @@ export default function KeywordExpansion({
   const handleAddCustom = () => {
     const v = customInput.trim();
     if (!v) return;
-    onAddCustom(v);
+    // MVP 폴백: en=ko (자동 번역 없음)
+    onAddCustom({ ko: v, en: v });
     setCustomInput('');
   };
 
   const tooMany = selected.length > MAX_SELECTED;
+  const selectedKeys = new Set(selected.map(pairKey));
+  const isSelected = (p) => selectedKeys.has(pairKey(p));
 
   return (
     <div className="space-y-3">
@@ -95,9 +111,9 @@ export default function KeywordExpansion({
           <div className="flex flex-wrap gap-1.5">
             {expanded.map((kw) => (
               <Chip
-                key={kw}
-                label={kw}
-                on={selected.includes(kw)}
+                key={pairKey(kw)}
+                pair={kw}
+                on={isSelected(kw)}
                 onToggle={() => onToggle(kw)}
               />
             ))}
@@ -107,7 +123,9 @@ export default function KeywordExpansion({
 
       {/* Custom keywords */}
       <div>
-        <div className="text-xs font-semibold text-slate-600 mb-1">직접 추가</div>
+        <div className="text-xs font-semibold text-slate-600 mb-1">
+          직접 추가 <span className="text-slate-400 font-normal">(영어로 입력해도 OK — 그대로 검색에 사용)</span>
+        </div>
         <div className="flex gap-2 mb-1.5">
           <input
             type="text"
@@ -129,9 +147,9 @@ export default function KeywordExpansion({
           <div className="flex flex-wrap gap-1.5">
             {customKeywords.map((kw) => (
               <Chip
-                key={kw}
-                label={kw}
-                on={selected.includes(kw)}
+                key={pairKey(kw)}
+                pair={kw}
+                on={isSelected(kw)}
                 onToggle={() => onToggle(kw)}
                 onRemove={() => onRemoveCustom(kw)}
               />

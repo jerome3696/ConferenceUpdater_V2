@@ -109,7 +109,7 @@ describe('buildUpdatePrompt — v6 (cross-coupling + venue 포맷 + draft)', () 
   });
 });
 
-describe('buildDiscoveryExpandPrompt — v1 (PLAN-011 Stage 1)', () => {
+describe('buildDiscoveryExpandPrompt — v1 (PLAN-011 Stage 1 + B.1 ko/en)', () => {
   it('DEFAULT_DISCOVERY_EXPAND_VERSION 은 v1', () => {
     expect(DEFAULT_DISCOVERY_EXPAND_VERSION).toBe('v1');
   });
@@ -120,6 +120,19 @@ describe('buildDiscoveryExpandPrompt — v1 (PLAN-011 Stage 1)', () => {
     expect(user).toContain('"열전달"');
     expect(user).toContain('"디지털 트윈"');
     expect(system).toContain('연관 키워드 10개');
+  });
+
+  it('system 에 ko/en 페어 출력 schema 명시', () => {
+    const { system } = buildDiscoveryExpandPrompt(['열전달']);
+    expect(system).toMatch(/한국어\/영어 페어|ko[^a-z].*en/);
+    expect(system).toContain('"ko"');
+    expect(system).toContain('"en"');
+  });
+
+  it('user 에 ko/en 가이드 라인 포함', () => {
+    const { user } = buildDiscoveryExpandPrompt(['열전달']);
+    expect(user).toMatch(/ko:.*한국/);
+    expect(user).toMatch(/en:.*영문|en:.*web_search/);
   });
 
   it('단일 키워드 문자열도 처리', () => {
@@ -143,15 +156,19 @@ describe('buildDiscoverySearchPrompt — v1 (PLAN-011 Stage 2)', () => {
     expect(DEFAULT_DISCOVERY_SEARCH_VERSION).toBe('v1');
   });
 
-  it('선택 키워드와 기존 학회 목록을 user 프롬프트에 포함', () => {
+  it('ko/en 페어 키워드를 한국어 / 영어 형식으로 user 에 포함', () => {
     const existing = [
       { full_name: 'International Heat Transfer Conference', abbreviation: 'IHTC', official_url: 'https://ihtc18.org/' },
       { full_name: 'ASHRAE Winter Conference', abbreviation: 'ASHRAE Winter' },
     ];
-    const { user, system, version } = buildDiscoverySearchPrompt(['heat transfer', 'HVAC'], existing);
+    const pairs = [
+      { ko: '열전달', en: 'heat transfer' },
+      { ko: '공기조화', en: 'HVAC' },
+    ];
+    const { user, system, version } = buildDiscoverySearchPrompt(pairs, existing);
     expect(version).toBe('v1');
-    expect(user).toContain('- heat transfer');
-    expect(user).toContain('- HVAC');
+    expect(user).toContain('- 열전달 / heat transfer');
+    expect(user).toContain('- 공기조화 / HVAC');
     expect(user).toContain('IHTC');
     expect(user).toContain('International Heat Transfer Conference');
     expect(user).toContain('ihtc18.org');
@@ -160,30 +177,46 @@ describe('buildDiscoverySearchPrompt — v1 (PLAN-011 Stage 2)', () => {
     expect(system).toContain('OR 매칭');
   });
 
+  it('문자열 키워드는 ko=en 폴백으로 페어화', () => {
+    const { user } = buildDiscoverySearchPrompt(['heat transfer'], []);
+    expect(user).toContain('- heat transfer / heat transfer');
+  });
+
+  it('system 에 matched_keywords + field 지시 명시', () => {
+    const { system } = buildDiscoverySearchPrompt([], []);
+    expect(system).toContain('matched_keywords');
+    expect(system).toMatch(/field.*matched_keywords\[0\]\.ko/);
+  });
+
+  it('system 에 영문 면을 web_search 메인 쿼리로 사용 명시', () => {
+    const { system } = buildDiscoverySearchPrompt([], []);
+    expect(system).toMatch(/영문.*web_search.*메인|영문 면을 web_search/);
+  });
+
   it('user 프롬프트에 오늘 날짜(YYYY-MM-DD) 포함', () => {
     const today = new Date().toISOString().slice(0, 10);
-    const { user } = buildDiscoverySearchPrompt(['x'], []);
+    const { user } = buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], []);
     expect(user).toContain(today);
   });
 
   it('기존 학회 목록 빈 배열이면 "없음" 표시', () => {
-    const { user } = buildDiscoverySearchPrompt(['x'], []);
+    const { user } = buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], []);
     expect(user).toContain('없음');
   });
 
   it('system 프롬프트에 BANNED_LINK_DOMAINS 인용 (waset 등)', () => {
-    const { system } = buildDiscoverySearchPrompt(['x'], []);
+    const { system } = buildDiscoverySearchPrompt([], []);
     expect(system).toContain('waset.org');
     expect(system).toContain('omicsonline.org');
     expect(system).toContain('hilarispublisher.com');
   });
 
   it('system 프롬프트에 정기 학회 한정 + 단발 행사 제외 명시', () => {
-    const { user } = buildDiscoverySearchPrompt(['x'], []);
+    const { user } = buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], []);
     expect(user).toContain('정기 학회');
   });
 
   it('알 수 없는 버전은 throw', () => {
-    expect(() => buildDiscoverySearchPrompt(['x'], [], { version: 'v99' })).toThrow();
+    expect(() => buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], [], { version: 'v99' })).toThrow();
   });
 });

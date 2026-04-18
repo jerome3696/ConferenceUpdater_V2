@@ -48,6 +48,32 @@ export default function DiscoveryCard({ candidate, onAccept, onReject }) {
       </div>
 
       <div className="p-3 space-y-2">
+        {/* 추천 분류 (PLAN-011-B.1) — field 한국어 + matched_keywords 페어 칩 */}
+        {(candidate.field || candidate.matched_keywords?.length > 0) && (
+          <div className="flex items-center gap-2 flex-wrap pb-2 border-b border-slate-200">
+            <span className="text-[11px] text-slate-500 shrink-0">추천 분류</span>
+            {candidate.field && (
+              <span className="px-2 py-0.5 rounded text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                {candidate.field}
+              </span>
+            )}
+            {candidate.matched_keywords?.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {candidate.matched_keywords.map((m, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200"
+                    title={`${m.ko} / ${m.en}`}
+                  >
+                    {m.ko}
+                    <span className="ml-1 text-slate-400">{m.en}</span>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div>
           <Field label="organizer" value={candidate.organizer} />
           {candidate.official_url && (

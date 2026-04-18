@@ -134,8 +134,9 @@ export function parseUpdateResponse(text) {
 const PREDATORY_LEVELS = new Set(['low', 'medium', 'high']);
 
 /**
- * Discovery Stage 1 응답 파싱. { keywords: string[] } 기대.
- * @returns {{ok:true, keywords:string[]} | {ok:false, reason:string, raw:string, parsed?:any}}
+ * Discovery Stage 1 응답 파싱. { keywords: [{ko, en}, ...] } 기대.
+ * 후방 호환: 항목이 string 이면 {ko: s, en: s} 폴백.
+ * @returns {{ok:true, keywords:Array<{ko:string,en:string}>} | {ok:false, reason:string, raw:string, parsed?:any}}
  *   reason: 'empty' | 'no_json' | 'schema_mismatch'
  */
 export function parseDiscoveryExpandResponse(text) {
@@ -148,17 +149,24 @@ export function parseDiscoveryExpandResponse(text) {
   const arr = data.keywords;
   if (!Array.isArray(arr)) return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
 
-  // 문자열만 추출, 공백·중복 제거. 빈 배열도 허용.
+  // ko/en 페어 추출 + dedup. 문자열은 {ko, en} 폴백.
   const seen = new Set();
   const keywords = [];
   for (const k of arr) {
-    if (typeof k !== 'string') continue;
-    const trimmed = k.trim();
-    if (!trimmed) continue;
-    const key = trimmed.toLowerCase();
+    let pair = null;
+    if (typeof k === 'string') {
+      const t = k.trim();
+      if (t) pair = { ko: t, en: t };
+    } else if (k && typeof k === 'object' && !Array.isArray(k)) {
+      const ko = typeof k.ko === 'string' ? k.ko.trim() : '';
+      const en = typeof k.en === 'string' ? k.en.trim() : '';
+      if (ko && en) pair = { ko, en };
+    }
+    if (!pair) continue;
+    const key = `${pair.ko.toLowerCase()}::${pair.en.toLowerCase()}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    keywords.push(trimmed);
+    keywords.push(pair);
   }
   return { ok: true, keywords };
 }
@@ -198,10 +206,25 @@ export function parseDiscoverySearchResponse(text) {
       ? raw.predatory_reasons.filter((r) => typeof r === 'string')
       : [];
 
+    // matched_keywords: [{ko, en}, ...] — 페어만 통과, 잘못된 항목 폐기
+    const rawMatched = Array.isArray(raw.matched_keywords) ? raw.matched_keywords : [];
+    const matchedKeywords = [];
+    for (const m of rawMatched) {
+      if (!m || typeof m !== 'object' || Array.isArray(m)) continue;
+      const ko = typeof m.ko === 'string' ? m.ko.trim() : '';
+      const en = typeof m.en === 'string' ? m.en.trim() : '';
+      if (!ko || !en) continue;
+      matchedKeywords.push({ ko, en });
+    }
+
+    // field 기본값: matched_keywords[0].ko (AI 가 채우지 않았을 경우 폴백)
+    const rawField = typeof raw.field === 'string' ? raw.field.trim() : '';
+    const field = rawField || (matchedKeywords[0]?.ko ?? '');
+
     const candidate = {
       full_name: fullName,
       abbreviation: typeof raw.abbreviation === 'string' ? raw.abbreviation.trim() : '',
-      field: typeof raw.field === 'string' ? raw.field.trim() : '',
+      field,
       region: typeof raw.region === 'string' ? raw.region.trim() : '',
       official_url: typeof raw.official_url === 'string' ? raw.official_url.trim() : '',
       organizer: typeof raw.organizer === 'string' ? raw.organizer.trim() : '',
@@ -209,6 +232,7 @@ export function parseDiscoverySearchResponse(text) {
       evidence_url: typeof raw.evidence_url === 'string' ? raw.evidence_url.trim() : '',
       predatory_score: predatoryScore,
       predatory_reasons: reasons,
+      matched_keywords: matchedKeywords,
     };
 
     if (raw.upcoming && typeof raw.upcoming === 'object' && !Array.isArray(raw.upcoming)) {

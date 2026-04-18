@@ -167,30 +167,70 @@ describe('BANNED_LINK_DOMAINS 상수', () => {
   });
 });
 
-describe('parseDiscoveryExpandResponse (PLAN-011)', () => {
-  it('정상 keywords 배열을 파싱한다', () => {
+describe('parseDiscoveryExpandResponse (PLAN-011 + B.1 ko/en pair)', () => {
+  it('ko/en 페어 배열을 파싱한다', () => {
     const text = JSON.stringify({
-      keywords: ['heat transfer', 'thermal management', 'HVAC', '공기조화'],
+      keywords: [
+        { ko: '열관리', en: 'thermal management' },
+        { ko: '공기조화', en: 'HVAC' },
+      ],
     });
     const result = parseDiscoveryExpandResponse(text);
     expect(result.ok).toBe(true);
-    expect(result.keywords).toEqual(['heat transfer', 'thermal management', 'HVAC', '공기조화']);
+    expect(result.keywords).toEqual([
+      { ko: '열관리', en: 'thermal management' },
+      { ko: '공기조화', en: 'HVAC' },
+    ]);
   });
 
   it('코드펜스로 감싼 응답도 파싱한다', () => {
-    const text = '```json\n' + JSON.stringify({ keywords: ['a', 'b'] }) + '\n```';
+    const text = '```json\n' + JSON.stringify({
+      keywords: [{ ko: 'a', en: 'A' }, { ko: 'b', en: 'B' }],
+    }) + '\n```';
     const result = parseDiscoveryExpandResponse(text);
     expect(result.ok).toBe(true);
-    expect(result.keywords).toEqual(['a', 'b']);
+    expect(result.keywords).toEqual([{ ko: 'a', en: 'A' }, { ko: 'b', en: 'B' }]);
   });
 
-  it('공백·중복·비문자열은 제거한다', () => {
+  it('문자열 항목은 {ko, en} 폴백으로 처리한다', () => {
+    const text = JSON.stringify({ keywords: ['heat transfer', 'HVAC'] });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([
+      { ko: 'heat transfer', en: 'heat transfer' },
+      { ko: 'HVAC', en: 'HVAC' },
+    ]);
+  });
+
+  it('ko 또는 en 누락된 항목은 폐기', () => {
     const text = JSON.stringify({
-      keywords: ['heat', '  HEAT  ', '', null, 42, 'thermal', 'thermal'],
+      keywords: [
+        { ko: '', en: 'no ko' },
+        { ko: 'no en', en: '' },
+        { ko: '정상', en: 'normal' },
+      ],
     });
     const result = parseDiscoveryExpandResponse(text);
     expect(result.ok).toBe(true);
-    expect(result.keywords).toEqual(['heat', 'thermal']);
+    expect(result.keywords).toEqual([{ ko: '정상', en: 'normal' }]);
+  });
+
+  it('공백·중복·비객체는 제거 (ko+en 정규화 키)', () => {
+    const text = JSON.stringify({
+      keywords: [
+        { ko: '  열관리  ', en: '  thermal management  ' },
+        { ko: '열관리', en: 'thermal management' },
+        null,
+        42,
+        { ko: 'HVAC', en: 'HVAC' },
+      ],
+    });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([
+      { ko: '열관리', en: 'thermal management' },
+      { ko: 'HVAC', en: 'HVAC' },
+    ]);
   });
 
   it('빈 응답은 reason: empty', () => {
@@ -359,6 +399,71 @@ describe('parseDiscoverySearchResponse (PLAN-011)', () => {
     const result = parseDiscoverySearchResponse(JSON.stringify({ candidates: [] }));
     expect(result.ok).toBe(true);
     expect(result.candidates).toEqual([]);
+  });
+
+  it('matched_keywords 페어 정상 파싱', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        matched_keywords: [
+          { ko: '열전달', en: 'heat transfer' },
+          { ko: '열관리', en: 'thermal management' },
+        ],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].matched_keywords).toEqual([
+      { ko: '열전달', en: 'heat transfer' },
+      { ko: '열관리', en: 'thermal management' },
+    ]);
+  });
+
+  it('matched_keywords 누락은 빈 배열', () => {
+    const result = parseDiscoverySearchResponse(JSON.stringify({ candidates: [MIN_CANDIDATE] }));
+    expect(result.candidates[0].matched_keywords).toEqual([]);
+  });
+
+  it('matched_keywords 잘못된 항목은 폐기 (ko/en 누락·문자열)', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        matched_keywords: [
+          { ko: '열전달', en: 'heat transfer' },
+          { ko: '', en: 'no ko' },
+          'plain string',
+          null,
+          { ko: 'no en', en: '' },
+        ],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].matched_keywords).toEqual([
+      { ko: '열전달', en: 'heat transfer' },
+    ]);
+  });
+
+  it('field 미지정 시 matched_keywords[0].ko 로 폴백', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        field: '',
+        matched_keywords: [{ ko: '극저온', en: 'cryogenics' }],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].field).toBe('극저온');
+  });
+
+  it('field 명시되어 있으면 그대로 유지 (matched_keywords 무관)', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        field: '공기조화',
+        matched_keywords: [{ ko: '극저온', en: 'cryogenics' }],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].field).toBe('공기조화');
   });
 });
 
