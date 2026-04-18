@@ -191,10 +191,12 @@ docs/
 - **확인**: MainTable·FormModal 등 큰 컴포넌트가 경고에 잡히는가? ✅ 잡힘 (2026-04-18)
 
 ### Step B.4: 리팩토링 실행 (결과 기반)
-- [ ] B.3 결과에서 가장 심각한 1~2건 선정
-- [ ] 각각 플랜 문서 작성 (H2.2 절차)
-- [ ] feature branch에서 리팩토링 → verify-task → PR → merge
-- **확인**: 리팩토링 후 기존 테스트 전건 통과?
+- [x] B.3 결과에서 2건 선정 — ConferenceFormModal + MainTable (promptBuilder 는 v1~v6 공존 설계로 보류)
+- [x] 각각 플랜 문서 작성 — PLAN-007, PLAN-008
+- [x] feature branch에서 리팩토링 → verify-task → PR → merge
+  - PLAN-007 (PR #15): FormModal 376→360줄, className 중복 9회→0. 핵심 이득(중복 제거·label/input 통일) 달성, <300 미달은 별도 작업
+  - PLAN-008 (PR #16): MainTable 370→330줄, useState 7→4 (warning tier 탈출). useSorting/useFiltering 훅 분리 + 단위 테스트 10건 추가 (총 122→132)
+- **확인**: 리팩토링 후 기존 테스트 전건 통과? ✅ MainTable.test.jsx 9건 불변 통과, verify-task ✅ 5/0 (2026-04-18)
 
 > ✅ **Track B 완료 조건**: v2 프롬프트 확정, 핵심 컴포넌트 리팩토링 1회 이상 완료, 테스트 커버리지 서비스 레이어 100%.
 
