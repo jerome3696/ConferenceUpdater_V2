@@ -30,9 +30,10 @@
   - **Haiku→Sonnet 재시도** (PLAN-005, 2026-04-18): 1차 Haiku 결과 `start_date=null`이면 Sonnet 4.6 + `web_fetch` 로 1회 재시도
 - **v5 휴면**: `dedicated_url` 힌트 라인 추가 버전. `DEFAULT_UPDATE_VERSION=v4` 유지. eval 통과 후 활성 검토
 - **v6 휴면 (신규)**: PLAN-006 — Link–Confidence 상호구속, Venue 포맷(USA/Canada/그외) 엄격화, 3순위 색인 페이지 허용 명료화, framer.ai 연성화(draft 규칙). 파서 `normalizeUpdateData` 안전망 동반
-- **마지막 측정(v3)**: 2026-04-17 / pass **19/19 (100%)** / avg input 41,651 · output 722 토큰
-  - 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
-- **v4 / v5 / v6 eval**: 미실행 — `npm run eval -- --version v4|v5|v6` 로 확인 필요. 3-tier 채점(pass/partial/fail) 적용됨 — URL만 맞고 `start_date=null` 은 partial로 드러남
+- **마지막 측정(v6)**: 2026-04-18 / **pass 15 / partial 1 / fail 3 (19건)** / avg input 34,613 · output 729 토큰
+  - 결과 파일: `docs/eval/results/2026-04-18T00-28-11-v6.json`
+  - 직전(v3): 2026-04-17 / 19/19 (100%) / avg in 41,651 · out 722 — `docs/eval/results/2026-04-17T12-42-33-v3.json`
+- **v4 / v5 eval**: 미실행. v6 측정으로 우선 비교 종료 (사용자 결정 2026-04-18). 향후 필요 시 `npm run eval -- --version v4|v5`
 
 ### 잔존 실패 (다음 개선 타겟)
 - **[P2 해소] conf_006 IIR Cryogenics** — `official_url` 이 금지 도메인(iir-conferences-series)이었음. 2026-04-18 `cryogenics-conference.eu` 로 교체 (PLAN-005 Part 1). 브라우저 확인 필요
@@ -52,7 +53,7 @@
 - [x] **H. Link–Confidence 상호구속** — v6: `high/medium` 이면 link non-null 강제, 파서 백필 안전망 병행 (PLAN-006, 2026-04-18)
 - [x] **I. Venue 포맷 정규화** — v6: US `City, State, USA` / Canada `City, Province, Canada` / 그 외 `City, Country` (Korea·UK 표기 고정) (PLAN-006, 2026-04-18)
 - [x] **J. Draft 사이트 연성화 + 3순위 색인 페이지 허용 명료화** — v6: framer.ai 하드 금지 제거, confidence=low + notes='draft/prototype' 조건부 사용. `ibpsa.org/conferences/` 류 색인 페이지는 3순위로 공식 허용 (PLAN-006, 2026-04-18)
-- [ ] **v4 / v5 / v6 eval 확인**: 3-tier 채점 → 이전 "19/19 pass" 착시 해소, partial 분리 측정
+- [x] **v6 eval 확인** (2026-04-18): 15 pass / 1 partial / 3 fail. v3 100% 대비 표면 회귀 — conf_010은 의도된 보수성, conf_012/015는 진짜 회귀. v4/v5는 미측정 (사용자 결정으로 비교 종료)
 - [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. MVP 후 본격 검토
 
 ---
@@ -87,7 +88,7 @@
 | v3 | 2026-04-17 | Haiku 4.5 + Phase A | **19/19 (100%)** | 41,651 / 722 | 레버 A' 적용. P4 3건 완전 해소 (IEA HPC·ICBCHT·IHTC), P1·P2 유지 |
 | v4 | 2026-04-17 | Haiku 4.5 + Phase A | (미측정) | — | 레버 C: confidence 기준·link 4순위·하위 페이지 탐색 의무 |
 | v5 | 2026-04-18 | Haiku + Phase A + (`dedicated_url` 힌트) + Sonnet 4.6 폴백 | (미측정) | — | 레버 F·G. v4 system 동일, user에 `dedicated_url` 있을 때만 힌트 1줄 + 사용 지침 추가 |
-| v6 | 2026-04-18 | Haiku + Phase A + Sonnet 4.6 폴백 + 파서 `normalizeUpdateData` | (미측정) | — | 레버 H·I·J. Link–Confidence 상호구속 + Venue 포맷 엄격 + draft 연성화 + 3순위 색인 페이지 허용. `BANNED_LINK_DOMAINS` 상수 단일 공급원 |
+| v6 | 2026-04-18 | Haiku + Phase A + Sonnet 4.6 폴백 + 파서 `normalizeUpdateData` | **15/19 pass + 1 partial + 3 fail (79%/5%/16%)** | 34,613 / 729 | 레버 H·I·J. v3 100% → v6 79% 회귀 표면적, 단 conf_010은 의도된 보수성(link 빈 반환)으로 추정. conf_012/015 진짜 회귀 |
 
 ---
 
@@ -336,7 +337,10 @@
    - `promptBuilder.test.js`: v6 분기 7종 — Link–Confidence 텍스트, Venue 포맷 예시, Draft 섹션, framer.ai 금지리스트 미등장, 3순위 색인 허용, 자기검증 체크리스트, dedicated_url 힌트 (v5 동일 동작)
 
 #### 결과
-- eval: **미실행** — `npm run eval -- --version v6` 측정 후 기록 예정
+- eval (2026-04-18, `--version v6`): **pass 15 / partial 1 / fail 3 (19건)**, avg input 34,613 · output 729, `stop_reason=max_tokens` 0/19 — `docs/eval/results/2026-04-18T00-28-11-v6.json`
+  - **fail**: conf_010 TPTPR (`ai_link_missing` — 17s, link 빈 반환), conf_012 THERMINIC (`url_mismatch` → `ipcei-me-ct.eu/events/...` 오답), conf_015 ICCFD (`url_mismatch` → `iccfd13.polimi.it`, 합리적 추측이나 golden과 mismatch)
+  - **partial**: conf_006 IIR Cryogenics (URL pass, `start_date=null` — draft 연성화 효과 가능)
+  - **v3(19/19) → v6(15/19) 표면적 회귀** — conf_010은 레버 H 의도된 보수성으로 추정(확신 없으면 link 비우기), conf_012/015는 진짜 회귀. 향후 follow-up 분석 대상
 - 단위 테스트: 전건 122/122 통과 (신규 +21: 파서 14, 프롬프트 7)
 
 #### 가설 (측정 대기)
