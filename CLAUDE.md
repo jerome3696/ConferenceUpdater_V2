@@ -7,13 +7,13 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A·B 완료**, **Track C.0·C.1·C.1.5 완료** (PLAN-009 캘린더, PLAN-010 scope 3-option + ICS 내보내기), **QA Batch 1~2 완료**. 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3 돌입. 할일 list up 및 상세 계획 수립 예정** (Track D=Infra / E=Extend / F=Ops 병렬). 상세: `docs/dev-guide-v3.md`.
 
 ## 문서 맵 (작업 종류별)
 
 | 언제 | 무엇을 읽어라 |
 |---|---|
-| Step·트랙 진행 / 진행 상황 확인 | `docs/dev-guide-v2.md` |
+| Step·트랙 진행 / 진행 상황 확인 | `docs/dev-guide-v3.md` (완료된 v1·v2는 `docs/legacy/`) |
 | 기능 설계 / 구현 가능성 판단 | `docs/blueprint.md` |
 | 프롬프트 변경·평가 | `docs/prompteng.md` (현황판 §1, 레버 §4, 패턴 §6) |
 | UI/디자인 결정 | `docs/design.md` |
