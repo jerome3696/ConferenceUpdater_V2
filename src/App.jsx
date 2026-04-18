@@ -148,6 +148,7 @@ function App() {
             <DiscoveryPanel
               apiKey={apiKey}
               existingConferences={conferences.rows}
+              onAccept={conferences.addConferenceFromDiscovery}
               onClose={() => setDiscoveryPanelOpen(false)}
             />
           </div>

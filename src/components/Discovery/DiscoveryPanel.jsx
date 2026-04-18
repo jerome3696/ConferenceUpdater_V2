@@ -1,7 +1,6 @@
 // 발굴 패널 컨테이너. Stage 1 (키워드 확장) + Stage 2 (학회 검색) + Stage 3 (카드 검토).
-// 011-B: callClaude 직접 호출, 카드 표시까지. 승인 시 alert 만 (실제 master+edition 생성은 011-C).
-//
-// 주의: useDiscoveryQueue 분리는 011-C 에서 수행. 본 단계는 단일 batch 호출 결과만 다룸.
+// 011-C: 승인 시 onAccept 콜백 (App → useConferences.addConferenceFromDiscovery) 으로
+//        master + upcoming edition 동시 생성. Stage 1·2 의 토큰/web_search usage 누적.
 
 import { useMemo, useState } from 'react';
 import KeywordExpansion from './KeywordExpansion';
@@ -17,8 +16,40 @@ import {
 } from '../../services/responseParser';
 import { MODELS } from '../../config/models';
 
-// Haiku 4.5 사용 (update와 동일). discovery 전용 키 추가는 011-C.
+// Haiku 4.5 사용 (update와 동일). 추후 discovery 전용 모델 키로 분리 가능.
 const DISCOVERY_MODEL = MODELS.update;
+
+// Haiku 4.5 가격: $1 / 1M input, $5 / 1M output. web_search: $10 / 1k searches.
+const PRICING = {
+  inputPer1M: 1,
+  outputPer1M: 5,
+  searchPer1k: 10,
+};
+
+function calcCost(usage) {
+  const { input = 0, output = 0, searches = 0 } = usage;
+  return (input / 1e6) * PRICING.inputPer1M
+    + (output / 1e6) * PRICING.outputPer1M
+    + (searches / 1000) * PRICING.searchPer1k;
+}
+
+function extractUsage(res) {
+  const u = res?.usage || {};
+  const input = Number(u.input_tokens) || 0;
+  const output = Number(u.output_tokens) || 0;
+  // server_tool_use.web_search_requests 가 명시 카운터.
+  const searches = Number(u.server_tool_use?.web_search_requests) || 0;
+  return { input, output, searches };
+}
+
+function fmtUSD(n) {
+  if (n < 0.01) return `$${n.toFixed(4)}`;
+  return `$${n.toFixed(3)}`;
+}
+
+function fmtKRW(n) {
+  return `₩${Math.round(n * 1500).toLocaleString('ko-KR')}`;
+}
 
 function parseSeed(input) {
   return input
@@ -50,7 +81,7 @@ function dedupPairs(arr) {
   return out;
 }
 
-export default function DiscoveryPanel({ apiKey, existingConferences = [], onClose }) {
+export default function DiscoveryPanel({ apiKey, existingConferences = [], onAccept, onClose }) {
   const [seedInput, setSeedInput] = useState('');
   const [expanded, setExpanded] = useState([]);     // AI 제안
   const [customKeywords, setCustomKeywords] = useState([]);
@@ -62,7 +93,19 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState(null);
   const [candidates, setCandidates] = useState([]); // Stage 2 결과
+  const [acceptedIds, setAcceptedIds] = useState(new Set());
   const [rejectedIds, setRejectedIds] = useState(new Set());
+
+  // Stage 1+2 누적 usage. 패널 단위 (모달 닫혀도 unmount → 리셋)
+  const [usage, setUsage] = useState({ input: 0, output: 0, searches: 0, calls: 0 });
+  const addUsage = (u) => {
+    setUsage((prev) => ({
+      input: prev.input + u.input,
+      output: prev.output + u.output,
+      searches: prev.searches + u.searches,
+      calls: prev.calls + 1,
+    }));
+  };
 
   const handleExpand = async () => {
     setExpandError(null);
@@ -82,6 +125,7 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
         maxTokens: 768,
         model: DISCOVERY_MODEL,
       });
+      addUsage(extractUsage(res));
       const text = extractText(res);
       const parsed = parseDiscoveryExpandResponse(text);
       if (!parsed.ok) {
@@ -140,6 +184,7 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
         maxTokens: 4096,
         model: DISCOVERY_MODEL,
       });
+      addUsage(extractUsage(res));
       const text = extractText(res);
       const parsed = parseDiscoverySearchResponse(text);
       if (!parsed.ok) {
@@ -156,23 +201,32 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
   };
 
   const visibleCandidates = useMemo(
-    () => candidates.filter((_, i) => !rejectedIds.has(i)),
-    [candidates, rejectedIds]
+    () => candidates.filter((_, i) => !rejectedIds.has(i) && !acceptedIds.has(i)),
+    [candidates, rejectedIds, acceptedIds]
   );
 
   const handleAccept = (idx) => {
-    // 011-B: 실제 저장은 011-C. 임시로 alert + 카드 제거.
     const c = candidates[idx];
-    alert(
-      `[PLAN-011-B 임시] "${c.full_name}" 승인됨 — 실제 저장은 011-C 단계에서 구현됩니다.\n`
-      + `marked predatory_score=${c.predatory_score}.`
-    );
-    setRejectedIds((prev) => new Set(prev).add(idx));
+    if (!c) return;
+    if (typeof onAccept !== 'function') {
+      // 안전망 — 정상 라우팅에서는 도달 불가.
+      console.warn('[DiscoveryPanel] onAccept prop 미연결');
+      return;
+    }
+    const newId = onAccept(c);
+    if (!newId) {
+      alert('학회 추가에 실패했습니다 (full_name 누락 또는 데이터 이상).');
+      return;
+    }
+    setAcceptedIds((prev) => new Set(prev).add(idx));
   };
 
   const handleReject = (idx) => {
     setRejectedIds((prev) => new Set(prev).add(idx));
   };
+
+  const totalCost = calcCost(usage);
+  const acceptedCount = acceptedIds.size;
 
   return (
     <div className="space-y-4">
@@ -227,8 +281,15 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
       {/* Stage 3 candidate cards */}
       {!searching && candidates.length > 0 && (
         <div>
-          <div className="text-sm font-semibold text-slate-700 mb-2">
-            후보 학회 ({visibleCandidates.length}/{candidates.length})
+          <div className="text-sm font-semibold text-slate-700 mb-2 flex items-center justify-between">
+            <span>
+              후보 학회 ({visibleCandidates.length}/{candidates.length})
+            </span>
+            {acceptedCount > 0 && (
+              <span className="text-xs font-normal text-emerald-700">
+                ✓ {acceptedCount}건 추가됨
+              </span>
+            )}
           </div>
           {visibleCandidates.length === 0 ? (
             <div className="p-4 text-sm text-slate-500 text-center border border-dashed border-slate-300 rounded">
@@ -237,7 +298,7 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
           ) : (
             <div className="space-y-3">
               {candidates.map((c, i) => {
-                if (rejectedIds.has(i)) return null;
+                if (rejectedIds.has(i) || acceptedIds.has(i)) return null;
                 return (
                   <DiscoveryCard
                     key={i}
@@ -255,6 +316,20 @@ export default function DiscoveryPanel({ apiKey, existingConferences = [], onClo
       {!searching && !searchError && candidates.length === 0 && selected.length > 0 && (
         <div className="p-4 text-sm text-slate-500 text-center border border-dashed border-slate-300 rounded">
           [학회 검색 시작] 버튼을 눌러주세요.
+        </div>
+      )}
+
+      {/* 세션 사용량/비용 — Stage 1+2 누적, 모달 unmount 시 리셋 */}
+      {usage.calls > 0 && (
+        <div className="border-t border-slate-200 pt-2 text-[11px] text-slate-500 flex items-center justify-between flex-wrap gap-2">
+          <span>
+            세션 호출 {usage.calls}회 · input {usage.input.toLocaleString()} tok
+            · output {usage.output.toLocaleString()} tok
+            {usage.searches > 0 && <> · web_search {usage.searches}회</>}
+          </span>
+          <span className="font-semibold text-slate-700">
+            누적 비용 ≈ {fmtUSD(totalCost)} ({fmtKRW(totalCost)})
+          </span>
         </div>
       )}
     </div>

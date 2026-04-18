@@ -5,6 +5,7 @@ import {
   saveConferencesLocal,
   commitToGitHub,
   getCachedSha,
+  generateDiscoveryConferenceId,
   ConflictError,
 } from '../services/dataManager';
 
@@ -219,6 +220,66 @@ export function useConferences({ token } = {}) {
     persist({ ...data, editions });
   };
 
+  // PLAN-011-C: discovery 후보 승인 → master + (있으면) upcoming edition 동시 생성.
+  // candidate 는 parseDiscoverySearchResponse 가 반환하는 형태 그대로.
+  // 이미 동일 id 가 있으면 새 id 재생성 (이론상 거의 불가, 안전망).
+  const addConferenceFromDiscovery = (candidate) => {
+    if (!candidate || typeof candidate !== 'object') return null;
+    const fullName = typeof candidate.full_name === 'string' ? candidate.full_name.trim() : '';
+    if (!fullName) return null;
+
+    let id = generateDiscoveryConferenceId();
+    const existingIds = new Set(data.conferences.map((c) => c.id));
+    while (existingIds.has(id)) id = generateDiscoveryConferenceId();
+
+    const cycle = Number.isFinite(candidate.cycle_years) ? candidate.cycle_years : 0;
+    const master = {
+      id,
+      starred: 0,
+      category: '',
+      field: typeof candidate.field === 'string' ? candidate.field : '',
+      abbreviation: typeof candidate.abbreviation === 'string' ? candidate.abbreviation : '',
+      full_name: fullName,
+      cycle_years: cycle,
+      duration_days: 0,
+      region: typeof candidate.region === 'string' ? candidate.region : '',
+      official_url: typeof candidate.official_url === 'string' ? candidate.official_url : '',
+      note: '',
+      source: 'ai_discovery',
+      discovery_meta: {
+        predatory_score: candidate.predatory_score || 'medium',
+        predatory_reasons: Array.isArray(candidate.predatory_reasons) ? candidate.predatory_reasons : [],
+        matched_keywords: Array.isArray(candidate.matched_keywords) ? candidate.matched_keywords : [],
+        evidence_url: typeof candidate.evidence_url === 'string' ? candidate.evidence_url : '',
+        organizer: typeof candidate.organizer === 'string' ? candidate.organizer : '',
+        found_at: new Date().toISOString(),
+      },
+    };
+
+    const u = candidate.upcoming;
+    const hasUpcoming = u && (u.start_date || u.end_date || u.venue || u.link);
+    const editions = hasUpcoming
+      ? [
+        ...data.editions,
+        {
+          id: generateEditionId(),
+          conference_id: id,
+          status: 'upcoming',
+          start_date: u.start_date || null,
+          end_date: u.end_date || null,
+          venue: u.venue || null,
+          link: u.link || null,
+          confidence: null,
+          source: 'ai_discovery',
+          updated_at: new Date().toISOString(),
+        },
+      ]
+      : data.editions;
+
+    persist({ ...data, conferences: [...data.conferences, master], editions });
+    return id;
+  };
+
   const deleteConference = (id) => {
     persist({
       ...data,
@@ -257,6 +318,7 @@ export function useConferences({ token } = {}) {
     saveConferenceEdit,
     applyAiUpdate,
     applyVerifyUpdate,
+    addConferenceFromDiscovery,
     deleteConference,
   };
 }

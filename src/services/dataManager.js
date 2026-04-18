@@ -60,3 +60,10 @@ export function resetToSeed() {
 export function generateConferenceId() {
   return `user_${Date.now().toString(36)}`;
 }
+
+// PLAN-011-C: discovery 출신 학회는 별도 prefix 로 구분 (감사·디버그용).
+// 동시 호출 충돌 회피용 작은 random suffix 추가.
+export function generateDiscoveryConferenceId() {
+  const rand = Math.floor(Math.random() * 1296).toString(36).padStart(2, '0');
+  return `disc_${Date.now().toString(36)}${rand}`;
+}
