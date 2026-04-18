@@ -29,6 +29,14 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 - `docs/blueprint.md` §3.4: scope 2옵션 → 3옵션 설명으로 교체, 외부 캘린더 내보내기(ICS) 섹션 신규, **상업화 방향의 캘린더 통합 전략** 3계층 서술 (현재=다운로드 / 서버 후 메인=구독 URL / 보조=pre-filled URL). §7.2 우선순위 표에 1.5(ICS 다운로드 완료)·2.5(구독 URL — 서버 도입 이후) 행 추가
 - `docs/design.md`: PLAN-010 로그 — scope 3옵션 배경, ICS 버튼 위치/톤, 순수 함수 분리 이유(서버 재사용)
 
+**`starred` 이진화 — 중요도 평점(0~3) → 즐겨찾기(0|1)** (PLAN-010 추가분)
+- `src/components/common/StarRating.jsx`: 3개 별 map → 단일 토글 버튼. `value`는 truthy/falsy로 해석, `onChange(on ? 0 : 1)`. `aria-pressed` 추가
+- `src/components/MainTable/ConferenceFormModal.jsx`: "중요도" 필드 → "즐겨찾기". 3별 widget → 단일 별 + "일반/즐겨찾기" 라벨. "(N/3)" 카운터 제거
+- `src/services/exportService.js`: 엑셀 컬럼 헤더 "중요도" → "즐겨찾기" (값도 0|1 로 강제)
+- `docs/blueprint.md` §2.2 필드 타입 설명·§4.2.2 컬럼 표 "중요도 (★) 0~3개" → "즐겨찾기 (★) on/off"
+- 테스트 fixture 의 `starred: 2|3` → `1` (의미 보존: truthy). 데이터 파일(`public/data/conferences.json`)은 전부 `starred: 0`이라 마이그레이션 불요
+- 배경: 실사용에서 3단계 평점이 불필요 — "즐겨찾기에 담을까 말까"의 이진 결정으로 단순화. 캘린더 scope "즐겨찾기"와 의미 일치
+
 ### Added (PLAN-009, 2026-04-18)
 
 **캘린더 뷰 — 연간 타임라인 + 월간 그리드** (Track C.0 1순위)

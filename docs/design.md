@@ -55,6 +55,14 @@ Step 4.2 착수 시점의 현재 상태 스냅샷.
 - 사유: MVP 단순화. 네이티브의 검증된 접근성·키보드 지원 우선. 커스텀 디자인 일관성은 후순위.
 - 여지: 디자인 통일 필요성이 커지면 컴포넌트화 (MVP 후 과제).
 
+### 2026-04-18 — PLAN-010 `starred` 이진화 (중요도 평점 → 즐겨찾기)
+
+- **StarRating 3별 → 단일 별 토글**: 0/1/2/3 평점 → 0|1 이진
+  - 왜: 실사용에서 "얼마나 중요한가"의 3단계 구분이 의미 없었음. "즐겨찾기에 담을까 말까"의 이진 결정으로 충분. 캘린더 scope의 "즐겨찾기" 라벨과 의미 정합.
+  - 실제 `public/data/conferences.json` 24건 전부 `starred: 0` → 마이그레이션 불필요
+  - UI 라벨도 "중요도" → "즐겨찾기"로 통일 (폼 모달, 엑셀 컬럼)
+  - 영향: `src/components/common/StarRating.jsx`, `ConferenceFormModal.jsx`, `src/services/exportService.js`, `blueprint.md` §2.2·§4.2.2
+
 ### 2026-04-18 — PLAN-010 캘린더 scope UX 3-option + ICS 내보내기
 
 - **scope 선택 방식**: Header 체크박스 ("테이블 필터와 동기화") → **3단 세그먼트 토글 (전체 / 즐겨찾기 / 테이블필터)**
