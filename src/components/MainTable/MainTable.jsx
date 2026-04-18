@@ -76,7 +76,14 @@ function formatSourceLabel(source, confidence) {
     return c ? `AI검색 (${c})` : 'AI검색';
   }
   if (source === 'user_input') return '수동입력';
+  if (source === 'ai_discovery') return 'AI발굴';
   return source || '';
+}
+
+function sourceBadgeClass(source) {
+  if (source === 'ai_search') return 'bg-purple-100 text-purple-700';
+  if (source === 'ai_discovery') return 'bg-blue-100 text-blue-700';
+  return 'bg-green-100 text-green-700'; // user_input 등
 }
 
 function getSortValue(row, key) {
@@ -283,7 +290,7 @@ export default function MainTable({ isAdmin = false, conferences, filtering, onR
               <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap"><LinkCell href={r.upcoming?.link} /></td>
               <td className="px-3 py-2 border-r-2 border-slate-400">
                 {r.upcoming?.source && (
-                  <span className={`px-2 py-0.5 rounded text-xs whitespace-nowrap ${r.upcoming.source === 'ai_search' ? 'bg-purple-100 text-purple-700' : 'bg-green-100 text-green-700'}`}>
+                  <span className={`px-2 py-0.5 rounded text-xs whitespace-nowrap ${sourceBadgeClass(r.upcoming.source)}`}>
                     {formatSourceLabel(r.upcoming.source, r.upcoming.confidence)}
                   </span>
                 )}

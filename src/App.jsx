@@ -137,14 +137,8 @@ function App() {
         </div>
       )}
       {isDiscoveryPanelOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto"
-          onClick={() => setDiscoveryPanelOpen(false)}
-        >
-          <div
-            className="bg-white rounded-lg shadow-xl w-full max-w-4xl my-4 p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl my-4 p-6">
             <DiscoveryPanel
               apiKey={apiKey}
               existingConferences={conferences.rows}
