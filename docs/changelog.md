@@ -9,6 +9,60 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (PLAN-010, 2026-04-18)
+
+**캘린더 scope UX 3-option 전환 + ICS 외부 내보내기**
+- Header 캘린더 모드의 "테이블 필터와 동기화" 체크박스 → **3단 세그먼트 토글** (`전체` / `즐겨찾기` / `테이블필터`). `src/components/common/Header.jsx`의 `ScopeToggle` 컴포넌트 신규
+- `calendarScope` 상태 타입 `'starred' | 'filter'` → `'all' | 'starred' | 'filter'`. `CalendarView` `sourceRows` 에 `'all'` 분기 추가
+- **`src/utils/icsExport.js` 신규** — RFC 5545 iCalendar 생성 순수 함수
+  - `buildIcs(rows, opts)`: VCALENDAR 헤더/푸터 + VEVENT(UID·DTSTAMP·DTSTART/DTEND·SUMMARY·LOCATION·URL·DESCRIPTION). all-day 이벤트는 DTEND 배타적(+1일) 규약 준수. 텍스트 필드는 RFC 5545 §3.3.11 이스케이프(`\ ; ,` / 개행 `\n`), 75옥텟 folding 적용
+  - `toIcsFilename(scope)`: `conferencefinder_{scope}_YYYYMMDD.ics`
+  - `downloadIcs(ics, filename)`: Blob + `<a download>` 트리거 (브라우저 전용 얇은 래퍼)
+- CalendarView 우상단 "캘린더로 내보내기 (.ics)" 버튼 추가 — 현재 scope의 학회만 내보냄. 빈 결과는 disabled
+
+**단위 테스트 +11**
+- `icsExport.test.js` 10건: 헤더·푸터·PRODID / upcoming 없는 행 스킵 / DTEND 배타적 / end_date 미기재 1일짜리 / 특수문자 이스케이프 / UID 형식 / DTSTAMP UTC ZULU / LOCATION·URL·DESCRIPTION 포함 / calName 옵션 / 빈 rows
+- `CalendarView.test.jsx` +2건: `scope=all` 전체 전달 / 다운로드 버튼 rows 유무에 따른 enable·disable
+
+### Changed (PLAN-010)
+
+- `docs/blueprint.md` §3.4: scope 2옵션 → 3옵션 설명으로 교체, 외부 캘린더 내보내기(ICS) 섹션 신규, **상업화 방향의 캘린더 통합 전략** 3계층 서술 (현재=다운로드 / 서버 후 메인=구독 URL / 보조=pre-filled URL). §7.2 우선순위 표에 1.5(ICS 다운로드 완료)·2.5(구독 URL — 서버 도입 이후) 행 추가
+- `docs/design.md`: PLAN-010 로그 — scope 3옵션 배경, ICS 버튼 위치/톤, 순수 함수 분리 이유(서버 재사용)
+
+**`starred` 이진화 — 중요도 평점(0~3) → 즐겨찾기(0|1)** (PLAN-010 추가분)
+- `src/components/common/StarRating.jsx`: 3개 별 map → 단일 토글 버튼. `value`는 truthy/falsy로 해석, `onChange(on ? 0 : 1)`. `aria-pressed` 추가
+- `src/components/MainTable/ConferenceFormModal.jsx`: "중요도" 필드 → "즐겨찾기". 3별 widget → 단일 별 + "일반/즐겨찾기" 라벨. "(N/3)" 카운터 제거
+- `src/services/exportService.js`: 엑셀 컬럼 헤더 "중요도" → "즐겨찾기" (값도 0|1 로 강제)
+- `docs/blueprint.md` §2.2 필드 타입 설명·§4.2.2 컬럼 표 "중요도 (★) 0~3개" → "즐겨찾기 (★) on/off"
+- 테스트 fixture 의 `starred: 2|3` → `1` (의미 보존: truthy). 데이터 파일(`public/data/conferences.json`)은 전부 `starred: 0`이라 마이그레이션 불요
+- 배경: 실사용에서 3단계 평점이 불필요 — "즐겨찾기에 담을까 말까"의 이진 결정으로 단순화. 캘린더 scope "즐겨찾기"와 의미 일치
+
+### Added (PLAN-009, 2026-04-18)
+
+**캘린더 뷰 — 연간 타임라인 + 월간 그리드** (Track C.0 1순위)
+- `src/components/Calendar/` 신규: `CalendarView.jsx` (상위), `YearTimeline.jsx` (연간 12개월 가로축 + 학회 막대), `MonthGrid.jsx` (7열 달력), `calendarUtils.js` (학회 에디션의 연/월 경계 클립, 월 그리드 셀 계산, year/month shift)
+- Header 우측에 "테이블 / 캘린더" 세그먼트 토글 버튼 + 캘린더 모드 시 "테이블 필터와 동기화" 체크박스
+- 표시 대상 scope: 기본 `starred` (즐겨찾기), 토글로 `filter` (현재 useFiltering 결과) 전환
+- 서브 뷰: 연간(기본) / 월간. 연 경계 걸친 학회 자동 클립, 월간 셀은 학회 칩 최대 3 + "+N" 축약
+- `date-fns` 의존성 추가. react-big-calendar/FullCalendar 대신 자체 렌더 (연간 지원·번들 이점)
+
+**useFiltering `starredOnly` 플래그**
+- `src/hooks/useFiltering.js`: `starredOnly: boolean` 추가 (기본 false). `setFilters` 를 부분 머지로 변경 — 기존 FilterBar 계약({category, field, region, query})을 유지하면서 starredOnly 상태 보존
+
+**App 상태 리프팅**
+- `src/App.jsx`: `useFiltering` 을 App 레벨에서 호출해 MainTable·CalendarView 양쪽이 동일 filter state 공유. `viewMode`, `calendarScope`, `calendarSubView` 상태 신규
+- `src/components/MainTable/MainTable.jsx`: `filtering` prop 수용 (`useFilteringFallback` 으로 미전달 시 내부 자체 호출, 기존 테스트 경로 보존)
+
+**단위 테스트 +22**
+- `calendarUtils.test.js` 14건 (연 경계 클립·월별 day map·그리드 leading 셀·year/month shift·윤년)
+- `CalendarView.test.jsx` 4건 (scope 분기·subView 렌더·토글 콜백)
+- `useFiltering.test.js` +3건 (starredOnly 통과 / 부분 머지 보존 / FilterBar 계약 유지)
+
+### Changed (PLAN-009)
+
+- `docs/blueprint.md` v1.2: §0 구현 상태 표기 가이드 신규, §3 각 기능에 상태 뱃지, §3.4 캘린더 뷰 섹션 신규, §4.1 페이지 구조에 뷰 토글 반영, §7.2 우선순위 컬럼·캘린더 뷰 ✅ 완료 반영
+- `docs/dev-guide-v2.md` §5: Step C.0 체크박스 [x], Step C.1 (캘린더 뷰 완료) 추가, "예정 기능"을 §7.2 우선순위 기준으로 재정리
+
 ### Added (PLAN-006, 2026-04-18)
 
 **프롬프트 v6 — Link–Confidence 상호구속 + Venue 포맷 + draft 연성화** (휴면)

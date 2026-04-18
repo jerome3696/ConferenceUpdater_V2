@@ -36,11 +36,68 @@ function SyncBadge({ status, lastSavedAt, onRetry, hasToken }) {
   }
 }
 
+function ViewToggle({ viewMode, onChangeViewMode }) {
+  const base = 'px-3 py-1.5 text-sm border border-slate-300';
+  const active = 'bg-slate-800 text-white hover:bg-slate-700';
+  const inactive = 'bg-white text-slate-700 hover:bg-slate-50';
+  return (
+    <div className="inline-flex rounded overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onChangeViewMode('table')}
+        className={`${base} rounded-l ${viewMode === 'table' ? active : inactive}`}
+      >
+        테이블
+      </button>
+      <button
+        type="button"
+        onClick={() => onChangeViewMode('calendar')}
+        className={`${base} rounded-r border-l-0 ${viewMode === 'calendar' ? active : inactive}`}
+      >
+        캘린더
+      </button>
+    </div>
+  );
+}
+
+const SCOPE_OPTIONS = [
+  { value: 'all', label: '전체' },
+  { value: 'starred', label: '즐겨찾기' },
+  { value: 'filter', label: '테이블필터' },
+];
+
+function ScopeToggle({ scope, onChange }) {
+  const base = 'px-2.5 py-1 text-xs border border-slate-300';
+  const active = 'bg-slate-700 text-white';
+  const inactive = 'bg-white text-slate-700 hover:bg-slate-50';
+  return (
+    <div className="inline-flex rounded overflow-hidden" role="group" aria-label="캘린더 범위">
+      {SCOPE_OPTIONS.map((opt, i) => {
+        const on = scope === opt.value;
+        const radius = i === 0 ? 'rounded-l' : i === SCOPE_OPTIONS.length - 1 ? 'rounded-r border-l-0' : 'border-l-0';
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={`${base} ${radius} ${on ? active : inactive}`}
+            aria-pressed={on}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function Header({
   hasKey, onOpenKeyModal,
   hasToken, onOpenTokenModal,
   syncStatus, lastSavedAt, onRetryCommit,
   pendingUpdateCount = 0, onOpenUpdatePanel,
+  viewMode = 'table', onChangeViewMode,
+  calendarScope = 'starred', onChangeCalendarScope,
 }) {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
@@ -49,6 +106,12 @@ function Header({
         <p className="text-xs text-slate-500">열유체·건물공조 학회 DB</p>
       </div>
       <div className="flex items-center gap-3">
+        {onChangeViewMode && (
+          <ViewToggle viewMode={viewMode} onChangeViewMode={onChangeViewMode} />
+        )}
+        {viewMode === 'calendar' && onChangeCalendarScope && (
+          <ScopeToggle scope={calendarScope} onChange={onChangeCalendarScope} />
+        )}
         {hasKey && (
           <SyncBadge
             status={syncStatus}

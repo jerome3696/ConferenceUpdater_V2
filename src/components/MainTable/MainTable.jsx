@@ -7,6 +7,13 @@ import { formatLocation } from '../../utils/locationFormatter';
 import { useSorting } from '../../hooks/useSorting';
 import { useFiltering } from '../../hooks/useFiltering';
 
+// filtering 이 prop 으로 주어지지 않은 경우(테스트·독립 사용) 내부에서 자체 훅 호출.
+// 실 앱에서는 App.jsx 가 리프팅된 filtering 을 내려 Calendar 와 공유한다.
+function useFilteringFallback(rows, external) {
+  const internal = useFiltering(rows);
+  return external || internal;
+}
+
 // 그룹별 컬럼 정의 (이중 헤더용). Last/참고는 기본 접힘(QA #7).
 // cellClass: th·td에 공통 적용할 클래스 (예: min-w로 좁은 폭에서 한글 절단 방지).
 const GROUPS = [
@@ -96,7 +103,7 @@ function LinkCell({ href }) {
   );
 }
 
-export default function MainTable({ isAdmin = false, conferences, onRequestUpdate, onRequestUpdateAll, onRequestVerifyAll }) {
+export default function MainTable({ isAdmin = false, conferences, filtering, onRequestUpdate, onRequestUpdateAll, onRequestVerifyAll }) {
   const { rows, loading, error, data, addConference, updateStarred, saveConferenceEdit, deleteConference } = conferences;
   const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
   const [editingRow, setEditingRow] = useState(null);
@@ -108,7 +115,7 @@ export default function MainTable({ isAdmin = false, conferences, onRequestUpdat
     return next;
   });
 
-  const { filters, setFilters, filtered, options: { categories, fields, regions } } = useFiltering(rows);
+  const { filters, setFilters, filtered, options: { categories, fields, regions } } = useFilteringFallback(rows, filtering);
   const { sortKey, sortDir, onSort, sorted } = useSorting(filtered, getSortValue, 'upcoming_start');
 
   if (loading) return <div className="p-8 text-slate-500">로딩 중...</div>;

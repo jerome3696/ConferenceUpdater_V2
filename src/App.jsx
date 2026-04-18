@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import MainTable from './components/MainTable/MainTable';
+import CalendarView from './components/Calendar/CalendarView';
 import UpdatePanel from './components/UpdatePanel/UpdatePanel';
 import Header from './components/common/Header';
 import ApiKeyModal from './components/common/ApiKeyModal';
@@ -8,6 +9,7 @@ import { useApiKey } from './hooks/useApiKey';
 import { useGitHubToken } from './hooks/useGitHubToken';
 import { useConferences } from './hooks/useConferences';
 import { useUpdateQueue } from './hooks/useUpdateQueue';
+import { useFiltering } from './hooks/useFiltering';
 import { filterSearchTargets } from './services/updateLogic';
 
 function App() {
@@ -24,6 +26,12 @@ function App() {
   const [isTokenModalOpen, setTokenModalOpen] = useState(false);
   // 개별 업데이트는 큐에만 쌓고 메인 화면 유지(QA #11). 일괄 작업과 헤더 버튼은 overlay 자동 오픈.
   const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
+
+  // PLAN-009: 테이블/캘린더 뷰 전환. useFiltering은 App 레벨에서 호출해 양쪽 뷰가 동일 필터 상태 공유.
+  const filtering = useFiltering(conferences.rows);
+  const [viewMode, setViewMode] = useState('table'); // 'table' | 'calendar'
+  const [calendarScope, setCalendarScope] = useState('starred'); // 'all' | 'starred' | 'filter'
+  const [calendarSubView, setCalendarSubView] = useState('year'); // 'year' | 'month'
 
   const handleRequestUpdate = (row) => {
     if (!hasKey) {
@@ -87,15 +95,30 @@ function App() {
         onRetryCommit={conferences.retryCommit}
         pendingUpdateCount={updateQueue.totalRemaining}
         onOpenUpdatePanel={() => setUpdatePanelOpen(true)}
+        viewMode={viewMode}
+        onChangeViewMode={setViewMode}
+        calendarScope={calendarScope}
+        onChangeCalendarScope={setCalendarScope}
       />
       <main className="p-4">
-        <MainTable
-          isAdmin={hasKey}
-          conferences={conferences}
-          onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
-          onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
-          onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
-        />
+        {viewMode === 'table' ? (
+          <MainTable
+            isAdmin={hasKey}
+            conferences={conferences}
+            filtering={filtering}
+            onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
+            onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
+            onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
+          />
+        ) : (
+          <CalendarView
+            rows={conferences.rows}
+            filtering={filtering}
+            scope={calendarScope}
+            subView={calendarSubView}
+            onChangeSubView={setCalendarSubView}
+          />
+        )}
       </main>
       {isUpdatePanelOpen && (
         <div

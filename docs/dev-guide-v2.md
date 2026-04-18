@@ -209,18 +209,24 @@ docs/
 > ⚠️ Track C의 상세 Step은 기능 요구사항이 구체화된 후 blueprint.md에서 설계, 이 문서에 Step 추가.
 
 ### Step C.0: blueprint.md 갱신
-- [ ] 현재 구현된 기능 목록 정리 (v1.0 baseline)
-- [ ] 미구현/희망 기능 목록 정리 (멀티유저, 학회 검색, 캘린더 뷰 등)
-- [ ] 각 기능의 우선순위 결정
-- [ ] 첫 번째 기능의 상세 설계 추가
+- [x] 현재 구현된 기능 목록 정리 (v1.0 baseline) — blueprint §3 에 [구현됨 v1.0] 뱃지 + §0 구현 상태 표기 가이드 추가
+- [x] 미구현/희망 기능 목록 정리 (멀티유저, 학회 검색, 캘린더 뷰 등) — §7.2 재편, 상태 컬럼 추가
+- [x] 각 기능의 우선순위 결정 — §7.2 우선순위 컬럼 (1=캘린더, 2=Option 2, 3=신규 발굴, 4=Option 4)
+- [x] 첫 번째 기능의 상세 설계 추가 — blueprint §3.4 "캘린더 뷰" 신규 섹션 + PLAN-009 구현 완료 (2026-04-18)
 
-### 예정 기능 (우선순위 미결)
-- 다기기 편집 아키텍처 전환 (Cloudflare Worker → Firebase/Supabase)
-- 신규 학회 발굴 (키워드 기반 AI 검색)
-- 사용자별 DB (로그인 + 개인화)
-- 캘린더 뷰
-- 프롬프트 반자동 log analyzer (결과 10회+ 축적 후)
-- E2E 테스트 (Playwright)
+### Step C.1: 캘린더 뷰 구현 **[완료]**
+- [x] PLAN-009 — 연간 타임라인 + 월간 그리드, Header 토글, starred/filter 스코프, date-fns 기반 (PR merge 2026-04-18)
+
+### Step C.1.5: 캘린더 scope UX + ICS 내보내기 **[완료]**
+- [x] PLAN-010 — scope 3-option 토글(전체/즐겨찾기/테이블필터), RFC 5545 ICS export 순수함수 + 다운로드 버튼 (2026-04-18)
+- 상업화 코어(사용자별 ICS 구독 URL)는 서버 도입(Option 2) 이후 Step C.2.5로 예약 — `buildIcs`는 그때 서버에서 재사용
+
+### 예정 기능 (우선순위 §7.2 기준)
+- 2순위: 다기기 편집 아키텍처 — Option 2 (Cloudflare Worker) 먼저, 이후 Option 4 (Firebase/Supabase)
+- 2.5순위: 사용자별 ICS 구독 URL (서버 도입과 함께 활성화)
+- 3순위: 신규 학회 발굴 (키워드 기반 AI 검색)
+- 4순위: 서버 기반 구조 전환 — 사용자별 DB·다중 편집 포함
+- 지속 작업: 프롬프트 반자동 log analyzer (결과 10회+ 축적 후), E2E 테스트 (Playwright)
 
 > ✅ **Track C 완료 조건**: 기능별로 정의. 각 기능마다 플랜 → 구현 → verify → merge 사이클.
 

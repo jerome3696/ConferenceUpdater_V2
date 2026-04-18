@@ -55,6 +55,46 @@ Step 4.2 착수 시점의 현재 상태 스냅샷.
 - 사유: MVP 단순화. 네이티브의 검증된 접근성·키보드 지원 우선. 커스텀 디자인 일관성은 후순위.
 - 여지: 디자인 통일 필요성이 커지면 컴포넌트화 (MVP 후 과제).
 
+### 2026-04-18 — PLAN-010 `starred` 이진화 (중요도 평점 → 즐겨찾기)
+
+- **StarRating 3별 → 단일 별 토글**: 0/1/2/3 평점 → 0|1 이진
+  - 왜: 실사용에서 "얼마나 중요한가"의 3단계 구분이 의미 없었음. "즐겨찾기에 담을까 말까"의 이진 결정으로 충분. 캘린더 scope의 "즐겨찾기" 라벨과 의미 정합.
+  - 실제 `public/data/conferences.json` 24건 전부 `starred: 0` → 마이그레이션 불필요
+  - UI 라벨도 "중요도" → "즐겨찾기"로 통일 (폼 모달, 엑셀 컬럼)
+  - 영향: `src/components/common/StarRating.jsx`, `ConferenceFormModal.jsx`, `src/services/exportService.js`, `blueprint.md` §2.2·§4.2.2
+
+### 2026-04-18 — PLAN-010 캘린더 scope UX 3-option + ICS 내보내기
+
+- **scope 선택 방식**: Header 체크박스 ("테이블 필터와 동기화") → **3단 세그먼트 토글 (전체 / 즐겨찾기 / 테이블필터)**
+  - 왜: 초기 2옵션(starred 기본 + 필터 동기화 체크박스)은 "전체"를 볼 길이 없었음. 사용자가 "그냥 전부 깔아서 보고싶을 때도 있다"는 자연스러운 니즈 → scope를 평평한 3옵션으로 펼침.
+  - 영향: `src/components/common/Header.jsx` `ScopeToggle`, `src/App.jsx:33` 주석 (`'all' | 'starred' | 'filter'`), `src/components/Calendar/CalendarView.jsx` sourceRows
+
+- **"캘린더로 내보내기 (.ics)" 버튼**: 캘린더 뷰 우상단, scope+subView 토글 옆 배치
+  - 왜: 구글·애플·아웃룩 어느 플랫폼 사용자든 자신의 개인 캘린더에 학회 일정을 병합해서 보고싶음. OAuth 통합 없이도 **ICS 가져오기**가 모든 플랫폼에서 네이티브 지원됨. 현재 정적 호스팅 아키텍처와 정합(서버 불요).
+  - 스타일: outline 톤 (`border-slate-300`), disabled 시 opacity-50 — 주요 액션(`blue-600`) 대비 낮은 강도. "주요 동작"이 아니라 "편의 기능"임을 시각적으로 표현.
+  - 영향: `src/components/Calendar/CalendarView.jsx`, `src/utils/icsExport.js` (신규)
+
+- **ICS 생성 순수함수 분리**: 브라우저 다운로드 로직(`downloadIcs`)은 얇은 DOM wrapper, 핵심 생성(`buildIcs`)은 입출력 모두 문자열
+  - 왜: 상업화 방향(blueprint §3.4 외부 캘린더 통합 전략)에서 **서버측 구독 URL 엔드포인트가 핵심**이 될 것. 그때 Cloudflare Worker에서 같은 `buildIcs(rows, opts)`를 import해 `GET /u/{token}/calendar.ics` 응답으로 그대로 재사용 가능하도록 지금부터 분리.
+  - 영향: `src/utils/icsExport.js` — `buildIcs` / `toIcsFilename` / `downloadIcs` 분리
+
+### 2026-04-18 — PLAN-009 캘린더 뷰 UI 결정
+
+- **뷰 전환 방식**: 별도 페이지(라우터) 대신 **Header 우측 세그먼트 토글** ("테이블 / 캘린더")
+  - 왜: 라우터 미도입 상태 유지. Option 2/4 서버화 단계에서 일괄 도입이 정합. 지금 라우터만 넣는 건 비용 대비 얻는 게 없음
+  - 영향: `src/components/common/Header.jsx` `ViewToggle`, `src/App.jsx`
+
+- **캘린더 표시 대상**: 기본 `starred`, 옵션으로 "테이블 필터와 동기화" 체크박스
+  - 왜: 전부 표시는 정보 과잉. 한편 `starred` 는 지금까지 데이터에만 있고 쓸 자리가 없었음 — 캘린더가 "★ 의미 부여" 역할을 겸함. 필터 동기화는 탐색 목적 사용자에게 열어둠
+  - 영향: `CalendarView.jsx` scope prop, Header 체크박스
+
+- **뷰 단위 — 연간 + 월간 듀얼**: 학회 도메인 특성상 연 단위 조망이 월간 달력보다 정보 밀도 높음. 동시에 임박 월 상세도 필요 → 내부 서브 토글로 둘 다 제공
+  - 왜: 월간만 두면 여러 달 학회 패턴을 놓침. 연간만 두면 "이번 달 뭐 있지?" 체감 약함
+  - 영향: `CalendarView.jsx` subView toggle, `YearTimeline.jsx` / `MonthGrid.jsx`
+
+- **캘린더 색상**: 막대·칩은 `blue-500/100/700` 계열 통일. 강조 색상 역할을 §2 baseline "주요 액션" 색과 정합
+- **월간 셀 "+N"**: 3개 초과 시 축약. 학회 이름은 `abbreviation` 우선, 없으면 `full_name`. 제목 속성에 전체 이름 + 장소 툴팁
+
 ### 2026-04-16 — Step 4.2 결정
 
 - **전체 검증 버튼 `indigo-600` → `blue-600` 통일**
