@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 완료, B.2 v4 활성 + PLAN-005·006 보강 + v6 eval 측정 완료(15p/1pa/3f) — v4·v5 eval 비교 종료, B.3 다음), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1·B.2 완료, B.3 완료 — refactor-check 스크립트 + 대상 선정(FormModal/MainTable), B.4 다음), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
@@ -41,6 +41,7 @@ MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1 
 
 ## 작업 규칙
 - **작업 완료 후 반드시 `bash scripts/verify-task.sh` 실행할 것.**
+- **리팩토링 요청 시** `bash scripts/refactor-check.sh` 먼저 실행 → 결과 기반 대상 선정·제안.
 - **브랜치**: `feature/PLAN-xxx-설명` | `fix/설명` | `docs/설명` | `chore/설명` (main 직접 push 금지)
 - **커밋**: Conventional Commits — `feat:` `fix:` `docs:` `refactor:` `test:` `chore:`
 - API 키 하드코딩 금지. AI 응답 파싱은 try-catch 필수.
