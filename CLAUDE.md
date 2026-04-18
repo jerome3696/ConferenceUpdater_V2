@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP: **Track A 완료**, **Track B 진행 중** (B.1·B.2 완료, B.3 완료 — refactor-check 스크립트 + 대상 선정(FormModal/MainTable), B.4 다음), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
+MVP v1.0.0 완료 → Post-MVP: **Track A·B 완료**, **Track C 대기** (C.0 blueprint 갱신부터), **QA Batch 1~2 완료** (PLAN-003·004). 상세: `docs/dev-guide-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
