@@ -539,7 +539,7 @@
       "venue": "Vienna, Austria",
       "link": "https://ibpsa.org/conferences/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T16:24:05.857Z",
+      "updated_at": "2026-04-18T12:23:40.989Z",
       "confidence": "medium"
     },
     {
@@ -623,6 +623,42 @@
       "confidence": "high",
       "source": "ai_search",
       "updated_at": "2026-04-17T16:21:21.857Z"
+    },
+    {
+      "id": "ed_mo4b66iv",
+      "conference_id": "disc_mo4asr0xda",
+      "status": "upcoming",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "venue": "Los Angeles, California, USA",
+      "link": "https://iaqvec2026.org/",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-18T12:23:35.047Z"
+    },
+    {
+      "id": "ed_mo4b67ry",
+      "conference_id": "disc_mo4atuc4nq",
+      "status": "upcoming",
+      "start_date": "2026-08-02",
+      "end_date": "2026-08-07",
+      "venue": "Pacific Grove, CA, United States",
+      "link": "https://www.aceee.org/2026-summer-study-energy-efficiency-buildings",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-18T12:23:36.670Z"
+    },
+    {
+      "id": "ed_mo4b69gd",
+      "conference_id": "disc_mo4auw08jt",
+      "status": "upcoming",
+      "start_date": "2026-06-14",
+      "end_date": "2026-06-18",
+      "venue": "Singapore, Singapore",
+      "link": "https://www.indoorair2026.org/",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-18T12:23:38.845Z"
     }
   ]
 }
