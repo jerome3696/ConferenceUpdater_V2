@@ -175,13 +175,20 @@ docs/
 - **확인**: v2 pass율이 v1(16/17) 이상인가? ✅ v3 19/19 (100%) 달성. v6 까지 4차례 이터레이션 종료
 
 ### Step B.3: 리팩토링 체크 스크립트
-- [ ] `scripts/refactor-check.sh` 작성:
-  - 파일별 줄 수 리포트 (500줄 초과 경고)
-  - 컴포넌트당 useState 개수 (10개 초과 경고 — 상태 분리 필요 신호)
-  - 중복 코드 패턴 감지 (기본적 수준)
-- [ ] CLAUDE.md에 추가: "리팩토링 요청 시 먼저 `scripts/refactor-check.sh` 실행 후 결과 기반으로 제안할 것"
-- [ ] 첫 실행 → 결과 리뷰 → 리팩토링 대상 선정
-- **확인**: MainTable 등 큰 컴포넌트가 경고에 잡히는가?
+- [x] `scripts/refactor-check.sh` 작성 (진단용, 게이트 아님):
+  - 파일별 줄 수 리포트 (> 500 critical, > 300 warning)
+  - 컴포넌트당 useState 개수 (> 10 critical, > 5 warning)
+  - 중복 코드 패턴 감지 (30자+ 라인이 3회+ 등장, 상위 10)
+- [x] CLAUDE.md "작업 규칙"에 규칙 한 줄 추가
+- [x] 첫 실행 결과 (2026-04-18):
+  - critical 1 / warning 2 — `promptBuilder.js 539`, `ConferenceFormModal.jsx 376`, `MainTable.jsx 370`
+  - useState warning — `MainTable.jsx 7`, `ConferenceFormModal.jsx 6`
+  - 중복 라인 상위 — form input className 9회, button className 6회, promptBuilder 템플릿 문자열 6~7회 (v1~v6 공존 설계 → 의도된 중복)
+- [x] **리팩토링 대상 선정 (B.4 인풋)**:
+  1. **ConferenceFormModal.jsx** — 376줄 + useState 6개 + form input className 중복 9회. form state 통합 + className 상수 추출 여지 큼
+  2. **MainTable.jsx** — 370줄 + useState 7개. 컬럼/정렬/필터/모달 상태 혼재 → 하위 훅 분리
+  3. **보류: promptBuilder.js** — critical(539)이지만 중복은 v1~v6 템플릿 공존 설계의 산물. 활성 v4 안정 상태에서 구조 변경 리스크 > 이득
+- **확인**: MainTable·FormModal 등 큰 컴포넌트가 경고에 잡히는가? ✅ 잡힘 (2026-04-18)
 
 ### Step B.4: 리팩토링 실행 (결과 기반)
 - [ ] B.3 결과에서 가장 심각한 1~2건 선정
