@@ -36,11 +36,37 @@ function SyncBadge({ status, lastSavedAt, onRetry, hasToken }) {
   }
 }
 
+function ViewToggle({ viewMode, onChangeViewMode }) {
+  const base = 'px-3 py-1.5 text-sm border border-slate-300';
+  const active = 'bg-slate-800 text-white hover:bg-slate-700';
+  const inactive = 'bg-white text-slate-700 hover:bg-slate-50';
+  return (
+    <div className="inline-flex rounded overflow-hidden">
+      <button
+        type="button"
+        onClick={() => onChangeViewMode('table')}
+        className={`${base} rounded-l ${viewMode === 'table' ? active : inactive}`}
+      >
+        테이블
+      </button>
+      <button
+        type="button"
+        onClick={() => onChangeViewMode('calendar')}
+        className={`${base} rounded-r border-l-0 ${viewMode === 'calendar' ? active : inactive}`}
+      >
+        캘린더
+      </button>
+    </div>
+  );
+}
+
 function Header({
   hasKey, onOpenKeyModal,
   hasToken, onOpenTokenModal,
   syncStatus, lastSavedAt, onRetryCommit,
   pendingUpdateCount = 0, onOpenUpdatePanel,
+  viewMode = 'table', onChangeViewMode,
+  calendarScope = 'starred', onChangeCalendarScope,
 }) {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
@@ -49,6 +75,20 @@ function Header({
         <p className="text-xs text-slate-500">열유체·건물공조 학회 DB</p>
       </div>
       <div className="flex items-center gap-3">
+        {onChangeViewMode && (
+          <ViewToggle viewMode={viewMode} onChangeViewMode={onChangeViewMode} />
+        )}
+        {viewMode === 'calendar' && onChangeCalendarScope && (
+          <label className="inline-flex items-center gap-1.5 text-xs text-slate-600 select-none">
+            <input
+              type="checkbox"
+              className="rounded border-slate-300"
+              checked={calendarScope === 'filter'}
+              onChange={(e) => onChangeCalendarScope(e.target.checked ? 'filter' : 'starred')}
+            />
+            테이블 필터와 동기화
+          </label>
+        )}
         {hasKey && (
           <SyncBadge
             status={syncStatus}
