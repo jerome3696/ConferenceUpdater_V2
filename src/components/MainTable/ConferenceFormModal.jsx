@@ -3,17 +3,44 @@ import { generateConferenceId } from '../../services/dataManager';
 import { CATEGORY_OPTIONS, REGION_OPTIONS } from './conferenceConstants';
 
 const NEW_VALUE = '__new__';
+const INPUT_CLASS = 'w-full border border-slate-300 rounded px-2 py-1.5 text-sm';
+const SELECT_CLASS = `${INPUT_CLASS} bg-white`;
+const LABEL_CLASS = 'block text-xs font-medium text-slate-700 mb-1';
+
+function FieldLabel({ children, required }) {
+  return (
+    <label className={LABEL_CLASS}>
+      {children}{required && <> <span className="text-red-500">*</span></>}
+    </label>
+  );
+}
+
+function TextField({ label, required, colSpan2, mono, type = 'text', ...inputProps }) {
+  return (
+    <div className={colSpan2 ? 'col-span-2' : undefined}>
+      <FieldLabel required={required}>{label}</FieldLabel>
+      <input type={type} className={`${INPUT_CLASS}${mono ? ' font-mono' : ''}`} {...inputProps} />
+    </div>
+  );
+}
+
+function TextArea({ label, colSpan2, ...props }) {
+  return (
+    <div className={colSpan2 ? 'col-span-2' : undefined}>
+      <FieldLabel>{label}</FieldLabel>
+      <textarea className={INPUT_CLASS} {...props} />
+    </div>
+  );
+}
 
 function FixedSelect({ label, required, value, options, onChange }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-slate-700 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+      <FieldLabel required={required}>{label}</FieldLabel>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm bg-white"
+        className={SELECT_CLASS}
       >
         <option value="">(선택)</option>
         {options.map((o) => (
@@ -41,13 +68,11 @@ function ComboField({ label, required, value, options, onChange, placeholder }) 
 
   return (
     <div>
-      <label className="block text-xs font-medium text-slate-700 mb-1">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+      <FieldLabel required={required}>{label}</FieldLabel>
       <select
         value={mode === 'new' ? NEW_VALUE : value}
         onChange={(e) => handleSelect(e.target.value)}
-        className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm bg-white"
+        className={SELECT_CLASS}
       >
         <option value="">(선택)</option>
         {options.map((o) => (
@@ -61,7 +86,7 @@ function ComboField({ label, required, value, options, onChange, placeholder }) 
           value={newInput}
           onChange={(e) => { setNewInput(e.target.value); onChange(e.target.value); }}
           placeholder={placeholder}
-          className="w-full mt-1 border border-slate-300 rounded px-2 py-1.5 text-sm"
+          className={`${INPUT_CLASS} mt-1`}
         />
       )}
     </div>
@@ -74,43 +99,27 @@ function EditionSection({ title, edition, onChange }) {
     <fieldset className="border border-slate-200 rounded p-3">
       <legend className="text-xs font-semibold text-slate-600 px-1">{title}</legend>
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs font-medium text-slate-700 mb-1">시작일</label>
-          <input
-            type="date"
-            value={edition.start_date}
-            onChange={(e) => update('start_date', e.target.value)}
-            className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-slate-700 mb-1">종료일</label>
-          <input
-            type="date"
-            value={edition.end_date}
-            onChange={(e) => update('end_date', e.target.value)}
-            className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div className="col-span-2">
-          <label className="block text-xs font-medium text-slate-700 mb-1">장소</label>
-          <input
-            type="text"
-            value={edition.venue}
-            onChange={(e) => update('venue', e.target.value)}
-            className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div className="col-span-2">
-          <label className="block text-xs font-medium text-slate-700 mb-1">링크</label>
-          <input
-            type="url"
-            value={edition.link}
-            onChange={(e) => update('link', e.target.value)}
-            placeholder="https://..."
-            className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-          />
-        </div>
+        <TextField
+          label="시작일" type="date"
+          value={edition.start_date}
+          onChange={(e) => update('start_date', e.target.value)}
+        />
+        <TextField
+          label="종료일" type="date"
+          value={edition.end_date}
+          onChange={(e) => update('end_date', e.target.value)}
+        />
+        <TextField
+          colSpan2 label="장소"
+          value={edition.venue}
+          onChange={(e) => update('venue', e.target.value)}
+        />
+        <TextField
+          colSpan2 label="링크" type="url"
+          value={edition.link}
+          onChange={(e) => update('link', e.target.value)}
+          placeholder="https://..."
+        />
       </div>
       <p className="text-[11px] text-slate-400 mt-2">
         모든 항목을 비우면 저장 시 해당 개최 이력이 삭제됩니다.
@@ -219,27 +228,17 @@ function ConferenceFormModal({
         </h2>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label className="block text-xs font-medium text-slate-700 mb-1">
-              학회명 <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={form.full_name}
-              onChange={(e) => update('full_name', e.target.value)}
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-            />
-          </div>
+          <TextField
+            colSpan2 required label="학회명"
+            value={form.full_name}
+            onChange={(e) => update('full_name', e.target.value)}
+          />
 
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">약칭</label>
-            <input
-              type="text"
-              value={form.abbreviation}
-              onChange={(e) => update('abbreviation', e.target.value)}
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm font-mono"
-            />
-          </div>
+          <TextField
+            mono label="약칭"
+            value={form.abbreviation}
+            onChange={(e) => update('abbreviation', e.target.value)}
+          />
 
           <FixedSelect
             label="분류" options={CATEGORY_OPTIONS}
@@ -257,51 +256,36 @@ function ConferenceFormModal({
             value={form.region} onChange={(v) => update('region', v)}
           />
 
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">주기(년)</label>
-            <input
-              type="number" min="0"
-              value={form.cycle_years}
-              onChange={(e) => update('cycle_years', e.target.value)}
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-            />
-          </div>
+          <TextField
+            label="주기(년)" type="number" min="0"
+            value={form.cycle_years}
+            onChange={(e) => update('cycle_years', e.target.value)}
+          />
 
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">기간(일)</label>
-            <input
-              type="number" min="0"
-              value={form.duration_days}
-              onChange={(e) => update('duration_days', e.target.value)}
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-            />
-          </div>
+          <TextField
+            label="기간(일)" type="number" min="0"
+            value={form.duration_days}
+            onChange={(e) => update('duration_days', e.target.value)}
+          />
 
-          <div className="col-span-2">
-            <label className="block text-xs font-medium text-slate-700 mb-1">공식 홈페이지</label>
-            <input
-              type="url"
-              value={form.official_url}
-              onChange={(e) => update('official_url', e.target.value)}
-              placeholder="https://..."
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-            />
-          </div>
+          <TextField
+            colSpan2 label="공식 홈페이지" type="url"
+            value={form.official_url}
+            onChange={(e) => update('official_url', e.target.value)}
+            placeholder="https://..."
+          />
 
-          <div className="col-span-2">
-            <label className="block text-xs font-medium text-slate-700 mb-1">메모</label>
-            <textarea
-              value={form.note}
-              onChange={(e) => update('note', e.target.value)}
-              rows={2}
-              className="w-full border border-slate-300 rounded px-2 py-1.5 text-sm"
-            />
-          </div>
+          <TextArea
+            colSpan2 label="메모"
+            value={form.note}
+            onChange={(e) => update('note', e.target.value)}
+            rows={2}
+          />
 
           {mode === 'edit' && (
             <>
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-slate-700 mb-1">중요도</label>
+                <FieldLabel>중요도</FieldLabel>
                 <div className="flex gap-1">
                   {[1, 2, 3].map((n) => (
                     <button
