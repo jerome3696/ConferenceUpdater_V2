@@ -49,13 +49,13 @@ Option 2 → 2.5 → Option 4 순서. 각 단계가 다음 단계의 전제.
   - `dataManager.js` 인터페이스 교체로 전환 설계됨
 
 ### Track E: 기능 확장 (Track D와 독립 병렬)
-- [ ] **E.1** **신규 학회 자동 발굴** (blueprint §7.2 우선순위 3)
+- [ ] **E.1** **신규 학회 자동 발굴** (blueprint §7.2 우선순위 3) — **블루프린트 완료**: `docs/plans/active/PLAN-011.md` (2026-04-18). 서브플랜 011-A~E 분리, 회당 비용 $0.16 추정. E.2·E.3 흡수.
   - 키워드 기반 AI 웹검색으로 DB에 없는 학회 발굴
   - UpdateCard 수용/거절 패턴 재사용
-- [ ] **E.2** **가짜 학회 필터링** (E.1 하위)
-  - WASET 등 약탈적 학회 자동 판별
-- [ ] **E.3** **키워드 추천** (E.1 보조)
-  - 사용자가 분야 키워드 입력 시 AI가 관련 키워드 제안
+- [ ] **E.2** **가짜 학회 필터링** — **PLAN-011에 흡수** (3중 안전망: 도메인 블랙리스트 + AI 자체 판정 + UI 거절 토글)
+- [ ] **E.3** **키워드 추천** — **PLAN-011에 흡수** (Stage 1 키워드 확장 단계)
+- [ ] **E.4** **discovery 프롬프트 fine-tuning** (PLAN-012, PLAN-011 머지 후)
+  - update v1→v6 진화와 동일 트랙. eval 골든셋 + runner 별도 인프라
 
 ### Track F: 운영 품질 (상시 병행)
 - [ ] **F.1** **프롬프트 v6 활성 전환 평가**
@@ -90,7 +90,7 @@ Track D (INFRA — 시퀀스 의존)
   D.1 Option 2 (Worker) ──→ D.2 구독 URL ──→ D.3 Option 4 (DB)
 
 Track E (EXTEND — D와 독립)
-  E.1 신규 학회 발굴 ──→ E.2 가짜 필터 · E.3 키워드 추천
+  E.1 신규 학회 발굴 (PLAN-011, E.2·E.3 흡수) ──→ E.4 프롬프트 튜닝 (PLAN-012)
 
 Track F (OPS — 상시)
   F.1 v6 평가   F.2 log analyzer   F.3 E2E   F.4 qa-backlog

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import MainTable from './components/MainTable/MainTable';
 import CalendarView from './components/Calendar/CalendarView';
 import UpdatePanel from './components/UpdatePanel/UpdatePanel';
+import DiscoveryPanel from './components/Discovery/DiscoveryPanel';
 import Header from './components/common/Header';
 import ApiKeyModal from './components/common/ApiKeyModal';
 import GitHubTokenModal from './components/common/GitHubTokenModal';
@@ -26,6 +27,7 @@ function App() {
   const [isTokenModalOpen, setTokenModalOpen] = useState(false);
   // 개별 업데이트는 큐에만 쌓고 메인 화면 유지(QA #11). 일괄 작업과 헤더 버튼은 overlay 자동 오픈.
   const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
+  const [isDiscoveryPanelOpen, setDiscoveryPanelOpen] = useState(false);
 
   // PLAN-009: 테이블/캘린더 뷰 전환. useFiltering은 App 레벨에서 호출해 양쪽 뷰가 동일 필터 상태 공유.
   const filtering = useFiltering(conferences.rows);
@@ -95,6 +97,7 @@ function App() {
         onRetryCommit={conferences.retryCommit}
         pendingUpdateCount={updateQueue.totalRemaining}
         onOpenUpdatePanel={() => setUpdatePanelOpen(true)}
+        onOpenDiscoveryPanel={() => setDiscoveryPanelOpen(true)}
         viewMode={viewMode}
         onChangeViewMode={setViewMode}
         calendarScope={calendarScope}
@@ -130,6 +133,18 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <UpdatePanel queue={updateQueue} onBack={() => setUpdatePanelOpen(false)} />
+          </div>
+        </div>
+      )}
+      {isDiscoveryPanelOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl my-4 p-6">
+            <DiscoveryPanel
+              apiKey={apiKey}
+              existingConferences={conferences.rows}
+              onAccept={conferences.addConferenceFromDiscovery}
+              onClose={() => setDiscoveryPanelOpen(false)}
+            />
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ vi.mock('../services/dataManager', () => ({
   saveConferencesLocal: vi.fn(),
   commitToGitHub: vi.fn(),
   getCachedSha: vi.fn().mockReturnValue(null),
+  generateDiscoveryConferenceId: vi.fn(() => `disc_${Math.random().toString(36).slice(2, 8)}`),
   ConflictError: class ConflictError extends Error {
     constructor(msg) { super(msg); this.name = 'ConflictError'; }
   },
@@ -301,6 +302,121 @@ describe('saveConferenceEdit — source 조건 (QA #13)', () => {
     const upc = result.current.data.editions.find((e) => e.status === 'upcoming');
     expect(upc).toBeDefined();
     expect(upc.source).toBe('user_input');
+  });
+});
+
+// --- addConferenceFromDiscovery (PLAN-011-C) ---
+
+describe('addConferenceFromDiscovery', () => {
+  const FULL_CANDIDATE = {
+    full_name: 'European Heat Transfer Symposium',
+    abbreviation: 'EHTS',
+    field: '열전달',
+    region: '유럽',
+    official_url: 'https://ehts.example.org',
+    organizer: 'EUROTHERM',
+    cycle_years: 2,
+    evidence_url: 'https://ehts.example.org/2027',
+    predatory_score: 'low',
+    predatory_reasons: [],
+    matched_keywords: [{ ko: '열전달', en: 'heat transfer' }],
+    upcoming: {
+      start_date: '2027-06-15',
+      end_date: '2027-06-18',
+      venue: 'Lyon, France',
+      link: 'https://ehts.example.org/2027',
+    },
+  };
+
+  it('master + upcoming edition 동시 생성, source=ai_discovery', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    let newId;
+    act(() => {
+      newId = result.current.addConferenceFromDiscovery(FULL_CANDIDATE);
+    });
+
+    expect(newId).toMatch(/^disc_/);
+    expect(result.current.data.conferences).toHaveLength(1);
+    const m = result.current.data.conferences[0];
+    expect(m.id).toBe(newId);
+    expect(m.full_name).toBe('European Heat Transfer Symposium');
+    expect(m.source).toBe('ai_discovery');
+    expect(m.field).toBe('열전달');
+    expect(m.cycle_years).toBe(2);
+    expect(m.discovery_meta.predatory_score).toBe('low');
+    expect(m.discovery_meta.matched_keywords[0].en).toBe('heat transfer');
+
+    expect(result.current.data.editions).toHaveLength(1);
+    const ed = result.current.data.editions[0];
+    expect(ed.conference_id).toBe(newId);
+    expect(ed.status).toBe('upcoming');
+    expect(ed.source).toBe('ai_discovery');
+    expect(ed.start_date).toBe('2027-06-15');
+    expect(ed.venue).toBe('Lyon, France');
+
+    expect(saveConferencesLocal).toHaveBeenCalled();
+  });
+
+  it('upcoming 없는 candidate → master 만 추가, edition 0건', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const candidate = { ...FULL_CANDIDATE, upcoming: undefined };
+    act(() => {
+      result.current.addConferenceFromDiscovery(candidate);
+    });
+
+    expect(result.current.data.conferences).toHaveLength(1);
+    expect(result.current.data.editions).toHaveLength(0);
+  });
+
+  it('full_name 누락 → null 반환, 데이터 변동 없음', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    let newId;
+    act(() => {
+      newId = result.current.addConferenceFromDiscovery({ abbreviation: 'X' });
+    });
+
+    expect(newId).toBeNull();
+    expect(result.current.data.conferences).toHaveLength(0);
+  });
+
+  it('빈 upcoming (모든 필드 비어있음) → edition 생성하지 않음', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const candidate = {
+      ...FULL_CANDIDATE,
+      upcoming: { start_date: null, end_date: null, venue: '', link: '' },
+    };
+    act(() => {
+      result.current.addConferenceFromDiscovery(candidate);
+    });
+
+    expect(result.current.data.conferences).toHaveLength(1);
+    expect(result.current.data.editions).toHaveLength(0);
+  });
+
+  it('predatory_score 미지정 candidate → discovery_meta.predatory_score=medium 폴백', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const candidate = { full_name: 'Test Conf', abbreviation: 'TC' };
+    act(() => {
+      result.current.addConferenceFromDiscovery(candidate);
+    });
+
+    const m = result.current.data.conferences[0];
+    expect(m.discovery_meta.predatory_score).toBe('medium');
   });
 });
 

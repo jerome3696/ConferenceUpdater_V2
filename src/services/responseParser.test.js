@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   parseUpdateResponse,
   parseVerifyResponse,
+  parseDiscoveryExpandResponse,
+  parseDiscoverySearchResponse,
   normalizeUpdateData,
   UPDATE_SCHEMA,
   VERIFY_FIELDS,
@@ -155,6 +157,313 @@ describe('BANNED_LINK_DOMAINS 상수', () => {
 
   it('framer.ai 는 포함하지 않는다 (draft 연성화)', () => {
     expect(BANNED_LINK_DOMAINS).not.toContain('framer.ai');
+  });
+
+  it('PLAN-011 약탈 출판사 도메인 추가', () => {
+    expect(BANNED_LINK_DOMAINS).toContain('omicsonline.org');
+    expect(BANNED_LINK_DOMAINS).toContain('scirp.org');
+    expect(BANNED_LINK_DOMAINS).toContain('hilarispublisher.com');
+    expect(BANNED_LINK_DOMAINS).toContain('sciencepublishinggroup.com');
+  });
+});
+
+describe('parseDiscoveryExpandResponse (PLAN-011 + B.1 ko/en pair)', () => {
+  it('ko/en 페어 배열을 파싱한다', () => {
+    const text = JSON.stringify({
+      keywords: [
+        { ko: '열관리', en: 'thermal management' },
+        { ko: '공기조화', en: 'HVAC' },
+      ],
+    });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([
+      { ko: '열관리', en: 'thermal management' },
+      { ko: '공기조화', en: 'HVAC' },
+    ]);
+  });
+
+  it('코드펜스로 감싼 응답도 파싱한다', () => {
+    const text = '```json\n' + JSON.stringify({
+      keywords: [{ ko: 'a', en: 'A' }, { ko: 'b', en: 'B' }],
+    }) + '\n```';
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([{ ko: 'a', en: 'A' }, { ko: 'b', en: 'B' }]);
+  });
+
+  it('문자열 항목은 {ko, en} 폴백으로 처리한다', () => {
+    const text = JSON.stringify({ keywords: ['heat transfer', 'HVAC'] });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([
+      { ko: 'heat transfer', en: 'heat transfer' },
+      { ko: 'HVAC', en: 'HVAC' },
+    ]);
+  });
+
+  it('ko 또는 en 누락된 항목은 폐기', () => {
+    const text = JSON.stringify({
+      keywords: [
+        { ko: '', en: 'no ko' },
+        { ko: 'no en', en: '' },
+        { ko: '정상', en: 'normal' },
+      ],
+    });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([{ ko: '정상', en: 'normal' }]);
+  });
+
+  it('공백·중복·비객체는 제거 (ko+en 정규화 키)', () => {
+    const text = JSON.stringify({
+      keywords: [
+        { ko: '  열관리  ', en: '  thermal management  ' },
+        { ko: '열관리', en: 'thermal management' },
+        null,
+        42,
+        { ko: 'HVAC', en: 'HVAC' },
+      ],
+    });
+    const result = parseDiscoveryExpandResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([
+      { ko: '열관리', en: 'thermal management' },
+      { ko: 'HVAC', en: 'HVAC' },
+    ]);
+  });
+
+  it('빈 응답은 reason: empty', () => {
+    expect(parseDiscoveryExpandResponse('').reason).toBe('empty');
+  });
+
+  it('JSON 없으면 reason: no_json', () => {
+    expect(parseDiscoveryExpandResponse('plain text').reason).toBe('no_json');
+  });
+
+  it('keywords 필드 없으면 schema_mismatch', () => {
+    const result = parseDiscoveryExpandResponse(JSON.stringify({ other: ['a'] }));
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('schema_mismatch');
+  });
+
+  it('keywords 가 배열이 아니면 schema_mismatch', () => {
+    const result = parseDiscoveryExpandResponse(JSON.stringify({ keywords: 'a,b,c' }));
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('schema_mismatch');
+  });
+
+  it('keywords 빈 배열도 ok', () => {
+    const result = parseDiscoveryExpandResponse(JSON.stringify({ keywords: [] }));
+    expect(result.ok).toBe(true);
+    expect(result.keywords).toEqual([]);
+  });
+});
+
+describe('parseDiscoverySearchResponse (PLAN-011)', () => {
+  const MIN_CANDIDATE = {
+    full_name: 'International Heat Transfer Conference',
+    abbreviation: 'IHTC',
+    field: '열전달',
+    region: '전세계',
+    official_url: 'https://www.ihtc18.org/',
+    organizer: 'AIHTC',
+    cycle_years: 4,
+    evidence_url: 'https://www.ihtc18.org/about',
+    predatory_score: 'low',
+    predatory_reasons: ['Established academic body'],
+  };
+
+  it('정상 candidates 배열 파싱', () => {
+    const text = JSON.stringify({ candidates: [MIN_CANDIDATE] });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates).toHaveLength(1);
+    expect(result.candidates[0].full_name).toBe(MIN_CANDIDATE.full_name);
+    expect(result.candidates[0].predatory_score).toBe('low');
+  });
+
+  it('upcoming 필드 정상 파싱 (날짜 형식 검증)', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        upcoming: {
+          start_date: '2026-08-10',
+          end_date: '2026-08-14',
+          venue: 'Cape Town, South Africa',
+          link: 'https://www.ihtc18.org/',
+        },
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates[0].upcoming.start_date).toBe('2026-08-10');
+    expect(result.candidates[0].upcoming.venue).toBe('Cape Town, South Africa');
+  });
+
+  it('upcoming 의 비정상 날짜는 null 로 정규화', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        upcoming: { start_date: '2026/08/10', end_date: 'TBA', venue: 'X', link: 'https://x' },
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates[0].upcoming.start_date).toBeNull();
+    expect(result.candidates[0].upcoming.end_date).toBeNull();
+    expect(result.candidates[0].upcoming.venue).toBe('X');
+  });
+
+  it('upcoming 의 모든 필드가 비면 upcoming 자체 omit', () => {
+    const text = JSON.stringify({
+      candidates: [{ ...MIN_CANDIDATE, upcoming: { start_date: '', end_date: '', venue: '', link: '' } }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates[0].upcoming).toBeUndefined();
+  });
+
+  it('금지도메인이 official_url 인 후보는 hard reject', () => {
+    const text = JSON.stringify({
+      candidates: [
+        { ...MIN_CANDIDATE, full_name: 'WASET Conf', official_url: 'https://waset.org/heat-transfer-conference' },
+        MIN_CANDIDATE,
+      ],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates).toHaveLength(1);
+    expect(result.candidates[0].full_name).toBe(MIN_CANDIDATE.full_name);
+  });
+
+  it('금지도메인이 upcoming.link 인 후보도 hard reject', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        upcoming: { start_date: '2026-08-10', end_date: '2026-08-14', venue: 'X', link: 'https://easychair.org/cfp/IHTC' },
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates).toHaveLength(0);
+  });
+
+  it('predatory_score 미지정·잘못된 값은 medium 으로 보수치 처리', () => {
+    const text = JSON.stringify({
+      candidates: [
+        { ...MIN_CANDIDATE, predatory_score: undefined },
+        { ...MIN_CANDIDATE, full_name: 'X', predatory_score: 'unknown' },
+      ],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates[0].predatory_score).toBe('medium');
+    expect(result.candidates[1].predatory_score).toBe('medium');
+  });
+
+  it('full_name 없는 항목은 제외', () => {
+    const text = JSON.stringify({
+      candidates: [
+        MIN_CANDIDATE,
+        { ...MIN_CANDIDATE, full_name: '' },
+        { ...MIN_CANDIDATE, full_name: null },
+        null,
+        'invalid',
+      ],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.candidates).toHaveLength(1);
+  });
+
+  it('cycle_years 가 숫자 아니면 null', () => {
+    const text = JSON.stringify({
+      candidates: [{ ...MIN_CANDIDATE, cycle_years: '4' }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].cycle_years).toBeNull();
+  });
+
+  it('빈 응답은 reason: empty', () => {
+    expect(parseDiscoverySearchResponse('').reason).toBe('empty');
+  });
+
+  it('candidates 배열 아니면 schema_mismatch', () => {
+    const result = parseDiscoverySearchResponse(JSON.stringify({ candidates: 'not array' }));
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('schema_mismatch');
+  });
+
+  it('candidates 빈 배열도 ok', () => {
+    const result = parseDiscoverySearchResponse(JSON.stringify({ candidates: [] }));
+    expect(result.ok).toBe(true);
+    expect(result.candidates).toEqual([]);
+  });
+
+  it('matched_keywords 페어 정상 파싱', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        matched_keywords: [
+          { ko: '열전달', en: 'heat transfer' },
+          { ko: '열관리', en: 'thermal management' },
+        ],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].matched_keywords).toEqual([
+      { ko: '열전달', en: 'heat transfer' },
+      { ko: '열관리', en: 'thermal management' },
+    ]);
+  });
+
+  it('matched_keywords 누락은 빈 배열', () => {
+    const result = parseDiscoverySearchResponse(JSON.stringify({ candidates: [MIN_CANDIDATE] }));
+    expect(result.candidates[0].matched_keywords).toEqual([]);
+  });
+
+  it('matched_keywords 잘못된 항목은 폐기 (ko/en 누락·문자열)', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        matched_keywords: [
+          { ko: '열전달', en: 'heat transfer' },
+          { ko: '', en: 'no ko' },
+          'plain string',
+          null,
+          { ko: 'no en', en: '' },
+        ],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].matched_keywords).toEqual([
+      { ko: '열전달', en: 'heat transfer' },
+    ]);
+  });
+
+  it('field 미지정 시 matched_keywords[0].ko 로 폴백', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        field: '',
+        matched_keywords: [{ ko: '극저온', en: 'cryogenics' }],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].field).toBe('극저온');
+  });
+
+  it('field 명시되어 있으면 그대로 유지 (matched_keywords 무관)', () => {
+    const text = JSON.stringify({
+      candidates: [{
+        ...MIN_CANDIDATE,
+        field: '공기조화',
+        matched_keywords: [{ ko: '극저온', en: 'cryogenics' }],
+      }],
+    });
+    const result = parseDiscoverySearchResponse(text);
+    expect(result.candidates[0].field).toBe('공기조화');
   });
 });
 
