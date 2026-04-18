@@ -9,6 +9,32 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (PLAN-009, 2026-04-18)
+
+**캘린더 뷰 — 연간 타임라인 + 월간 그리드** (Track C.0 1순위)
+- `src/components/Calendar/` 신규: `CalendarView.jsx` (상위), `YearTimeline.jsx` (연간 12개월 가로축 + 학회 막대), `MonthGrid.jsx` (7열 달력), `calendarUtils.js` (학회 에디션의 연/월 경계 클립, 월 그리드 셀 계산, year/month shift)
+- Header 우측에 "테이블 / 캘린더" 세그먼트 토글 버튼 + 캘린더 모드 시 "테이블 필터와 동기화" 체크박스
+- 표시 대상 scope: 기본 `starred` (즐겨찾기), 토글로 `filter` (현재 useFiltering 결과) 전환
+- 서브 뷰: 연간(기본) / 월간. 연 경계 걸친 학회 자동 클립, 월간 셀은 학회 칩 최대 3 + "+N" 축약
+- `date-fns` 의존성 추가. react-big-calendar/FullCalendar 대신 자체 렌더 (연간 지원·번들 이점)
+
+**useFiltering `starredOnly` 플래그**
+- `src/hooks/useFiltering.js`: `starredOnly: boolean` 추가 (기본 false). `setFilters` 를 부분 머지로 변경 — 기존 FilterBar 계약({category, field, region, query})을 유지하면서 starredOnly 상태 보존
+
+**App 상태 리프팅**
+- `src/App.jsx`: `useFiltering` 을 App 레벨에서 호출해 MainTable·CalendarView 양쪽이 동일 filter state 공유. `viewMode`, `calendarScope`, `calendarSubView` 상태 신규
+- `src/components/MainTable/MainTable.jsx`: `filtering` prop 수용 (`useFilteringFallback` 으로 미전달 시 내부 자체 호출, 기존 테스트 경로 보존)
+
+**단위 테스트 +22**
+- `calendarUtils.test.js` 14건 (연 경계 클립·월별 day map·그리드 leading 셀·year/month shift·윤년)
+- `CalendarView.test.jsx` 4건 (scope 분기·subView 렌더·토글 콜백)
+- `useFiltering.test.js` +3건 (starredOnly 통과 / 부분 머지 보존 / FilterBar 계약 유지)
+
+### Changed (PLAN-009)
+
+- `docs/blueprint.md` v1.2: §0 구현 상태 표기 가이드 신규, §3 각 기능에 상태 뱃지, §3.4 캘린더 뷰 섹션 신규, §4.1 페이지 구조에 뷰 토글 반영, §7.2 우선순위 컬럼·캘린더 뷰 ✅ 완료 반영
+- `docs/dev-guide-v2.md` §5: Step C.0 체크박스 [x], Step C.1 (캘린더 뷰 완료) 추가, "예정 기능"을 §7.2 우선순위 기준으로 재정리
+
 ### Added (PLAN-006, 2026-04-18)
 
 **프롬프트 v6 — Link–Confidence 상호구속 + Venue 포맷 + draft 연성화** (휴면)
