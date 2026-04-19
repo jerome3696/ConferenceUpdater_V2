@@ -386,6 +386,38 @@
         "organizer": "EUROTHERM Committee",
         "found_at": "2026-04-19T00:48:20.297Z"
       }
+    },
+    {
+      "id": "disc_mo51ssyeyb",
+      "starred": 0,
+      "category": "",
+      "field": "열저장",
+      "abbreviation": "Eurotherm Seminar",
+      "full_name": "Eurotherm Seminar on Thermal Energy Storage",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "http://www.eurothermcommittee.eu/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "EUROTHERM Committee established since 1986",
+          "Regular annual events with peer review",
+          "Organized by established research institutions",
+          "[휴] 신뢰 출판사·단체 매칭 (eurotherm) — 감점"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "열저장",
+            "en": "thermal energy storage"
+          }
+        ],
+        "evidence_url": "https://nachhaltigwirtschaften.at/en/iea/events/2026/20260515-eurotherm-seminar-119-contribution-of-thermal-energy-storage-towards-decarbonization.php",
+        "organizer": "EUROTHERM Committee",
+        "found_at": "2026-04-19T00:49:00.566Z"
+      }
     }
   ],
   "editions": [
@@ -754,6 +786,18 @@
       "confidence": null,
       "source": "ai_discovery",
       "updated_at": "2026-04-19T00:48:20.297Z"
+    },
+    {
+      "id": "ed_mo51ssye",
+      "conference_id": "disc_mo51ssyeyb",
+      "status": "upcoming",
+      "start_date": "2026-05-13",
+      "end_date": "2026-05-15",
+      "venue": "Lleida, Spain",
+      "link": "https://nachhaltigwirtschaften.at/en/iea/events/2026/20260515-eurotherm-seminar-119-contribution-of-thermal-energy-storage-towards-decarbonization.php",
+      "confidence": null,
+      "source": "ai_discovery",
+      "updated_at": "2026-04-19T00:49:00.566Z"
     }
   ]
 }
