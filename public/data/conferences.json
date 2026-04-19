@@ -525,6 +525,37 @@
         "organizer": "IEEE Control Systems Society",
         "found_at": "2026-04-19T06:07:08.051Z"
       }
+    },
+    {
+      "id": "disc_mo5d6axpa3",
+      "starred": 0,
+      "category": "",
+      "field": "디지털트윈",
+      "abbreviation": "DigiTwin",
+      "full_name": "Digital Twin International Conference",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://dtiac.com/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Organized by IDEA (International Digital Engineering Association)",
+          "Established series since 2019",
+          "Clear academic governance"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "디지털트윈",
+            "en": "디지털트윈"
+          }
+        ],
+        "evidence_url": "https://dtiac.com/",
+        "organizer": "International Digital Engineering Association (IDEA)",
+        "found_at": "2026-04-19T06:07:26.173Z"
+      }
     }
   ],
   "editions": [
@@ -929,6 +960,18 @@
       "confidence": null,
       "source": "ai_discovery",
       "updated_at": "2026-04-19T06:07:08.051Z"
+    },
+    {
+      "id": "ed_mo5d6axp",
+      "conference_id": "disc_mo5d6axpa3",
+      "status": "upcoming",
+      "start_date": "2026-08-04",
+      "end_date": "2026-08-08",
+      "venue": "Oxford, UK",
+      "link": "https://dtiac.com/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "updated_at": "2026-04-19T06:07:26.173Z"
     }
   ]
 }
