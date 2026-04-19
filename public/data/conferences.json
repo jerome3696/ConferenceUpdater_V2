@@ -418,6 +418,42 @@
         "organizer": "EUROTHERM Committee",
         "found_at": "2026-04-19T00:49:00.566Z"
       }
+    },
+    {
+      "id": "disc_mo520jhk7o",
+      "starred": 0,
+      "category": "",
+      "field": "냉동 사이클",
+      "abbreviation": "IRACC",
+      "full_name": "International Refrigeration and Air Conditioning Conference at Purdue",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://docs.lib.purdue.edu/iracc/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "high",
+        "predatory_reasons": [
+          "Hosted by Purdue since 1972",
+          "800+ international experts annually",
+          "IIR partnership",
+          "[휴] 금지 도메인 iifiir.org"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "냉동 사이클",
+            "en": "refrigeration cycle"
+          },
+          {
+            "ko": "저온 공학",
+            "en": "air conditioning"
+          }
+        ],
+        "evidence_url": "https://iifiir.org/en/events/21st-international-refrigeration-and-air-conditioning-conference-at-purdue",
+        "organizer": "Purdue University, Ray W. Herrick Laboratories",
+        "found_at": "2026-04-19T00:55:01.544Z"
+      }
     }
   ],
   "editions": [
