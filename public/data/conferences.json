@@ -489,6 +489,42 @@
         "organizer": "Lucerne University of Applied Sciences and Arts, Competence Center for Thermal Energy Storage",
         "found_at": "2026-04-19T00:55:30.127Z"
       }
+    },
+    {
+      "id": "disc_mo5d5wybn7",
+      "starred": 0,
+      "category": "",
+      "field": "모델예측제어",
+      "abbreviation": "CDC",
+      "full_name": "IEEE Conference on Decision and Control",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://cdc2026.ieeecss.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "IEEE official conference",
+          "Annual premier conference since 1971",
+          "Top-tier control systems conference",
+          "[휴] 신뢰 출판사·단체 매칭 (ieee) — 감점"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "모델예측제어",
+            "en": "model predictive control"
+          },
+          {
+            "ko": "산업공정",
+            "en": "산업공정"
+          }
+        ],
+        "evidence_url": "https://cdc2026.ieeecss.org/",
+        "organizer": "IEEE Control Systems Society",
+        "found_at": "2026-04-19T06:07:08.051Z"
+      }
     }
   ],
   "editions": [
@@ -881,6 +917,18 @@
       "confidence": null,
       "source": "ai_discovery",
       "updated_at": "2026-04-19T00:55:30.128Z"
+    },
+    {
+      "id": "ed_mo5d5wyb",
+      "conference_id": "disc_mo5d5wybn7",
+      "status": "upcoming",
+      "start_date": "2026-12-15",
+      "end_date": "2026-12-18",
+      "venue": "Honolulu, Hawaii, USA",
+      "link": "https://cdc2026.ieeecss.org/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "updated_at": "2026-04-19T06:07:08.051Z"
     }
   ]
 }
