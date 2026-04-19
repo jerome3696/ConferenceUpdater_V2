@@ -315,6 +315,41 @@
       "official_url": "https://ishs.org/",
       "note": "",
       "source": "user_input"
+    },
+    {
+      "id": "disc_mo51rke0v1",
+      "starred": 0,
+      "category": "",
+      "field": "카르노배터리",
+      "abbreviation": "IWCB",
+      "full_name": "International Workshop on Carnot Batteries",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "https://event.dlr.de/en/event/4th-international-workshop-on-carnot-batteries/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Organized by established research institutions (KIT, University of Stuttgart, DLR)",
+          "IEA Storage Annex 36 endorsed",
+          "Clear peer-reviewed proceedings"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "카르노배터리",
+            "en": "Carnot battery"
+          },
+          {
+            "ko": "열저장",
+            "en": "thermal energy storage"
+          }
+        ],
+        "evidence_url": "https://iea-es.org/events/international-workshop-on-carnot-batteries/",
+        "organizer": "KIT, University of Stuttgart, DLR",
+        "found_at": "2026-04-19T00:48:02.808Z"
+      }
     }
   ],
   "editions": [
@@ -659,6 +694,18 @@
       "confidence": "high",
       "source": "ai_search",
       "updated_at": "2026-04-18T12:23:38.845Z"
+    },
+    {
+      "id": "ed_mo51rke0",
+      "conference_id": "disc_mo51rke0v1",
+      "status": "upcoming",
+      "start_date": "2026-09-15",
+      "end_date": "2026-09-17",
+      "venue": "Stuttgart, Germany",
+      "link": "https://event.dlr.de/en/event/4th-international-workshop-on-carnot-batteries/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "updated_at": "2026-04-19T00:48:02.808Z"
     }
   ]
 }
