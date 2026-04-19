@@ -350,6 +350,42 @@
         "organizer": "KIT, University of Stuttgart, DLR",
         "found_at": "2026-04-19T00:48:02.808Z"
       }
+    },
+    {
+      "id": "disc_mo51rxvtcm",
+      "starred": 0,
+      "category": "",
+      "field": "열전달",
+      "abbreviation": "EUROTHERM",
+      "full_name": "European Thermal Sciences Conference",
+      "cycle_years": 4,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "http://www.eurothermcommittee.eu/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Established in 1986 by major European scientific bodies",
+          "Peer-reviewed proceedings published",
+          "Clear institutional affiliation with university partners",
+          "[휴] 신뢰 출판사·단체 매칭 (eurotherm) — 감점"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "열저장",
+            "en": "thermal energy storage"
+          },
+          {
+            "ko": "열전달",
+            "en": "heat transfer"
+          }
+        ],
+        "evidence_url": "https://www.eurotherm2024.si/",
+        "organizer": "EUROTHERM Committee",
+        "found_at": "2026-04-19T00:48:20.297Z"
+      }
     }
   ],
   "editions": [
@@ -706,6 +742,18 @@
       "confidence": null,
       "source": "ai_discovery",
       "updated_at": "2026-04-19T00:48:02.808Z"
+    },
+    {
+      "id": "ed_mo51rxvt",
+      "conference_id": "disc_mo51rxvtcm",
+      "status": "upcoming",
+      "start_date": "2028-06-12",
+      "end_date": "2028-06-15",
+      "venue": "Ghent, Belgium",
+      "link": "http://www.eurothermcommittee.eu/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "updated_at": "2026-04-19T00:48:20.297Z"
     }
   ]
 }
