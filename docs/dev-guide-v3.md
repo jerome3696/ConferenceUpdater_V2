@@ -60,11 +60,13 @@ Option 2 → 2.5 → Option 4 순서. 각 단계가 다음 단계의 전제.
 ### Track F: 운영 품질 (상시 병행)
 - [ ] **F.1** **Update 기능 종합 개선** (원래 "v6 활성 전환 평가" 에서 확장)
   - [x] **Phase 1 — Last edition 1차 채움 (2026-04-19, PR #21)**: 28건 backfill (high 27 / medium 1), past 보유 master 2 → 29 전수. Claude Code WebSearch 활용 (API 비용 0). `scripts/export-review.cjs` / `import-review.cjs` 검수 도구 동반 추가
-  - [ ] **Phase 2 — 프롬프트/로직 정교화** (차기 작업, PLAN-013 예정)
-    - `formatLastEdition` 에 link 노출 (프롬프트 비대칭 해소, `src/utils/promptBuilder.js:104-111`)
-    - update 프롬프트 v7 — last 비었을 때 upcoming 과 병행 발굴 (update 액션 자체가 last 유지 메커니즘이 됨 → 별도 UI 불필요)
-    - v6 활성 전환 평가 — conf_012/015 회귀 원인 규명 후 DEFAULT_VERSION 승격 판단
-    - 권장 순서: (a) v6 회귀 분석 → (b) formatLastEdition 수정 → (c) v7 설계·구현 → (d) eval 후 활성 버전 결정
+  - [~] **Phase 2 — 프롬프트/로직 정교화 (PLAN-013, 2026-04-20 통합 PR 대기)** — 5개 서브플랜 구현 완료, 326 tests 통과, `feature/PLAN-013-integration` 푸시
+    - [x] A (90feb99) — Edition `anchored` 필드 + UI 토글 (UpdateCard accept·EditionSection). 사용자 확정 upcoming 재검색 보호
+    - [x] B1 (34dbb9b) — `src/utils/urlClassifier.js` 신규 (official_edition/series/org_event/news/listing 분류 → high/medium/low 신뢰도), `dateUtils.daysUntil`·`cycleProgress` 확장
+    - [x] B2 (a1b201b) — `shouldSearch(row, mode)` 전면 재작성 (anchor > 필드 미비 > precise > URL×주기 임계값), "전체 업데이트" 시 정밀/일반 모달
+    - [x] C (d8ac648) — Update prompt v7 (`formatLastEditionV2` last.link 노출 + 시리즈 도메인 패턴 추정 지시). dedicated_url 제거. `DEFAULT_UPDATE_VERSION` 은 여전히 v4 — eval 후 결정
+    - [x] D (962dd31) — `buildLastEditionPrompt` + `parseLastEditionResponse` + `applyLastDiscovery` + `useUpdateQueue` 분기 (row.last 없으면 main update 전 선행 발굴)
+    - [ ] **Step E — v6 vs v7 eval + `DEFAULT_UPDATE_VERSION` 결정** (별도 PR, API 비용 발생 작업) — 잔여
 - [ ] **F.2** **프롬프트 반자동 log analyzer**
   - eval 결과 10회+ 축적 시점에 트리거. 공통 실패 패턴 자동 추출 → 다음 버전 레버 후보
 - [ ] **F.3** **E2E 테스트 도입 (Playwright)**
