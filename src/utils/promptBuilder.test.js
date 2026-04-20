@@ -17,101 +17,7 @@ const CONF = {
   official_url: 'https://www.iccfd.org/',
 };
 
-describe('buildUpdatePrompt — v4 (default)', () => {
-  it('DEFAULT_UPDATE_VERSION 은 v4', () => {
-    expect(DEFAULT_UPDATE_VERSION).toBe('v4');
-  });
-
-  it('v4 에는 dedicated_url 힌트 라인이 없다', () => {
-    const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
-    const { user, version } = buildUpdatePrompt(conf, null, { version: 'v4' });
-    expect(version).toBe('v4');
-    expect(user).not.toContain('회차 전용 사이트(힌트)');
-    expect(user).not.toContain('iccfd13.polimi.it');
-  });
-});
-
-describe('buildUpdatePrompt — v5 (dedicated_url 힌트)', () => {
-  it('dedicated_url 있으면 힌트 라인이 user 프롬프트에 포함된다', () => {
-    const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
-    const { user, system, version } = buildUpdatePrompt(conf, null, { version: 'v5' });
-    expect(version).toBe('v5');
-    expect(user).toContain('회차 전용 사이트(힌트): https://iccfd13.polimi.it');
-    // v5 system == v4 system (내용 복사)
-    expect(system).toContain('[날짜 규칙 — 엄격]');
-  });
-
-  it('dedicated_url 없으면 힌트 라인이 없다 (v4와 user 구조 동일)', () => {
-    const { user } = buildUpdatePrompt(CONF, null, { version: 'v5' });
-    expect(user).not.toContain('회차 전용 사이트(힌트)');
-  });
-
-  it('dedicated_url 빈 문자열도 힌트 미출력', () => {
-    const conf = { ...CONF, dedicated_url: '' };
-    const { user } = buildUpdatePrompt(conf, null, { version: 'v5' });
-    expect(user).not.toContain('회차 전용 사이트(힌트)');
-  });
-});
-
-describe('buildUpdatePrompt — v6 (cross-coupling + venue 포맷 + draft)', () => {
-  it('v6 system 에 Link–Confidence 상호구속 섹션 존재', () => {
-    const { system, version } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(version).toBe('v6');
-    expect(system).toContain('[Link–Confidence 상호구속]');
-    expect(system).toMatch(/high[^\n]*medium[^\n]*link[^\n]*non-null/i);
-  });
-
-  it('v6 system 에 Venue 포맷 섹션 + USA/Korea/UK 규칙 존재', () => {
-    const { system } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(system).toContain('[Venue 포맷 — 엄격]');
-    expect(system).toContain('City, State, USA');
-    expect(system).toContain('Orlando, Florida, USA');
-    expect(system).toContain('City, Province, Canada');
-    expect(system).toMatch(/USA['"]?\s*고정/);
-    expect(system).toContain("'Korea'");
-    expect(system).toContain("'UK'");
-  });
-
-  it('v6 system 에 Draft/초안 사이트 처리 섹션 존재', () => {
-    const { system } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(system).toContain('[Draft/초안 사이트 처리]');
-    expect(system).toContain('framer.ai');
-    expect(system).toContain('draft/prototype');
-  });
-
-  it('v6 금지 도메인 리스트에 framer.ai 미포함', () => {
-    const { system } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    const bannedSection = system.match(/금지 \(제3자[^\n]*/)?.[0] ?? '';
-    expect(bannedSection).not.toContain('framer.ai');
-    expect(bannedSection).toContain('easychair.org');
-    expect(bannedSection).toContain('iifiir.org');
-  });
-
-  it('v6 에 3순위 색인 페이지 허용 명시 (ibpsa.org/conferences/)', () => {
-    const { system } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(system).toContain('ibpsa.org/conferences/');
-    expect(system).toMatch(/3순위.*색인/);
-  });
-
-  it('v6 user 프롬프트에 반환 직전 자기검증 체크리스트 존재', () => {
-    const { user } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(user).toContain('[반환 직전 자기검증 체크리스트]');
-    expect(user).toMatch(/link=null/);
-  });
-
-  it('v6 dedicated_url 힌트는 v5 와 동일하게 동작', () => {
-    const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
-    const { user } = buildUpdatePrompt(conf, null, { version: 'v6' });
-    expect(user).toContain('회차 전용 사이트(힌트): https://iccfd13.polimi.it');
-  });
-
-  it('v6 dedicated_url 없으면 힌트 라인 없음', () => {
-    const { user } = buildUpdatePrompt(CONF, null, { version: 'v6' });
-    expect(user).not.toContain('회차 전용 사이트(힌트)');
-  });
-});
-
-describe('buildUpdatePrompt — v7 (last.link 활용, dedicated_url 제거)', () => {
+describe('buildUpdatePrompt — v1_0 (PLAN-019 재시작, 소스 2축 분리)', () => {
   const LAST_WITH_LINK = {
     start_date: '2024-07-01', end_date: '2024-07-04',
     venue: 'Prague, Czech Republic', link: 'https://ecos2024.cz/',
@@ -121,50 +27,80 @@ describe('buildUpdatePrompt — v7 (last.link 활용, dedicated_url 제거)', ()
     venue: 'Prague, Czech Republic',
   };
 
-  it('v7 system 에 last.link 패턴 추정 + web_fetch 지시 존재', () => {
-    const { system, version } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
-    expect(version).toBe('v7');
-    expect(system).toContain('[마지막 개최 정보 활용 — v7 추가]');
-    expect(system).toContain('web_fetch');
-    expect(system).toMatch(/ihtc18.*ihtc19|ecos2024.*ecos2026/);
+  it('DEFAULT_UPDATE_VERSION 은 v1_0', () => {
+    expect(DEFAULT_UPDATE_VERSION).toBe('v1_0');
   });
 
-  it('v7 user: last.link 있으면 link=<URL> 이 마지막 개최 라인에 포함', () => {
-    const { user } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
+  it('system 에 축 A (탐색 순서) + 축 B (채택 규칙) 섹션 존재', () => {
+    const { system, version } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(version).toBe('v1_0');
+    expect(system).toContain('[소스 활용 — 축 A: 탐색 순서]');
+    expect(system).toContain('[소스 활용 — 축 B: upcoming.link 채택 규칙]');
+  });
+
+  it('system 에 Dedicated vs Institutional 판별 예시 4건 병기', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(system).toContain('cryocooler.org');
+    expect(system).toContain('ashrae.org');
+    expect(system).toContain('iccfd.org');
+    expect(system).toContain('ibpsa.org');
+  });
+
+  it('system 에 Link–Confidence 상호구속 섹션 존재', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(system).toContain('[Link–Confidence 상호구속]');
+    expect(system).toMatch(/high[^\n]*medium[^\n]*link[^\n]*non-null/i);
+  });
+
+  it('system 에 Venue 포맷 규칙 (USA/Canada/기타) 명시', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(system).toContain('[Venue 포맷 — 엄격]');
+    expect(system).toContain('City, State, USA');
+    expect(system).toContain('City, Province, Canada');
+    expect(system).toContain("'Korea'");
+    expect(system).toContain("'UK'");
+  });
+
+  it('system 에 Draft 사이트 조건부 허용 명시', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(system).toContain('framer.ai');
+    expect(system).toContain('draft/prototype');
+  });
+
+  it('user: last.link 있으면 "link=<URL>" 이 마지막 개최 라인에 포함 + 축 A 힌트 노출', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v1_0' });
     expect(user).toMatch(/마지막 개최:.*link=https:\/\/ecos2024\.cz\//);
     expect(user).toContain('다음 회차 URL 패턴을 먼저 추정');
   });
 
-  it('v7 user: last.link 없으면 마지막 개최 줄에 link= 미출력, 패턴 추정 힌트도 없음', () => {
-    const { user } = buildUpdatePrompt(CONF, LAST_NO_LINK, { version: 'v7' });
-    // "마지막 개최:" 라인만 추출해서 검사 (체크리스트의 "link=null" 이 false positive 내지 않도록)
+  it('user: last.link 없으면 마지막 개최 라인에 "link=" 미출력, 패턴 힌트도 없음', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_NO_LINK, { version: 'v1_0' });
     const lastLine = user.split('\n').find((l) => l.startsWith('마지막 개최:')) || '';
     expect(lastLine).not.toMatch(/link=/);
     expect(user).not.toContain('다음 회차 URL 패턴을 먼저 추정');
   });
 
-  it('v7 user: lastEdition 자체가 null 이면 "정보 없음"', () => {
-    const { user } = buildUpdatePrompt(CONF, null, { version: 'v7' });
+  it('user: lastEdition 자체가 null 이면 "정보 없음"', () => {
+    const { user } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
     expect(user).toContain('마지막 개최: 정보 없음');
   });
 
-  it('v7 은 dedicated_url 을 더 이상 소비하지 않음 (dead code 제거)', () => {
+  it('user: 반환 직전 자기검증 체크리스트 — dedicated/institutional 판별 규칙 포함', () => {
+    const { user } = buildUpdatePrompt(CONF, null, { version: 'v1_0' });
+    expect(user).toContain('[반환 직전 자기검증 체크리스트]');
+    expect(user).toMatch(/dedicated.*institutional|institutional.*dedicated/i);
+  });
+
+  it('더 이상 dedicated_url 힌트를 소비하지 않음 (v5/v6 잔재 제거)', () => {
     const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
-    const { user } = buildUpdatePrompt(conf, LAST_WITH_LINK, { version: 'v7' });
+    const { user } = buildUpdatePrompt(conf, LAST_WITH_LINK, { version: 'v1_0' });
     expect(user).not.toContain('회차 전용 사이트(힌트)');
     expect(user).not.toContain('iccfd13.polimi.it');
   });
 
-  it('v7 은 v6 의 Link–Confidence·Venue·Draft 섹션을 유지', () => {
-    const { system } = buildUpdatePrompt(CONF, null, { version: 'v7' });
-    expect(system).toContain('[Link–Confidence 상호구속]');
-    expect(system).toContain('[Venue 포맷 — 엄격]');
-    expect(system).toContain('[Draft/초안 사이트 처리]');
-    expect(system).toContain('framer.ai');
-  });
-
-  it('DEFAULT_UPDATE_VERSION 은 v7 활성 결정 전까진 v4 유지', () => {
-    expect(DEFAULT_UPDATE_VERSION).toBe('v4');
+  it('알 수 없는 버전은 throw — v4~v7 legacy 는 코드에서 제거됨', () => {
+    expect(() => buildUpdatePrompt(CONF, null, { version: 'v4' })).toThrow();
+    expect(() => buildUpdatePrompt(CONF, null, { version: 'v7' })).toThrow();
   });
 });
 

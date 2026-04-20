@@ -17,7 +17,6 @@ const REF_CONFERENCE = {
   abbreviation: '{{ABBR}}',
   cycle_years: '{{CYCLE}}',
   official_url: '{{OFFICIAL_URL}}',
-  dedicated_url: '{{DEDICATED_URL}}',
 };
 const REF_LAST_EDITION = {
   start_date: '{{LAST_START}}',
@@ -25,9 +24,9 @@ const REF_LAST_EDITION = {
   venue: '{{LAST_VENUE}}',
   link: '{{LAST_LINK}}',
 };
-const REF_TODAY_ISO = '2026-04-17T00:00:00.000Z';
+const REF_TODAY_ISO = '2026-04-21T00:00:00.000Z';
 
-const VERSIONS = ['v4', 'v5', 'v6', 'v7'];
+const VERSIONS = ['v1_0'];
 
 // outer fence = 4-backtick. MD 에서 `````text` 로 연 블록의 내용을 순서대로 반환.
 function extractCodeBlocks(md) {
@@ -101,7 +100,7 @@ describe('promptBuilder ↔ docs/prompts/ 동기화', () => {
         expect(normalize(mdBlocks[0])).toBe(normalize(expectedSystem));
       });
 
-      it('User Prompt 가 builder 렌더 결과와 일치 (reference input + today=2026-04-17)', () => {
+      it('User Prompt 가 builder 렌더 결과와 일치 (reference input + today=2026-04-21)', () => {
         expect(normalize(mdBlocks[1])).toBe(normalize(expectedUser));
       });
     });
