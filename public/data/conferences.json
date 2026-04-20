@@ -1244,6 +1244,17 @@
       "notes": "5th DigiTwin International Conference 2025, hybrid format.",
       "source_url": "https://www.aconf.org/conf_224622/",
       "updated_at": "2026-04-20T05:11:46.716Z"
+    },
+    {
+      "id": "ed_mo6s5ojh",
+      "conference_id": "disc_mo5d5wybn7",
+      "status": "past",
+      "start_date": "2025-12-10",
+      "end_date": "2025-12-12",
+      "venue": "Rio de Janeiro, Brazil",
+      "link": "https://cdc2025.ieeecss.org/",
+      "source": "user_input",
+      "updated_at": "2026-04-20T05:54:37.565Z"
     }
   ]
 }
