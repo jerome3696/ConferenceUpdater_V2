@@ -2,6 +2,7 @@ import { useState } from 'react';
 import MainTable from './components/MainTable/MainTable';
 import CalendarView from './components/Calendar/CalendarView';
 import UpdatePanel from './components/UpdatePanel/UpdatePanel';
+import UpdateModeModal from './components/UpdatePanel/UpdateModeModal';
 import DiscoveryPanel from './components/Discovery/DiscoveryPanel';
 import Header from './components/common/Header';
 import ApiKeyModal from './components/common/ApiKeyModal';
@@ -20,6 +21,7 @@ function App() {
   const updateQueue = useUpdateQueue({
     apiKey,
     applyAiUpdate: conferences.applyAiUpdate,
+    applyLastDiscovery: conferences.applyLastDiscovery,
     applyVerifyUpdate: conferences.applyVerifyUpdate,
   });
 
@@ -28,6 +30,9 @@ function App() {
   // 개별 업데이트는 큐에만 쌓고 메인 화면 유지(QA #11). 일괄 작업과 헤더 버튼은 overlay 자동 오픈.
   const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
   const [isDiscoveryPanelOpen, setDiscoveryPanelOpen] = useState(false);
+  // PLAN-013-B2: 전체 업데이트 시작 전 모드 선택 모달.
+  // null = 닫힘, { rows } = 열림 (rows 는 모달에서 선택 확정 시 filterSearchTargets 에 전달).
+  const [updateModeModal, setUpdateModeModal] = useState(null);
 
   // PLAN-009: 테이블/캘린더 뷰 전환. useFiltering은 App 레벨에서 호출해 양쪽 뷰가 동일 필터 상태 공유.
   const filtering = useFiltering(conferences.rows);
@@ -50,14 +55,21 @@ function App() {
       setKeyModalOpen(true);
       return;
     }
-    const targets = filterSearchTargets(rows);
+    setUpdateModeModal({ rows });
+  };
+
+  const handleConfirmUpdateMode = (mode) => {
+    const rows = updateModeModal?.rows || [];
+    setUpdateModeModal(null);
+    const targets = filterSearchTargets(rows, mode);
     const skipped = rows.length - targets.length;
     if (targets.length === 0) {
       alert(`업데이트 대상이 없습니다. (전체 ${rows.length}건 모두 최신 AI 정보 보유)`);
       return;
     }
+    const modeLabel = mode === 'precise' ? '정밀' : '일반';
     const ok = window.confirm(
-      `전체 ${rows.length}건 중 ${targets.length}건이 업데이트 대상입니다.`
+      `[${modeLabel} 모드] 전체 ${rows.length}건 중 ${targets.length}건이 업데이트 대상입니다.`
       + (skipped > 0 ? ` (${skipped}건은 pass)\n\n` : '\n\n')
       + `각 학회마다 Claude API 1회 호출이 발생합니다. 진행할까요?`
     );
@@ -162,6 +174,13 @@ function App() {
           onSave={(t) => { setToken(t); setTokenModalOpen(false); }}
           onClear={() => { clearToken(); setTokenModalOpen(false); }}
           onClose={() => setTokenModalOpen(false)}
+        />
+      )}
+      {updateModeModal && (
+        <UpdateModeModal
+          totalCount={updateModeModal.rows.length}
+          onSelect={handleConfirmUpdateMode}
+          onClose={() => setUpdateModeModal(null)}
         />
       )}
     </div>

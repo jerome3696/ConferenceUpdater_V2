@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { callClaude, extractText, ClaudeApiError } from '../services/claudeApi';
-import { buildUpdatePrompt, buildVerifyPrompt } from '../utils/promptBuilder';
-import { parseUpdateResponse, parseVerifyResponse } from '../services/responseParser';
+import { buildUpdatePrompt, buildVerifyPrompt, buildLastEditionPrompt } from '../utils/promptBuilder';
+import { parseUpdateResponse, parseVerifyResponse, parseLastEditionResponse } from '../services/responseParser';
 import { MODELS } from '../config/models';
 
 // 세션 내 메모리로만 유지. 새로고침하면 리셋됨.
@@ -37,7 +37,7 @@ function getHandlers(kind) {
   };
 }
 
-export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
+export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, applyVerifyUpdate }) {
   const [queue, setQueue] = useState([]);
   const [searching, setSearching] = useState(null);
   const [pending, setPending] = useState([]);
@@ -77,8 +77,44 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
         if (!apiKey) {
           throw new ClaudeApiError('API 키가 필요합니다. 우상단에서 입력해주세요.', { kind: 'auth' });
         }
+
+        // PLAN-013-D: update 직전, last 가 없으면 과거 회차 1건 선행 발굴.
+        // 실패/부분 실패여도 main update 는 그대로 진행 (row.last 만 보강됨).
+        let rowForUpdate = item.row;
+        if (item.kind === 'update' && !rowForUpdate.last) {
+          try {
+            const { system: lSys, user: lUser } = buildLastEditionPrompt(rowForUpdate);
+            const lRes = await callClaude({
+              apiKey,
+              prompt: lUser,
+              system: lSys,
+              model: MODELS.update,
+              webSearch: true,
+              maxTokens: 1024,
+              signal: controller.signal,
+            });
+            const lText = extractText(lRes);
+            const lParsed = parseLastEditionResponse(lText);
+            if (lParsed.ok && lParsed.data?.start_date) {
+              applyLastDiscovery?.(item.conferenceId, lParsed.data);
+              rowForUpdate = {
+                ...rowForUpdate,
+                last: {
+                  start_date: lParsed.data.start_date || null,
+                  end_date: lParsed.data.end_date || null,
+                  venue: lParsed.data.venue || null,
+                  link: lParsed.data.link || null,
+                },
+              };
+            }
+          } catch (lErr) {
+            if (lErr?.name === 'AbortError') throw lErr;
+            // last 발굴 실패는 치명적이지 않음 — main update 그대로 진행.
+          }
+        }
+
         const { buildPrompt, parse, model } = getHandlers(item.kind);
-        const { system, user } = buildPrompt(item.row);
+        const { system, user } = buildPrompt(rowForUpdate);
         const res = await callClaude({
           apiKey,
           prompt: user,
@@ -158,15 +194,16 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
         setSearching(null);
       }
     })();
-  }, [queue, searching, apiKey, rateLimitUntil]);
+  }, [queue, searching, apiKey, rateLimitUntil, applyLastDiscovery]);
 
-  const accept = useCallback((cardId) => {
+  // PLAN-013-A: opts.anchor=true 면 수용 후 anchor 마크 (update kind 만 의미 있음).
+  const accept = useCallback((cardId, { anchor = false } = {}) => {
     const card = pending.find((c) => c.id === cardId);
     if (!card || card.status !== 'ready') return;
     if (card.kind === 'verify') {
       applyVerifyUpdate?.(card.conferenceId, card.result);
     } else {
-      applyAiUpdate(card.conferenceId, card.result);
+      applyAiUpdate(card.conferenceId, card.result, { anchor });
     }
     pushLog({
       id: card.id,
@@ -174,7 +211,7 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
       conferenceId: card.conferenceId,
       abbrev: card.row.abbreviation,
       fullName: card.row.full_name,
-      action: 'accepted',
+      action: anchor ? 'accepted_anchored' : 'accepted',
       result: card.result,
     });
     setPending((p) => p.filter((c) => c.id !== cardId));

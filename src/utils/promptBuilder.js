@@ -110,6 +110,17 @@ function formatLastEdition(lastEdition) {
   return parts.length ? parts.join(' / ') : '정보 없음';
 }
 
+// v7: last.link 까지 노출. AI 가 시리즈/회차 도메인 패턴을 추정할 수 있도록.
+function formatLastEditionV2(lastEdition) {
+  if (!lastEdition) return '정보 없음';
+  const { start_date, end_date, venue, link } = lastEdition;
+  const parts = [];
+  if (start_date) parts.push(`${start_date}${end_date ? ` ~ ${end_date}` : ''}`);
+  if (venue) parts.push(venue);
+  if (link) parts.push(`link=${link}`);
+  return parts.length ? parts.join(' / ') : '정보 없음';
+}
+
 function buildUpdateUserV1(conference, lastEdition) {
   const {
     full_name = '',
@@ -461,6 +472,213 @@ function buildUpdateUserV5(conference, lastEdition) {
 \`\`\``;
 }
 
+// v7: v6 베이스에 last.link 활용 지시 추가, dedicated_url 제거.
+const UPDATE_SYSTEM_V7 = `당신은 학회/박람회 정보를 검색하는 전문 리서처입니다.
+
+[날짜 규칙 — 엄격]
+요청에는 오늘 날짜가 YYYY-MM-DD 형식으로 명시됩니다.
+"upcoming" 회차의 정의: **start_date > today** (YYYY-MM-DD 문자열 사전식 비교).
+
+검증 예시 (today=2026-04-17 기준):
+- start_date=2026-04-18 → upcoming ✅  (4/18이 4/17보다 뒤)
+- start_date=2026-05-26 → upcoming ✅  (5월이 4월보다 뒤)
+- start_date=2026-08-02 → upcoming ✅  (8월이 4월보다 뒤)
+- start_date=2027-01-23 → upcoming ✅  (2027년이 2026년보다 뒤)
+- start_date=2026-04-17 → 반환 금지  (오늘과 동일)
+- start_date=2026-03-10 → 반환 금지  (오늘보다 앞)
+- start_date=2025-06-28 → 반환 금지  (과거 연도)
+
+**반환 전 반드시 확인**: start_date 문자열이 today 문자열보다 뒤인지 자릿수 단위로 비교하세요.
+같은 연도 안에 있다는 이유만으로 "이미 지났다"고 판단하지 마세요 — 오늘이 4월이면 5·6·7·8·9·10·11·12월은 모두 미래입니다.
+
+[마지막 개최 정보 활용 — v7 추가]
+요청에 "마지막 개최" link 이 포함될 수 있습니다. 이 URL 은 과거 회차의 공식 페이지이며, 다음 회차 URL 을 **패턴 추정**하는 강력한 힌트입니다.
+
+패턴 1 — 회차 번호:
+- ihtc18.org (18회) → 다음 회차 후보: ihtc19.org, ihtc20.org
+- icr2025.kr → icr2027.kr (주기=2년)
+
+패턴 2 — 연도:
+- ecos2024.insae.ro → ecos2026.insae.ro (주기=2년), ecos2025.<host>
+- cryogenics-conference.eu/cryogenics2025/ → /cryogenics2027/
+
+**절차**:
+1. 마지막 개최 link 가 주어지면, 주기(cycle_years)를 참고해 다음 회차 URL 후보 1~3개를 추정.
+2. web_fetch 로 후보 URL 을 직접 방문. 페이지가 존재하고 해당 회차 정보를 제공하면 link 1순위로 채택.
+3. 후보가 모두 404/부재면 일반 web_search 로 보정.
+4. 마지막 link 가 시리즈 루트(예: ashrae.org) 여서 패턴 추정이 불가능하면 건너뛰고 일반 검색.
+
+이 절차로 web_search 횟수와 정확도를 동시에 개선하세요.
+
+[링크 우선순위]
+1순위: 해당 회차 전용 사이트 (예: icr2027.org, cryogenics-conference.eu/cryogenics2027/)
+2순위: 주관기관 공식 이벤트 페이지 (예: iifiir.org/en/events/XXX — 이벤트 직접 URL이 **특정 회차를 가리키는 경우만**)
+3순위: 주관기관의 컨퍼런스 색인/허브 페이지. 해당 회차를 명시적으로 나열·언급하는 경우에 한해 허용. 허용 시 confidence는 'medium' 이하.
+4순위 (1·2·3순위 링크 없을 때만): venue 또는 개최 사실을 확인한 출처 URL — 이 경우 confidence 반드시 'low'. 단, 아래 금지 도메인에 해당하면 사용 불가.
+
+금지 (제3자 CFP 집계·회차 무관 시리즈 페이지): ${BANNED_LIST_INLINE}. 특히 iifiir.org/en/iir-conferences-series 및 iifiir.org/en/events (이벤트 목록/검색 페이지 루트) 금지. 단, iifiir.org/en/events/<특정 이벤트 슬러그> 처럼 해당 회차를 **직접 가리키는** 이벤트 페이지는 2순위로 허용.
+
+**중요**: 해당 회차 specific 정보(날짜 또는 해당 회차를 식별하는 URL)가 없으면 link=null.
+
+[Link–Confidence 상호구속]
+- confidence가 'high' 또는 'medium' 이면 link는 반드시 non-null이어야 한다. 1~3순위가 막히면 4순위라도 채우고 confidence='low'로 내린다. 반대로 link가 null이면 confidence는 무조건 'low'.
+- confidence='high'인데 link=null, 혹은 "공식 페이지에서 확인" 취지의 notes와 link=null이 공존하는 응답은 **모순**이므로 금지.
+
+[Draft/초안 사이트 처리]
+- 주최자가 스태틱 사이트 빌더(framer.ai, notion.site, wix.com, squarespace.com 등)로 만든 회차 페이지도 **link로 사용 허용**.
+- 허용 조건: 사이트에서 해당 회차의 날짜나 장소 중 하나 이상 확인 가능. 이 경우 confidence는 'low' 강제, notes에 'draft/prototype' 명시.
+- 정식 도메인(자체 .org/.com)이 나중에 개설되면 그것이 1순위, draft 사이트는 즉시 대체.
+
+[Venue 포맷 — 엄격]
+venue는 아래 규칙을 반드시 따라야 한다.
+- 미국 개최: "City, State, USA" (예: "Orlando, Florida, USA", "Chicago, Illinois, USA"). 주 이름은 풀 네임(약자 FL/IL 금지). 국가명은 'USA' 고정 — 'United States'/'US'/'U.S.'/'U.S.A.' 금지.
+- 캐나다 개최: "City, Province, Canada" (예: "Toronto, Ontario, Canada").
+- 기타 국가: "City, Country" (예: "Milan, Italy", "Seoul, Korea"). 국가명 정규화: 영국은 'UK' (United Kingdom 금지), 한국은 'Korea' (South Korea/Republic of Korea 금지).
+
+[신뢰도 기준]
+high  : 1·2순위 링크에서 날짜(start_date)+장소 모두 직접 확인, link non-null
+medium: 날짜 있으나 장소 불확실, 또는 3순위 색인 페이지에서 확인. link non-null
+low   : start_date 미확인, 또는 4순위(간접 출처)·draft 사이트만 존재, 또는 link=null
+
+[이름 매칭]
+학회명/약칭이 요청에 명시됩니다. 정확히 그 학회의 정보만 반환하세요.
+("ASHRAE Winter Conference"와 "ASHRAE Annual Conference"는 다른 학회)
+
+반드시 공식 사이트 또는 신뢰할 수 있는 출처에서 정보를 찾으세요.`;
+
+function buildUpdateUserV7(conference, lastEdition) {
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    full_name = '',
+    abbreviation = '',
+    cycle_years = 0,
+    official_url = '',
+  } = conference;
+  const lastLine = formatLastEditionV2(lastEdition);
+  const lastLinkHint = lastEdition?.link
+    ? '\n- 마지막 개최 link 가 제공됨 → 주기(cycle_years)를 반영해 다음 회차 URL 패턴을 먼저 추정·web_fetch 시도한 뒤, 필요 시 web_search 로 보정.'
+    : '';
+  return `다음 학회의 다음(upcoming) 개최 정보를 찾아주세요.
+
+오늘: ${today}
+
+학회명: ${full_name}
+약칭: ${abbreviation || '없음'}
+주기: ${cycle_years ? `${cycle_years}년` : '미상'}
+공식사이트: ${official_url || '없음'}
+마지막 개최: ${lastLine}
+
+[upcoming 판별 — 반환 직전 필수 검증]
+찾은 학회의 start_date를 오늘(${today})과 YYYY-MM-DD 문자열로 비교하세요.
+- start_date > ${today} → upcoming. 그대로 반환.
+- start_date <= ${today} → 반환 금지 (과거 또는 당일). 주기를 고려해 다음 회차를 탐색하되, 정보가 없으면 start_date/end_date/venue/link 모두 null로 둘 것.
+
+비교는 연·월·일 자릿수 단위. 같은 연도라도 start_date의 월·일이 오늘(${today})보다 뒤라면 미래입니다. "같은 연도니까 이미 지났다"는 판단 금지.
+
+[반환 직전 자기검증 체크리스트]
+1. venue 포맷: 미국이면 "City, State, USA", 캐나다면 "City, Province, Canada", 그 외 "City, Country". 국가명 표기 규칙 준수.
+2. link vs confidence: confidence가 'high'/'medium'인데 link=null이면 안 됨. 둘 중 하나를 수정 후 반환.
+3. source_url이 있으면 link도 최소 그 URL 또는 더 적합한 링크로 채워져 있어야 함 (금지 도메인 제외).
+
+[기타 주의]
+- 해당 회차 전용 사이트를 최우선. 3순위(주관기관 컨퍼런스 색인) 페이지도 회차를 식별하면 허용.
+- 공식사이트를 발견했으나 홈페이지에 날짜가 없을 경우, 사이트 내 하위 페이지(Important Dates / Program / Venue / About / Registration 등)를 추가 탐색하라. 날짜가 사이트 어딘가에 있다면 반드시 추출해야 한다.${lastLinkHint}
+
+찾아야 할 정보:
+- 시작일 (YYYY-MM-DD)
+- 종료일 (YYYY-MM-DD)
+- 장소 (위 venue 포맷 규칙 적용)
+- 공식 링크 (링크 우선순위 1→4순위 적용, Link–Confidence 상호구속 준수)
+
+반드시 아래 JSON 형식으로만 응답하세요. 설명 문장은 JSON 뒤에 붙여도 되지만, JSON 블록은 반드시 포함되어야 합니다. 확인 불가 필드는 null로 두세요.
+
+\`\`\`json
+{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "venue": "City, State, USA | City, Country",
+  "link": "https://...",
+  "source_url": "근거가 된 출처 URL",
+  "confidence": "high" | "medium" | "low",
+  "notes": "부가 설명 (선택)"
+}
+\`\`\``;
+}
+
+// ──────────────────────────────────────────────────────────────────
+// Last-edition discovery (PLAN-013-D)
+// upcoming 검색 전에 past 회차 link/날짜/장소를 먼저 확보해 v7 프롬프트에 주입.
+// ──────────────────────────────────────────────────────────────────
+
+const LAST_EDITION_SYSTEM_V1 = `당신은 학회/박람회의 **과거 회차(most recent past)** 정보를 찾는 전문 리서처입니다.
+
+[작업]
+지정된 학회의 가장 최근에 이미 개최 완료된 회차 1건을 찾아 반환하세요.
+"과거 회차": end_date <= today 인 회차. 복수 회차 존재 시 end_date 가 가장 오늘에 가까운 1건.
+
+[링크 우선순위]
+1순위: 해당 회차 전용 사이트 (예: ihtc18.org, ecos2024.insae.ro)
+2순위: 주관기관 이벤트 페이지가 그 회차를 직접 가리키는 경우 (iifiir.org/en/events/<slug>)
+3순위: 시리즈 색인 페이지 중 해당 회차를 식별 가능한 앵커/섹션
+
+금지 (제3자 CFP 집계): ${BANNED_LIST_INLINE}
+단, iifiir.org/en/events/<특정 이벤트 슬러그> 처럼 해당 회차를 **직접 가리키는** 이벤트 페이지는 2순위로 허용.
+
+[신뢰도 기준]
+high  : 1·2순위 링크에서 날짜(start_date)+장소 직접 확인
+medium: 날짜 있으나 link 가 3순위 색인 또는 장소 불확실
+low   : 날짜 또는 link 미확인
+
+[venue 포맷]
+- 미국: "City, State, USA" (주 풀네임)
+- 캐나다: "City, Province, Canada"
+- 기타: "City, Country" (UK/Korea 표기 규칙은 update 프롬프트와 동일)
+
+확인 불가 필드는 null 로 두세요. 과거 회차 자체가 존재하지 않거나 정보가 없으면 모든 필드 null.`;
+
+function buildLastEditionUserV1(conference) {
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    full_name = '',
+    abbreviation = '',
+    cycle_years = 0,
+    official_url = '',
+  } = conference;
+  return `다음 학회의 가장 최근 과거(past) 회차 정보를 찾아주세요.
+
+오늘: ${today}
+
+학회명: ${full_name}
+약칭: ${abbreviation || '없음'}
+주기: ${cycle_years ? `${cycle_years}년` : '미상'}
+공식사이트: ${official_url || '없음'}
+
+[과거 회차 판별]
+- end_date <= ${today} 인 회차만.
+- 복수 회차 발견 시 가장 최근(가장 오늘에 가까운 end_date) 1건만 반환.
+- 아직 개최 전인 upcoming 회차는 절대 반환 금지.
+
+찾아야 할 정보:
+- 시작일 (YYYY-MM-DD)
+- 종료일 (YYYY-MM-DD)
+- 장소 (venue 포맷 규칙 적용)
+- 해당 회차 공식 링크 (link 우선순위 1→3)
+
+반드시 아래 JSON 형식으로만 응답하세요. 확인 불가 필드는 null.
+
+\`\`\`json
+{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "venue": "City, Country",
+  "link": "https://...",
+  "source_url": "근거가 된 출처 URL",
+  "confidence": "high" | "medium" | "low",
+  "notes": "부가 설명 (선택)"
+}
+\`\`\``;
+}
+
 function buildVerifyUserV1(conference) {
   const {
     full_name = '',
@@ -672,6 +890,7 @@ const TEMPLATES = {
     v4: { system: UPDATE_SYSTEM_V4, user: buildUpdateUserV4 },
     v5: { system: UPDATE_SYSTEM_V5, user: buildUpdateUserV5 },
     v6: { system: UPDATE_SYSTEM_V6, user: buildUpdateUserV6 },
+    v7: { system: UPDATE_SYSTEM_V7, user: buildUpdateUserV7 },
   },
   verify: {
     v1: { system: VERIFY_SYSTEM_V1, user: buildVerifyUserV1 },
@@ -682,12 +901,16 @@ const TEMPLATES = {
   discovery_search: {
     v1: { system: DISCOVERY_SEARCH_SYSTEM_V1, user: buildDiscoverySearchUserV1 },
   },
+  last_edition: {
+    v1: { system: LAST_EDITION_SYSTEM_V1, user: buildLastEditionUserV1 },
+  },
 };
 
 export const DEFAULT_UPDATE_VERSION = 'v4';
 export const DEFAULT_VERIFY_VERSION = 'v1';
 export const DEFAULT_DISCOVERY_EXPAND_VERSION = 'v1';
 export const DEFAULT_DISCOVERY_SEARCH_VERSION = 'v1';
+export const DEFAULT_LAST_EDITION_VERSION = 'v1';
 
 /**
  * 업데이트(다음 개최 찾기)용 프롬프트.
@@ -737,6 +960,16 @@ export function buildDiscoverySearchPrompt(selectedKeywords, existingIndex = [],
   const tpl = TEMPLATES.discovery_search[version];
   if (!tpl) throw new Error(`Unknown discovery_search prompt version: ${version}`);
   return { system: tpl.system, user: tpl.user(selectedKeywords, existingIndex), version };
+}
+
+/**
+ * 과거 회차(last edition) 발굴용 프롬프트 (PLAN-013-D).
+ * row.last 가 없을 때 update 직전에 선행 호출.
+ */
+export function buildLastEditionPrompt(conference, { version = DEFAULT_LAST_EDITION_VERSION } = {}) {
+  const tpl = TEMPLATES.last_edition[version];
+  if (!tpl) throw new Error(`Unknown last_edition prompt version: ${version}`);
+  return { system: tpl.system, user: tpl.user(conference), version };
 }
 
 export const __TEMPLATES_FOR_TEST = TEMPLATES;

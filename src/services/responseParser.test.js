@@ -4,6 +4,7 @@ import {
   parseVerifyResponse,
   parseDiscoveryExpandResponse,
   parseDiscoverySearchResponse,
+  parseLastEditionResponse,
   normalizeUpdateData,
   UPDATE_SCHEMA,
   VERIFY_FIELDS,
@@ -559,5 +560,115 @@ describe('normalizeUpdateData — link 백필 안전망 (PLAN-006)', () => {
     expect(result.ok).toBe(true);
     expect(result.data.link).toBe('https://iccfd.org/iccfd13/');
     expect(result.data.confidence).toBe('medium');
+  });
+});
+
+describe('parseLastEditionResponse (PLAN-013-D)', () => {
+  const TODAY = '2026-04-20';
+
+  it('정상 past 회차(end_date <= today) 파싱', () => {
+    const text = JSON.stringify({
+      start_date: '2024-07-01',
+      end_date: '2024-07-05',
+      venue: 'Milan, Italy',
+      link: 'https://iccfd.org/iccfd13/',
+      confidence: 'high',
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(true);
+    expect(result.data.start_date).toBe('2024-07-01');
+    expect(result.data.link).toBe('https://iccfd.org/iccfd13/');
+  });
+
+  it('end_date 없어도 start_date <= today 면 통과', () => {
+    const text = JSON.stringify({
+      start_date: '2024-07-01',
+      end_date: null,
+      venue: 'Milan, Italy',
+      link: 'https://example.org/',
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(true);
+  });
+
+  it('미래 end_date 는 not_past 로 거절', () => {
+    const text = JSON.stringify({
+      start_date: '2026-07-01',
+      end_date: '2026-07-05',
+      venue: 'Seoul',
+      link: 'https://ex.com',
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('not_past');
+  });
+
+  it('start_date 만 있고 미래면 not_past', () => {
+    const text = JSON.stringify({
+      start_date: '2027-01-01',
+      end_date: null,
+      venue: null,
+      link: null,
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('not_past');
+  });
+
+  it('날짜 둘 다 null 이면 no_date', () => {
+    const text = JSON.stringify({
+      start_date: null,
+      end_date: null,
+      venue: null,
+      link: null,
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('no_date');
+  });
+
+  it('잘못된 날짜 포맷은 no_date 취급', () => {
+    const text = JSON.stringify({
+      start_date: '2024/07/01',
+      end_date: 'July 5 2024',
+    });
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toBe('no_date');
+  });
+
+  it('빈 문자열은 empty', () => {
+    expect(parseLastEditionResponse('', TODAY).reason).toBe('empty');
+    expect(parseLastEditionResponse('   ', TODAY).reason).toBe('empty');
+  });
+
+  it('JSON 아닌 텍스트는 no_json', () => {
+    expect(parseLastEditionResponse('plain text', TODAY).reason).toBe('no_json');
+  });
+
+  it('코드펜스 안 배열이면 schema_mismatch', () => {
+    const text = '```json\n[]\n```';
+    expect(parseLastEditionResponse(text, TODAY).reason).toBe('schema_mismatch');
+  });
+
+  it('todayIso 미지정 시 오늘 시스템 날짜 사용', () => {
+    // 2000-01-01 은 확실히 과거 → 통과 기대
+    const text = JSON.stringify({
+      start_date: '2000-01-01',
+      end_date: '2000-01-05',
+    });
+    const result = parseLastEditionResponse(text);
+    expect(result.ok).toBe(true);
+  });
+
+  it('코드펜스 감싸진 JSON 도 파싱', () => {
+    const text = '```json\n' + JSON.stringify({
+      start_date: '2024-01-01',
+      end_date: '2024-01-05',
+      venue: 'Seoul',
+      link: 'https://ex.com',
+    }) + '\n```';
+    const result = parseLastEditionResponse(text, TODAY);
+    expect(result.ok).toBe(true);
   });
 });

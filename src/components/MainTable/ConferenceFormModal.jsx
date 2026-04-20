@@ -93,7 +93,7 @@ function ComboField({ label, required, value, options, onChange, placeholder }) 
   );
 }
 
-function EditionSection({ title, edition, onChange }) {
+function EditionSection({ title, edition, onChange, showAnchor }) {
   const update = (k, v) => onChange({ ...edition, [k]: v });
   return (
     <fieldset className="border border-slate-200 rounded p-3">
@@ -121,6 +121,17 @@ function EditionSection({ title, edition, onChange }) {
           placeholder="https://..."
         />
       </div>
+      {showAnchor && (
+        <label className="flex items-center gap-2 mt-3 text-xs text-slate-700 select-none cursor-pointer">
+          <input
+            type="checkbox"
+            checked={!!edition.anchored}
+            onChange={(e) => update('anchored', e.target.checked)}
+            className="accent-emerald-600"
+          />
+          확정으로 표시 (회차 종료까지 자동 재검색 제외)
+        </label>
+      )}
       <p className="text-[11px] text-slate-400 mt-2">
         모든 항목을 비우면 저장 시 해당 개최 이력이 삭제됩니다.
       </p>
@@ -158,6 +169,7 @@ function buildInitialForm(mode, initial) {
         end_date: initial.upcoming?.end_date || '',
         venue: initial.upcoming?.venue || '',
         link: initial.upcoming?.link || '',
+        anchored: !!initial.upcoming?.anchored,
       },
       last: {
         start_date: initial.last?.start_date || '',
@@ -305,6 +317,7 @@ function ConferenceFormModal({
                   title="Upcoming"
                   edition={form.upcoming}
                   onChange={(v) => update('upcoming', v)}
+                  showAnchor
                 />
               </div>
               <div className="col-span-2">

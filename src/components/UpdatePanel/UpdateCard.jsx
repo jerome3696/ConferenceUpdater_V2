@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const DIFF_FIELDS = ['start_date', 'end_date', 'venue', 'link'];
 
 function isEmpty(obj) {
@@ -34,6 +36,7 @@ function DiffRow({ label, oldValue, newValue }) {
 export default function UpdateCard({ current, onAccept, onReject, onCancel }) {
   const { row, status, result, error } = current;
   const oldUpcoming = row.upcoming || {};
+  const [anchor, setAnchor] = useState(false);
 
   // 변경없음 카드: 한 줄 배너 + 닫기만 (Item 4)
   if (status === 'ready' && result) {
@@ -142,19 +145,30 @@ export default function UpdateCard({ current, onAccept, onReject, onCancel }) {
               </div>
             )}
 
-            <div className="flex justify-end gap-2 mt-3">
-              <button
-                onClick={onReject}
-                className="px-3 py-1 text-xs border border-slate-300 rounded hover:bg-slate-100 text-slate-700"
-              >
-                리젝
-              </button>
-              <button
-                onClick={onAccept}
-                className="px-3 py-1 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700"
-              >
-                수용
-              </button>
+            <div className="flex justify-between items-center gap-2 mt-3">
+              <label className="flex items-center gap-1.5 text-[11px] text-slate-600 select-none cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={anchor}
+                  onChange={(e) => setAnchor(e.target.checked)}
+                  className="accent-emerald-600"
+                />
+                확정으로 표시 (회차 종료까지 재검색 안 함)
+              </label>
+              <div className="flex gap-2">
+                <button
+                  onClick={onReject}
+                  className="px-3 py-1 text-xs border border-slate-300 rounded hover:bg-slate-100 text-slate-700"
+                >
+                  리젝
+                </button>
+                <button
+                  onClick={() => onAccept({ anchor })}
+                  className="px-3 py-1 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700"
+                >
+                  {anchor ? '수용 (확정)' : '수용'}
+                </button>
+              </div>
             </div>
           </>
         )}

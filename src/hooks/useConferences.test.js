@@ -182,6 +182,91 @@ describe('applyAiUpdate', () => {
   });
 });
 
+// --- applyLastDiscovery (PLAN-013-D) ---
+
+describe('applyLastDiscovery', () => {
+  it('past 에디션이 없으면 신규 생성 (source=ai_search, status=past)', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([CONFERENCE], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.applyLastDiscovery('c1', {
+        start_date: '2024-09-01',
+        end_date: '2024-09-05',
+        venue: 'Milan',
+        link: 'https://iccfd24.example/',
+      });
+    });
+
+    const editions = result.current.data.editions;
+    expect(editions).toHaveLength(1);
+    expect(editions[0].status).toBe('past');
+    expect(editions[0].source).toBe('ai_search');
+    expect(editions[0].start_date).toBe('2024-09-01');
+    expect(editions[0].link).toBe('https://iccfd24.example/');
+  });
+
+  it('기존 past 보다 더 최근 이면 덮어쓰기', async () => {
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], [EDITION_PAST]), // 2025-09-01
+      sha: null,
+    });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.applyLastDiscovery('c1', {
+        start_date: '2026-01-15',
+        end_date: '2026-01-20',
+        venue: 'Seoul',
+        link: 'https://newer.example/',
+      });
+    });
+
+    const editions = result.current.data.editions;
+    expect(editions).toHaveLength(1);
+    expect(editions[0].id).toBe('ed2');
+    expect(editions[0].start_date).toBe('2026-01-15');
+    expect(editions[0].link).toBe('https://newer.example/');
+    expect(editions[0].source).toBe('ai_search');
+  });
+
+  it('기존 past 가 더 최근이면 아무것도 바꾸지 않음', async () => {
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE], [EDITION_PAST]), // 2025-09-01
+      sha: null,
+    });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const snapshot = JSON.stringify(result.current.data.editions);
+
+    act(() => {
+      result.current.applyLastDiscovery('c1', {
+        start_date: '2023-01-01',
+        end_date: '2023-01-05',
+        venue: 'Old',
+        link: 'https://old.example/',
+      });
+    });
+
+    expect(JSON.stringify(result.current.data.editions)).toBe(snapshot);
+  });
+
+  it('start_date 없으면 무시', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([CONFERENCE], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.applyLastDiscovery('c1', { start_date: null, venue: 'X' });
+    });
+
+    expect(result.current.data.editions).toHaveLength(0);
+  });
+});
+
 // --- saveConferenceEdit / upsertEdition source 조건 (QA #13) ---
 
 const EDITION_UPCOMING_AI = {

@@ -3,9 +3,11 @@ import {
   buildUpdatePrompt,
   buildDiscoveryExpandPrompt,
   buildDiscoverySearchPrompt,
+  buildLastEditionPrompt,
   DEFAULT_UPDATE_VERSION,
   DEFAULT_DISCOVERY_EXPAND_VERSION,
   DEFAULT_DISCOVERY_SEARCH_VERSION,
+  DEFAULT_LAST_EDITION_VERSION,
 } from './promptBuilder.js';
 
 const CONF = {
@@ -106,6 +108,63 @@ describe('buildUpdatePrompt — v6 (cross-coupling + venue 포맷 + draft)', () 
   it('v6 dedicated_url 없으면 힌트 라인 없음', () => {
     const { user } = buildUpdatePrompt(CONF, null, { version: 'v6' });
     expect(user).not.toContain('회차 전용 사이트(힌트)');
+  });
+});
+
+describe('buildUpdatePrompt — v7 (last.link 활용, dedicated_url 제거)', () => {
+  const LAST_WITH_LINK = {
+    start_date: '2024-07-01', end_date: '2024-07-04',
+    venue: 'Prague, Czech Republic', link: 'https://ecos2024.cz/',
+  };
+  const LAST_NO_LINK = {
+    start_date: '2024-07-01', end_date: '2024-07-04',
+    venue: 'Prague, Czech Republic',
+  };
+
+  it('v7 system 에 last.link 패턴 추정 + web_fetch 지시 존재', () => {
+    const { system, version } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
+    expect(version).toBe('v7');
+    expect(system).toContain('[마지막 개최 정보 활용 — v7 추가]');
+    expect(system).toContain('web_fetch');
+    expect(system).toMatch(/ihtc18.*ihtc19|ecos2024.*ecos2026/);
+  });
+
+  it('v7 user: last.link 있으면 link=<URL> 이 마지막 개최 라인에 포함', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
+    expect(user).toMatch(/마지막 개최:.*link=https:\/\/ecos2024\.cz\//);
+    expect(user).toContain('다음 회차 URL 패턴을 먼저 추정');
+  });
+
+  it('v7 user: last.link 없으면 마지막 개최 줄에 link= 미출력, 패턴 추정 힌트도 없음', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_NO_LINK, { version: 'v7' });
+    // "마지막 개최:" 라인만 추출해서 검사 (체크리스트의 "link=null" 이 false positive 내지 않도록)
+    const lastLine = user.split('\n').find((l) => l.startsWith('마지막 개최:')) || '';
+    expect(lastLine).not.toMatch(/link=/);
+    expect(user).not.toContain('다음 회차 URL 패턴을 먼저 추정');
+  });
+
+  it('v7 user: lastEdition 자체가 null 이면 "정보 없음"', () => {
+    const { user } = buildUpdatePrompt(CONF, null, { version: 'v7' });
+    expect(user).toContain('마지막 개최: 정보 없음');
+  });
+
+  it('v7 은 dedicated_url 을 더 이상 소비하지 않음 (dead code 제거)', () => {
+    const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
+    const { user } = buildUpdatePrompt(conf, LAST_WITH_LINK, { version: 'v7' });
+    expect(user).not.toContain('회차 전용 사이트(힌트)');
+    expect(user).not.toContain('iccfd13.polimi.it');
+  });
+
+  it('v7 은 v6 의 Link–Confidence·Venue·Draft 섹션을 유지', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v7' });
+    expect(system).toContain('[Link–Confidence 상호구속]');
+    expect(system).toContain('[Venue 포맷 — 엄격]');
+    expect(system).toContain('[Draft/초안 사이트 처리]');
+    expect(system).toContain('framer.ai');
+  });
+
+  it('DEFAULT_UPDATE_VERSION 은 v7 활성 결정 전까진 v4 유지', () => {
+    expect(DEFAULT_UPDATE_VERSION).toBe('v4');
   });
 });
 
@@ -218,5 +277,55 @@ describe('buildDiscoverySearchPrompt — v1 (PLAN-011 Stage 2)', () => {
 
   it('알 수 없는 버전은 throw', () => {
     expect(() => buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], [], { version: 'v99' })).toThrow();
+  });
+});
+
+describe('buildLastEditionPrompt — v1 (PLAN-013-D)', () => {
+  it('DEFAULT_LAST_EDITION_VERSION 은 v1', () => {
+    expect(DEFAULT_LAST_EDITION_VERSION).toBe('v1');
+  });
+
+  it('system + user 모두 생성', () => {
+    const { system, user, version } = buildLastEditionPrompt(CONF);
+    expect(system).toBeTruthy();
+    expect(user).toBeTruthy();
+    expect(version).toBe('v1');
+  });
+
+  it('system 은 past/end_date <= today 판별 명시', () => {
+    const { system } = buildLastEditionPrompt(CONF);
+    expect(system).toContain('과거 회차');
+    expect(system).toContain('end_date <= today');
+  });
+
+  it('system 은 link 우선순위 (회차 전용 도메인) 명시', () => {
+    const { system } = buildLastEditionPrompt(CONF);
+    expect(system).toContain('회차 전용');
+  });
+
+  it('system 은 upcoming 을 반환하지 않도록 지시', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toContain('upcoming');
+  });
+
+  it('user 에는 학회 full_name, 약칭, 공식사이트 포함', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toContain('International Conference on Computational Fluid Dynamics');
+    expect(user).toContain('ICCFD');
+    expect(user).toContain('https://www.iccfd.org/');
+  });
+
+  it('user 에는 오늘 날짜 (YYYY-MM-DD) 주입', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toMatch(/오늘: \d{4}-\d{2}-\d{2}/);
+  });
+
+  it('알 수 없는 버전은 throw', () => {
+    expect(() => buildLastEditionPrompt(CONF, { version: 'v99' })).toThrow();
+  });
+
+  it('정기 학회가 아니면 cycle_years=0 → "미상" 표기', () => {
+    const { user } = buildLastEditionPrompt({ ...CONF, cycle_years: 0 });
+    expect(user).toContain('주기: 미상');
   });
 });
