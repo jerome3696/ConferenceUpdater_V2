@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. PLAN-019 진행 — v1_0 측정(16/27) 후 v1_1 도입 (축 A URL 3유형 / confidence 소스 재정의 / 주기 초반 부정확 허용 / iifiir 임박 제외). 다음: v1_1 eval-loop 재측정.** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-019.md`.
+MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. PLAN-019 진행 — v1_0 측정(16/27) 후 v1_1 도입 및 측정 (19/27, persistent 9→5). 다음: v1_2 튜닝 (4년 주기 케이스, draft site confidence, ICMF JSON 안정성).** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-019.md`.
 
 ## 문서 맵 (작업 종류별)
 
