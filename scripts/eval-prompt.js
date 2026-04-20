@@ -24,15 +24,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 
 function parseArgs(argv) {
-  const args = { version: 'v1', case: null, retryWaitMs: 30000, weights: null };
+  const args = { version: 'v1', case: null, retryWaitMs: 30000, weights: null, out: null };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--version') args.version = argv[++i];
     else if (a === '--case') args.case = argv[++i];
     else if (a === '--retry-wait') args.retryWaitMs = Number(argv[++i]) * 1000;
     else if (a === '--weights') args.weights = argv[++i];
+    else if (a === '--out') args.out = argv[++i];
     else if (a === '--help' || a === '-h') {
-      console.log('Usage: node scripts/eval-prompt.js [--version v7] [--case conf_XXX] [--weights link=0.6,start=0.2,end=0.1,venue=0.1] [--retry-wait 30]');
+      console.log('Usage: node scripts/eval-prompt.js [--version v7] [--case conf_XXX] [--weights link=0.6,start=0.2,end=0.1,venue=0.1] [--retry-wait 30] [--out path.json]');
       process.exit(0);
     }
   }
@@ -231,10 +232,17 @@ async function main() {
     ms: r.elapsedMs || '',
   })));
 
-  const resultsDir = join(ROOT, 'docs/eval/results');
-  if (!existsSync(resultsDir)) await mkdir(resultsDir, { recursive: true });
+  let outPath;
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-  const outPath = join(resultsDir, `${timestamp}-${args.version}.json`);
+  if (args.out) {
+    outPath = resolve(args.out);
+    const outDir = dirname(outPath);
+    if (!existsSync(outDir)) await mkdir(outDir, { recursive: true });
+  } else {
+    const resultsDir = join(ROOT, 'docs/eval/results');
+    if (!existsSync(resultsDir)) await mkdir(resultsDir, { recursive: true });
+    outPath = join(resultsDir, `${timestamp}-${args.version}.json`);
+  }
   await writeFile(outPath, JSON.stringify({
     meta: {
       schema_version: SCHEMA_VERSION,
