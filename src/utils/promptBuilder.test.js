@@ -109,6 +109,63 @@ describe('buildUpdatePrompt — v6 (cross-coupling + venue 포맷 + draft)', () 
   });
 });
 
+describe('buildUpdatePrompt — v7 (last.link 활용, dedicated_url 제거)', () => {
+  const LAST_WITH_LINK = {
+    start_date: '2024-07-01', end_date: '2024-07-04',
+    venue: 'Prague, Czech Republic', link: 'https://ecos2024.cz/',
+  };
+  const LAST_NO_LINK = {
+    start_date: '2024-07-01', end_date: '2024-07-04',
+    venue: 'Prague, Czech Republic',
+  };
+
+  it('v7 system 에 last.link 패턴 추정 + web_fetch 지시 존재', () => {
+    const { system, version } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
+    expect(version).toBe('v7');
+    expect(system).toContain('[마지막 개최 정보 활용 — v7 추가]');
+    expect(system).toContain('web_fetch');
+    expect(system).toMatch(/ihtc18.*ihtc19|ecos2024.*ecos2026/);
+  });
+
+  it('v7 user: last.link 있으면 link=<URL> 이 마지막 개최 라인에 포함', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_WITH_LINK, { version: 'v7' });
+    expect(user).toMatch(/마지막 개최:.*link=https:\/\/ecos2024\.cz\//);
+    expect(user).toContain('다음 회차 URL 패턴을 먼저 추정');
+  });
+
+  it('v7 user: last.link 없으면 마지막 개최 줄에 link= 미출력, 패턴 추정 힌트도 없음', () => {
+    const { user } = buildUpdatePrompt(CONF, LAST_NO_LINK, { version: 'v7' });
+    // "마지막 개최:" 라인만 추출해서 검사 (체크리스트의 "link=null" 이 false positive 내지 않도록)
+    const lastLine = user.split('\n').find((l) => l.startsWith('마지막 개최:')) || '';
+    expect(lastLine).not.toMatch(/link=/);
+    expect(user).not.toContain('다음 회차 URL 패턴을 먼저 추정');
+  });
+
+  it('v7 user: lastEdition 자체가 null 이면 "정보 없음"', () => {
+    const { user } = buildUpdatePrompt(CONF, null, { version: 'v7' });
+    expect(user).toContain('마지막 개최: 정보 없음');
+  });
+
+  it('v7 은 dedicated_url 을 더 이상 소비하지 않음 (dead code 제거)', () => {
+    const conf = { ...CONF, dedicated_url: 'https://iccfd13.polimi.it' };
+    const { user } = buildUpdatePrompt(conf, LAST_WITH_LINK, { version: 'v7' });
+    expect(user).not.toContain('회차 전용 사이트(힌트)');
+    expect(user).not.toContain('iccfd13.polimi.it');
+  });
+
+  it('v7 은 v6 의 Link–Confidence·Venue·Draft 섹션을 유지', () => {
+    const { system } = buildUpdatePrompt(CONF, null, { version: 'v7' });
+    expect(system).toContain('[Link–Confidence 상호구속]');
+    expect(system).toContain('[Venue 포맷 — 엄격]');
+    expect(system).toContain('[Draft/초안 사이트 처리]');
+    expect(system).toContain('framer.ai');
+  });
+
+  it('DEFAULT_UPDATE_VERSION 은 v7 활성 결정 전까진 v4 유지', () => {
+    expect(DEFAULT_UPDATE_VERSION).toBe('v4');
+  });
+});
+
 describe('buildDiscoveryExpandPrompt — v1 (PLAN-011 Stage 1 + B.1 ko/en)', () => {
   it('DEFAULT_DISCOVERY_EXPAND_VERSION 은 v1', () => {
     expect(DEFAULT_DISCOVERY_EXPAND_VERSION).toBe('v1');
