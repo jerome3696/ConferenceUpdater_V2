@@ -26,6 +26,9 @@ dist-ssr
 # Local data/samples
 *.xlsx
 
+# Script 산출물 (검수 brief, xlsx 내보내기, 원격 스냅샷 등)
+scripts/output/
+
 # Env files (never commit secrets)
 .env
 .env.*
