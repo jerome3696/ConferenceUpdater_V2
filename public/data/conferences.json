@@ -388,38 +388,6 @@
       }
     },
     {
-      "id": "disc_mo51ssyeyb",
-      "starred": 0,
-      "category": "",
-      "field": "열저장",
-      "abbreviation": "Eurotherm Seminar",
-      "full_name": "Eurotherm Seminar on Thermal Energy Storage",
-      "cycle_years": 1,
-      "duration_days": 0,
-      "region": "유럽",
-      "official_url": "http://www.eurothermcommittee.eu/",
-      "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "EUROTHERM Committee established since 1986",
-          "Regular annual events with peer review",
-          "Organized by established research institutions",
-          "[휴] 신뢰 출판사·단체 매칭 (eurotherm) — 감점"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "열저장",
-            "en": "thermal energy storage"
-          }
-        ],
-        "evidence_url": "https://nachhaltigwirtschaften.at/en/iea/events/2026/20260515-eurotherm-seminar-119-contribution-of-thermal-energy-storage-towards-decarbonization.php",
-        "organizer": "EUROTHERM Committee",
-        "found_at": "2026-04-19T00:49:00.566Z"
-      }
-    },
-    {
       "id": "disc_mo520jhk7o",
       "starred": 0,
       "category": "",
@@ -926,18 +894,6 @@
       "updated_at": "2026-04-19T00:48:20.297Z"
     },
     {
-      "id": "ed_mo51ssye",
-      "conference_id": "disc_mo51ssyeyb",
-      "status": "upcoming",
-      "start_date": "2026-05-13",
-      "end_date": "2026-05-15",
-      "venue": "Lleida, Spain",
-      "link": "https://nachhaltigwirtschaften.at/en/iea/events/2026/20260515-eurotherm-seminar-119-contribution-of-thermal-energy-storage-towards-decarbonization.php",
-      "confidence": null,
-      "source": "ai_discovery",
-      "updated_at": "2026-04-19T00:49:00.566Z"
-    },
-    {
       "id": "ed_mo5215jk",
       "conference_id": "disc_mo5215jjv5",
       "status": "upcoming",
@@ -1308,20 +1264,6 @@
       "notes": "9th Eurotherm Conference on Thermal Sciences, June 10-13 2024, Bled, Slovenia. Hosted by University of Ljubljana.",
       "updated_at": "2026-04-20T05:11:46.716Z",
       "source_url": "https://www.proceedings.com/74890.html"
-    },
-    {
-      "id": "ed_last_mo51ssyeyb",
-      "conference_id": "disc_mo51ssyeyb",
-      "status": "past",
-      "start_date": "2023-05-24",
-      "end_date": "2023-05-26",
-      "venue": "Universitat de Lleida - Campus Cappont, Lleida, Spain",
-      "link": "https://eurotherm.udl.cat/",
-      "source": "ai_backfill",
-      "confidence": "high",
-      "notes": "Eurotherm Seminar #116 'Innovative solutions for thermal energy storage deployment', May 24-26 2023, Lleida. Next edition (#119) is May 13-15 2026 (future).",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://repositori.udl.cat/handle/10459.1/463389"
     },
     {
       "id": "ed_last_mo520jhk7o",
