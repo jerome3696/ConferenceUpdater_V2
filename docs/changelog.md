@@ -9,6 +9,17 @@ MVP 완성 시점(v1.0.0)을 기준으로 이후의 버그 수정·기능 변경
 
 ## [Unreleased] — Post-MVP
 
+### Added (F.1 Phase 1 — Last edition 1차 채움, 2026-04-19)
+
+**과거 회차 27건 일괄 backfill** — `public/data/conferences.json`
+- 26개 master + 3개 사용자/discovery 학회 = 27개 대상 (기존 past 보유 conf_003·conf_005 제외)
+- Claude Code WebSearch (구독 포함, 별도 API 비용 0) 로 직전 past 회차 조사 → `scripts/output/last-editions-brief.json` 으로 통합
+- 결과: high 26 / medium 1 (conf_021 IHPC Thailand — 공식 사이트가 placeholder 인 채로 'November 2024' 노출, 실제 개최 Jan 29 - Feb 2 2025 로 다른 출처들이 일치하므로 medium)
+- 모든 past edition 에 `source: 'ai_backfill'`, `confidence`, `notes`, `source_url` 감사 필드 부착. id 네이밍 `ed_last_<short>` (e.g. `ed_last_001`, `ed_last_mo04ezfq`)
+- 약탈/리스팅 도메인 (`iifiir.org`, `easychair.org` 등) 은 link 에서 제거하고 source_url 로만 보존 (예: IIR 행사들은 실제 개최 사이트 `cryogenics-conference.eu`, `gl2024.org`, `icr2023.org`, `tptpr2025` 사이트로 대체)
+- past 보유 master 2 → 29 (전수 채움). MainTable LAST 열 노출 가능
+- 다음 단계 (Phase 2 별도 플랜): `formatLastEdition` 에서 link 노출, update 프롬프트가 last 비면 병행 발굴, v6 활성 전환 평가
+
 ### Changed (docs 체계, 2026-04-18)
 
 **dev-guide v2 → v3 전환**
