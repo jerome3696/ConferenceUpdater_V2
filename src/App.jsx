@@ -21,6 +21,7 @@ function App() {
   const updateQueue = useUpdateQueue({
     apiKey,
     applyAiUpdate: conferences.applyAiUpdate,
+    applyLastDiscovery: conferences.applyLastDiscovery,
     applyVerifyUpdate: conferences.applyVerifyUpdate,
   });
 

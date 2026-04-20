@@ -200,6 +200,49 @@ export function useConferences({ token } = {}) {
     updateConference(conferenceId, patch);
   };
 
+  // PLAN-013-D: Last-edition 자동 발굴 적용.
+  // 같은 conference 에 이미 past edition 이 있으면 `start_date` 가 더 최근(>=)인 후보만 교체/추가.
+  // 더 오래된 과거를 덮어쓰지 않도록 보호.
+  const applyLastDiscovery = (conferenceId, proposed) => {
+    if (!proposed?.start_date) return;
+    const now = new Date().toISOString();
+    const pastsForConf = data.editions.filter(
+      (e) => e.conference_id === conferenceId && e.status === 'past' && e.start_date
+    );
+    const mostRecent = pastsForConf.sort((a, b) => b.start_date.localeCompare(a.start_date))[0];
+    if (mostRecent && mostRecent.start_date >= proposed.start_date) return;
+
+    const fields = {
+      start_date: proposed.start_date || null,
+      end_date: proposed.end_date || null,
+      venue: proposed.venue || null,
+      link: proposed.link || null,
+      confidence: proposed.confidence || null,
+    };
+
+    let editions;
+    if (mostRecent) {
+      editions = data.editions.map((e) =>
+        e.id === mostRecent.id
+          ? { ...e, ...fields, status: 'past', source: 'ai_search', updated_at: now }
+          : e
+      );
+    } else {
+      editions = [
+        ...data.editions,
+        {
+          id: generateEditionId(),
+          conference_id: conferenceId,
+          status: 'past',
+          ...fields,
+          source: 'ai_search',
+          updated_at: now,
+        },
+      ];
+    }
+    persist({ ...data, editions });
+  };
+
   // PLAN-013-A: AI 결과 수용 시 기본 anchor=false. 사용자가 "수용 (확정)" 으로 명시 요청한 경우만 true.
   const applyAiUpdate = (conferenceId, proposed, { anchor = false } = {}) => {
     const now = new Date().toISOString();
@@ -340,6 +383,7 @@ export function useConferences({ token } = {}) {
     updateStarred,
     saveConferenceEdit,
     applyAiUpdate,
+    applyLastDiscovery,
     applyVerifyUpdate,
     addConferenceFromDiscovery,
     deleteConference,

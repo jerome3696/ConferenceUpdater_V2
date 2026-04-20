@@ -3,9 +3,11 @@ import {
   buildUpdatePrompt,
   buildDiscoveryExpandPrompt,
   buildDiscoverySearchPrompt,
+  buildLastEditionPrompt,
   DEFAULT_UPDATE_VERSION,
   DEFAULT_DISCOVERY_EXPAND_VERSION,
   DEFAULT_DISCOVERY_SEARCH_VERSION,
+  DEFAULT_LAST_EDITION_VERSION,
 } from './promptBuilder.js';
 
 const CONF = {
@@ -275,5 +277,55 @@ describe('buildDiscoverySearchPrompt — v1 (PLAN-011 Stage 2)', () => {
 
   it('알 수 없는 버전은 throw', () => {
     expect(() => buildDiscoverySearchPrompt([{ ko: 'x', en: 'x' }], [], { version: 'v99' })).toThrow();
+  });
+});
+
+describe('buildLastEditionPrompt — v1 (PLAN-013-D)', () => {
+  it('DEFAULT_LAST_EDITION_VERSION 은 v1', () => {
+    expect(DEFAULT_LAST_EDITION_VERSION).toBe('v1');
+  });
+
+  it('system + user 모두 생성', () => {
+    const { system, user, version } = buildLastEditionPrompt(CONF);
+    expect(system).toBeTruthy();
+    expect(user).toBeTruthy();
+    expect(version).toBe('v1');
+  });
+
+  it('system 은 past/end_date <= today 판별 명시', () => {
+    const { system } = buildLastEditionPrompt(CONF);
+    expect(system).toContain('과거 회차');
+    expect(system).toContain('end_date <= today');
+  });
+
+  it('system 은 link 우선순위 (회차 전용 도메인) 명시', () => {
+    const { system } = buildLastEditionPrompt(CONF);
+    expect(system).toContain('회차 전용');
+  });
+
+  it('system 은 upcoming 을 반환하지 않도록 지시', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toContain('upcoming');
+  });
+
+  it('user 에는 학회 full_name, 약칭, 공식사이트 포함', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toContain('International Conference on Computational Fluid Dynamics');
+    expect(user).toContain('ICCFD');
+    expect(user).toContain('https://www.iccfd.org/');
+  });
+
+  it('user 에는 오늘 날짜 (YYYY-MM-DD) 주입', () => {
+    const { user } = buildLastEditionPrompt(CONF);
+    expect(user).toMatch(/오늘: \d{4}-\d{2}-\d{2}/);
+  });
+
+  it('알 수 없는 버전은 throw', () => {
+    expect(() => buildLastEditionPrompt(CONF, { version: 'v99' })).toThrow();
+  });
+
+  it('정기 학회가 아니면 cycle_years=0 → "미상" 표기', () => {
+    const { user } = buildLastEditionPrompt({ ...CONF, cycle_years: 0 });
+    expect(user).toContain('주기: 미상');
   });
 });

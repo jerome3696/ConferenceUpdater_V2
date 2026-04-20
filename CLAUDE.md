@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. Track E.1 신규 학회 발굴 블루프린트 완료 (PLAN-011, 2026-04-18) — 서브플랜 011-A~E 분리, 구현 대기.** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-011.md`.
+MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. F.1 Phase 1 Last-edition 1차 채움 완료 (PR #21, 2026-04-20) — past 보유 master 2→29 전수. 다음: F.1 Phase 2 (update 프롬프트/로직 정교화).** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-011.md`.
 
 ## 문서 맵 (작업 종류별)
 

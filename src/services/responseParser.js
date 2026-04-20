@@ -127,6 +127,41 @@ export function parseUpdateResponse(text) {
   return { ok: true, data, missing };
 }
 
+/**
+ * Last-edition 응답 파싱 (PLAN-013-D).
+ * update 와 동일 스키마지만 "과거 회차" 의미로 검증:
+ *   - end_date 가 있으면 오늘(today) 이하여야 함 (미래면 pass 처리 안 함)
+ *   - end_date 없으면 start_date 기준으로 판정, 둘 다 없으면 미확인으로 ok=false.
+ * 이 파서는 update 쪽 normalizeUpdateData 백필은 쓰지 않음 (past 는 confidence 다운그레이드가 의미 덜함).
+ *
+ * @param {string} text
+ * @param {string} [todayIso]  YYYY-MM-DD. 기본값 현재 시스템 날짜.
+ */
+export function parseLastEditionResponse(text, todayIso) {
+  if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
+  const data = extractJson(text);
+  if (data === null) return { ok: false, reason: 'no_json', raw: text };
+  if (typeof data !== 'object' || Array.isArray(data)) {
+    return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
+  }
+
+  const s = data.start_date;
+  const e = data.end_date;
+  const hasStart = typeof s === 'string' && DATE_RE.test(s);
+  const hasEnd = typeof e === 'string' && DATE_RE.test(e);
+  if (!hasStart && !hasEnd) {
+    return { ok: false, reason: 'no_date', raw: text, parsed: data };
+  }
+
+  const today = todayIso || new Date().toISOString().slice(0, 10);
+  const ref = hasEnd ? e : s;
+  if (ref > today) {
+    return { ok: false, reason: 'not_past', raw: text, parsed: data };
+  }
+
+  return { ok: true, data };
+}
+
 // ──────────────────────────────────────────────────────────────────
 // Discovery (PLAN-011)
 // ──────────────────────────────────────────────────────────────────
