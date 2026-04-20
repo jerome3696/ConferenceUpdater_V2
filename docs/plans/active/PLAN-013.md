@@ -1,10 +1,10 @@
 # PLAN-013: Update 시스템 대대적 재설계 (F.1 Phase 2)
 
-> **상태**: active
+> **상태**: A·B1·B2·C·D 구현 완료 · 통합 PR 대기 · eval(#E) 잔여
 > **생성일**: 2026-04-20
-> **완료일**: —
-> **브랜치**: 서브플랜별 분리 — `feature/PLAN-013-A-anchor`, `feature/PLAN-013-B1-url-classifier`, `feature/PLAN-013-B2-should-search`, `feature/PLAN-013-C-prompt-v7`, `feature/PLAN-013-D-last-discovery`
-> **연관 PR**: TBD
+> **완료일**: — (eval 이후 확정)
+> **브랜치**: 서브플랜별 분리 — `feature/PLAN-013-A-anchor`(d950a5c), `feature/PLAN-013-B1-url-classifier`(c708ee3), `feature/PLAN-013-B2-should-search`(689cada), `feature/PLAN-013-C-prompt-v7`(3ac3242), `feature/PLAN-013-D-last-discovery`(b3f461f). 통합: `feature/PLAN-013-integration` (90feb99 → 34dbb9b → a1b201b → d8ac648 → 962dd31, 326 tests 통과)
+> **연관 PR**: TBD (단일 통합 PR 로 머지 예정)
 > **트랙**: F (운영 품질) — F.1 Phase 2
 
 ---
@@ -85,14 +85,14 @@ Update 시스템의 두 가지 근본 문제를 동시에 해결한다:
 
 ## 5. 단계
 
-- [ ] Step A — Edition anchor + UI 토글 (PR #1)
-- [ ] Step B1 — urlClassifier + dateUtils (PR #2)
-- [ ] Step B2 — shouldSearch 재설계 + 정밀/일반 모드 (PR #3, B1 의존)
-- [ ] Step C — Prompt v7 + Last URL 노출 (PR #4)
-- [ ] Step D — Last 자동 발굴 (PR #5)
-- [ ] Step E — v6 vs v7 eval + DEFAULT_VERSION 결정 (PR #6, C·D 의존)
+- [x] Step A — Edition anchor + UI 토글 (`feature/PLAN-013-A-anchor` d950a5c)
+- [x] Step B1 — urlClassifier + dateUtils (`feature/PLAN-013-B1-url-classifier` c708ee3)
+- [x] Step B2 — shouldSearch 재설계 + 정밀/일반 모드 (`feature/PLAN-013-B2-should-search` 689cada)
+- [x] Step C — Prompt v7 + Last URL 노출 (`feature/PLAN-013-C-prompt-v7` 3ac3242)
+- [x] Step D — Last 자동 발굴 (`feature/PLAN-013-D-last-discovery` b3f461f)
+- [ ] Step E — v6 vs v7 eval + DEFAULT_VERSION 결정 (별도 PR, C·D 의존)
 
-각 PR 독립. A/B1/C/D 병렬 가능. B2 는 B1 의존, E 는 C·D 의존.
+구현 경로: 계획상 5개 독립 PR 이었으나 실제로는 5개 branch 를 단일 통합 PR 로 머지 — 브랜치 stacking 없이 각자 main 에서 분기된 상태여서 일괄 검토가 더 안전. Step E 는 API 비용 발생 작업이므로 별도 세션/PR.
 
 ## 6. 검증
 
@@ -128,3 +128,10 @@ Update 시스템의 두 가지 근본 문제를 동시에 해결한다:
 ## 9. 작업 로그
 
 - 2026-04-20: 플랜 수립. 사용자 승인. PLAN-013-A 부터 착수.
+- 2026-04-20: A·B1·B2·C·D 5개 서브플랜 구현 완료. 각 verify-task 통과.
+  - A (d950a5c): anchor 스키마 + UI 토글
+  - B1 (c708ee3): urlClassifier + daysUntil/cycleProgress — 19 + 16 단위 테스트
+  - B2 (689cada): shouldSearch(row, mode) 전면 재작성 + 정밀/일반 모달
+  - C (3ac3242): update v7 — formatLastEditionV2 + URL 패턴 추정, dedicated_url 제거. DEFAULT_UPDATE_VERSION 은 여전히 v4 (eval 후 결정)
+  - D (b3f461f): buildLastEditionPrompt + parseLastEditionResponse + applyLastDiscovery + useUpdateQueue 선행 호출 분기
+- 2026-04-20: 5 branch 단일 통합 PR 생성·머지. Step E(eval) 잔여 — 별도 세션에서 API 호출로 진행 예정.
