@@ -837,25 +837,25 @@
       "id": "ed_mo51rke0",
       "conference_id": "disc_mo51rke0v1",
       "status": "upcoming",
-      "start_date": "2026-09-15",
-      "end_date": "2026-09-17",
+      "start_date": "2026-09-21",
+      "end_date": "2026-09-23",
       "venue": "Stuttgart, Germany",
-      "link": "https://event.dlr.de/en/event/4th-international-workshop-on-carnot-batteries/",
-      "confidence": null,
-      "source": "ai_discovery",
-      "updated_at": "2026-04-19T00:48:02.808Z"
+      "link": "https://event.dlr.de/en/event/5th-international-workshop-on-carnot-batteries-iwcb/",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-20T06:39:13.134Z"
     },
     {
       "id": "ed_mo5215jk",
       "conference_id": "disc_mo5215jjv5",
       "status": "upcoming",
-      "start_date": "2026-09-01",
-      "end_date": "2026-09-03",
-      "venue": "Lucerne, Switzerland",
-      "link": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage/cctes-sstes-2026/",
-      "confidence": null,
-      "source": "ai_discovery",
-      "updated_at": "2026-04-19T00:55:30.128Z"
+      "start_date": null,
+      "end_date": null,
+      "venue": null,
+      "link": null,
+      "confidence": "low",
+      "source": "ai_search",
+      "updated_at": "2026-04-20T06:39:29.003Z"
     },
     {
       "id": "ed_mo5d5wyb",
@@ -875,11 +875,11 @@
       "status": "upcoming",
       "start_date": "2026-08-04",
       "end_date": "2026-08-08",
-      "venue": "Oxford, UK",
-      "link": "https://dtiac.com/",
-      "confidence": null,
-      "source": "ai_discovery",
-      "updated_at": "2026-04-19T06:07:26.173Z"
+      "venue": "Oxford, United Kingdom",
+      "link": "https://dtiac.com/digitwin2026/index.aspx",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-20T06:39:34.036Z"
     },
     {
       "id": "ed_last_001",
@@ -1255,6 +1255,18 @@
       "link": "https://cdc2025.ieeecss.org/",
       "source": "user_input",
       "updated_at": "2026-04-20T05:54:37.565Z"
+    },
+    {
+      "id": "ed_mo6tr5sb",
+      "conference_id": "disc_mo520jhk7o",
+      "status": "upcoming",
+      "start_date": "2026-07-12",
+      "end_date": "2026-07-16",
+      "venue": "West Lafayette, IN, United States",
+      "link": "https://chpb.engineering.purdue.edu/herrick-conferences/",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-20T06:39:19.307Z"
     }
   ]
 }
