@@ -11,8 +11,8 @@
 - `golden-set.meta.json` — snapshot 메타 (xlsx 와 쌍).
 - `golden-set.parsed.json` — 자동 생성 (xlsx import 결과). gitignore. 편집 금지.
 - `snapshots/<date>.xlsx` — conferences.json 에서 뽑은 전체 스냅샷 (편집 전 원본). 대용량이라 git 제외.
-- `results/<timestamp>-<version>.json` — 평가 러너 실행 결과 로그.
-- `runs/<run-id>/run.json` — 재시도 루프 집계 (PR-4).
+- `results/<timestamp>-<version>.json` — 단일 평가 러너 실행 결과 로그 (`npm run eval`).
+- `runs/<run-id>/` — 재시도 루프 한 번의 디렉토리. `run.json` (집계) + `iter-<N>.json` (각 iteration 의 results).
 - `legacy/` — 기존 CSV/JSON 동결. 참조용.
 
 ## XLSX 스키마 (24컬럼)
@@ -33,8 +33,21 @@
 npm run golden:export              # conferences.json → docs/eval/snapshots/<today>.xlsx
 npm run golden:export -- --snapshot-date 2026-04-20   # 명시 날짜
 npm run golden:import              # golden-set.xlsx → golden-set.parsed.json + 검증
-npm run eval                       # API 평가 실행 (legacy CSV 기반, PR-3 에서 XLSX 전환)
+npm run eval                       # 단일 run (XLSX 입력, PR-3 이후)
+npm run eval -- --case conf_007    # 특정 케이스만
+npm run eval:loop -- --version v7 --max-iter 3 --threshold 0.9   # early-stop 재시도 루프 (PR-4)
 ```
+
+### Early-stop 루프 (`eval:loop`)
+
+한 번 run 으로는 웹검색/LLM 노이즈가 남아 "진짜 약점" 과 "운 나쁜 실패" 구분이 어렵다. `eval-loop.js` 가 `eval-prompt.js` 를 최대 N회 반복 호출해 노이즈를 걷어낸다. **한 루프 동안 프롬프트 고정** — 튜닝 금지, 재시도는 노이즈 제거 목적.
+
+종료 조건 (순서):
+1. `success` — pass / total ≥ threshold AND partial+fail ≤ 1
+2. `plateau` — 직전 iter 와 pass 수 · fail_ids 집합 동일 (iter ≥ min-iter)
+3. `max_iter` — 도달
+
+출력: `runs/<run-id>/run.json` — `iterations`, `persistent_failures` (모든 iter 에서 한 번도 pass 하지 못한 id), `by_cycle_years_total`.
 
 ### Export/Import 워크플로
 

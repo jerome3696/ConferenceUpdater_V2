@@ -49,7 +49,7 @@ MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(
 - 대화형 프롬프트 우회용으로 파괴 플래그 쓰지 말고 사용자에게 `!<command>` 직접 실행 요청.
 
 ## 비자명한 코드 제약
-- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2·v3·v4 공존, 활성: v4)
+- 프롬프트 변경은 `src/utils/promptBuilder.js` + `docs/prompts/v{N}.md` **양쪽 동기** (동기화 테스트로 묶임 — 한쪽만 고치면 CI 실패). 이전 버전 불변, 활성: v4
 - `src/services/claudeApi.js`는 브라우저·Node 양쪽에서 사용 (브라우저 전용 API 금지)
 - `responseParser.js` ↔ `UpdateCard.jsx`/`VerificationCard.jsx`의 JSON 구조 일치 필수 — 하나 바꾸면 나머지 확인
 

@@ -24,6 +24,14 @@
 
 ## §1. 빠른 현황판 (Active)
 
+> **현황판 갱신 절차** (PR-5 이후): 새 run 이 끝나면 `docs/eval/runs/<run-id>/run.json` 을 열어 아래 필드를 복사해 "마지막 측정" 블록에 반영한다. 자동화는 미적용 — 사람이 복사.
+> - `run_id`, `version`, `stopped_by`, `iterations.length`
+> - 최종 iter 의 `pass` / `partial` / `fail_or_error` / `total`
+> - `persistent_failures` 배열 → "잔존 실패" 에 반영
+> - `by_cycle_years_total` → cycle 버킷 편향 분석
+>
+> 단일 run (eval-loop 미사용) 시에는 `docs/eval/results/<timestamp>-<version>.json` 의 `summary` 블록을 사용.
+
 ### 활성 버전
 - **앱 사용 중**: `v4` (Haiku 4.5 + Phase A 적용)
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
