@@ -54,13 +54,21 @@ npm run eval                       # API 평가 실행 (legacy CSV 기반, PR-3 
 4. `source_url` 에 근거 공식사이트 링크 기록 → 재검증 가능.
 5. `_meta` 시트의 `snapshot_date` 가 정답지 시점. 프롬프트 개선 시 같은 시점 재사용.
 
-## 합격 기준 (MVP)
+## 합격 기준 (PR-3 이후, schema v2)
 
-- **pass**: 4개 필드(start_date, end_date, venue, link) 전부 일치
-- **partial**: 1~3개 일치
-- **fail**: 0개 일치 또는 파싱 실패
+필드별 가중 채점 — 기본 weights: `link=0.6, start=0.2, end=0.1, venue=0.1`. 골든셋의 expected 가 빈 값인 필드는 제외되고 남은 필드끼리 가중치 재분배.
 
-정답지 중 **5건 이상 pass** 면 MVP 합격선.
+- **pass**: score ≥ 0.9 (대부분 전필드 pass)
+- **partial**: 0.5 ≤ score < 0.9
+- **fail**: score < 0.5 · 또는 api/parse 오류
+- **no_expected**: 채점 가능한 필드 0 (골든셋이 빈 케이스)
+
+필드별 매칭:
+- `link`: urlMatch (정규화 후 상위·하위 경로 허용) vs `upcoming_link` 또는 `source_url`.
+- `start`/`end`: YYYY-MM-DD 문자열 exact match.
+- `venue`: 쉼표 앞 첫 토큰 case-insensitive match. `"Chicago, USA"` ↔ `"Chicago, IL, USA"` pass.
+
+가중치 덮어쓰기: `npm run eval -- --weights link=0.5,start=0.3,end=0.1,venue=0.1`.
 
 ## 실패 원인 분류
 
