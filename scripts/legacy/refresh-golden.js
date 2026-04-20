@@ -11,8 +11,9 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
-const CSV_PATH = join(ROOT, 'docs/eval/golden-set.csv');
+// PR-2 (PLAN-015) 이후 scripts/legacy/ 로 이동. ROOT 는 두 단계 상위.
+const ROOT = resolve(__dirname, '../..');
+const CSV_PATH = join(ROOT, 'docs/eval/legacy/golden-set.csv');
 const CONF_PATH = join(ROOT, 'public/data/conferences.json');
 
 const STALE_MONTHS = 6;

@@ -9,9 +9,10 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, '..');
-const CSV_PATH = join(ROOT, 'docs/eval/golden-set.csv');
-const JSON_PATH = join(ROOT, 'docs/eval/golden-set.json');
+// PR-2 (PLAN-015) 이후 scripts/legacy/ 로 이동. ROOT 는 두 단계 상위.
+const ROOT = resolve(__dirname, '../..');
+const CSV_PATH = join(ROOT, 'docs/eval/legacy/golden-set.csv');
+const JSON_PATH = join(ROOT, 'docs/eval/legacy/golden-set.json');
 const CONF_PATH = join(ROOT, 'public/data/conferences.json');
 
 const REQUIRED_COLS = ['id', 'link', 'source_url', 'verified_at', 'notes'];
@@ -107,7 +108,7 @@ async function main() {
   };
 
   await writeFile(JSON_PATH, JSON.stringify(out, null, 2));
-  console.log(`✅ ${cases.length}건 변환 → docs/eval/golden-set.json`);
+  console.log(`✅ ${cases.length}건 변환 → docs/eval/legacy/golden-set.json`);
   if (skipped.length) {
     console.log(`   (미작성으로 스킵: ${skipped.length}건)`);
   }

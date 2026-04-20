@@ -1,6 +1,6 @@
 {
   "_generated": "이 파일은 csv-to-golden.js가 자동 생성합니다. 직접 편집하지 마세요. 편집은 docs/eval/golden-set.csv 에서.",
-  "snapshot_date": "2026-04-18",
+  "snapshot_date": "2026-04-20",
   "case_count": 19,
   "cases": [
     {

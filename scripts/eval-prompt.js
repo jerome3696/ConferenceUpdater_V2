@@ -112,10 +112,11 @@ async function main() {
     process.exit(1);
   }
 
-  // CSV → JSON 자동 동기화
-  const csvPath = join(ROOT, 'docs/eval/golden-set.csv');
+  // CSV → JSON 자동 동기화. CSV/JSON/sync 스크립트는 PR-2 에서 legacy/ 로 이동.
+  // PR-3 에서 eval-prompt.js 가 docs/eval/golden-set.parsed.json(XLSX import) 을 읽도록 재작성.
+  const csvPath = join(ROOT, 'docs/eval/legacy/golden-set.csv');
   if (existsSync(csvPath)) {
-    const sync = spawnSync(process.execPath, [join(ROOT, 'scripts/csv-to-golden.js')], { stdio: 'inherit' });
+    const sync = spawnSync(process.execPath, [join(ROOT, 'scripts/legacy/csv-to-golden.js')], { stdio: 'inherit' });
     if (sync.status !== 0) {
       console.error('❌ csv-to-golden.js 실패. CSV 확인 요망.');
       process.exit(1);
@@ -123,14 +124,14 @@ async function main() {
   }
 
   const confPath = join(ROOT, 'public/data/conferences.json');
-  const goldenPath = join(ROOT, 'docs/eval/golden-set.json');
+  const goldenPath = join(ROOT, 'docs/eval/legacy/golden-set.json');
   const { conferences, editions } = JSON.parse(await readFile(confPath, 'utf8'));
   const golden = JSON.parse(await readFile(goldenPath, 'utf8'));
 
   let cases = golden.cases || [];
   if (args.case) cases = cases.filter((c) => c.id === args.case);
   if (cases.length === 0) {
-    console.error('❌ 실행할 케이스가 없습니다. docs/eval/golden-set.csv 를 확인하세요.');
+    console.error('❌ 실행할 케이스가 없습니다. docs/eval/legacy/golden-set.csv 를 확인하세요.');
     process.exit(1);
   }
 
