@@ -160,7 +160,7 @@ export default function UpdatePanel({ queue, onBack }) {
               <Card
                 key={card.id}
                 current={card}
-                onAccept={() => accept(card.id)}
+                onAccept={(opts) => accept(card.id, opts)}
                 onReject={() => reject(card.id)}
               />
             );

@@ -42,6 +42,17 @@ describe('shouldSearch', () => {
   it('source가 비어있으면 검색', () => {
     expect(shouldSearch({ upcoming: { ...fullUpcoming, source: '' } })).toBe(true);
   });
+
+  it('anchored=true면 다른 조건 무시하고 pass', () => {
+    expect(shouldSearch({ upcoming: { ...fullUpcoming, anchored: true } })).toBe(false);
+    expect(shouldSearch({ upcoming: { ...fullUpcoming, anchored: true, source: 'user_input' } })).toBe(false);
+    expect(shouldSearch({ upcoming: { anchored: true } })).toBe(false);
+  });
+
+  it('anchored=false 또는 미정의면 기존 로직대로', () => {
+    expect(shouldSearch({ upcoming: { ...fullUpcoming, anchored: false } })).toBe(false);
+    expect(shouldSearch({ upcoming: { ...fullUpcoming, anchored: false, source: 'user_input' } })).toBe(true);
+  });
 });
 
 describe('filterSearchTargets', () => {

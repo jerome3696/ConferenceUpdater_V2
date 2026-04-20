@@ -160,13 +160,14 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
     })();
   }, [queue, searching, apiKey, rateLimitUntil]);
 
-  const accept = useCallback((cardId) => {
+  // PLAN-013-A: opts.anchor=true 면 수용 후 anchor 마크 (update kind 만 의미 있음).
+  const accept = useCallback((cardId, { anchor = false } = {}) => {
     const card = pending.find((c) => c.id === cardId);
     if (!card || card.status !== 'ready') return;
     if (card.kind === 'verify') {
       applyVerifyUpdate?.(card.conferenceId, card.result);
     } else {
-      applyAiUpdate(card.conferenceId, card.result);
+      applyAiUpdate(card.conferenceId, card.result, { anchor });
     }
     pushLog({
       id: card.id,
@@ -174,7 +175,7 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyVerifyUpdate }) {
       conferenceId: card.conferenceId,
       abbrev: card.row.abbreviation,
       fullName: card.row.full_name,
-      action: 'accepted',
+      action: anchor ? 'accepted_anchored' : 'accepted',
       result: card.result,
     });
     setPending((p) => p.filter((c) => c.id !== cardId));
