@@ -50,9 +50,11 @@ export const REF_LAST_EDITION = {
 export const REF_TODAY = '2026-04-21';
 
 // ─── 버전 메타 ─────────────────────────────────────────────────────────
-// PLAN-019 (2026-04-21): v1~v7 legacy 격리, v1_0 단일 활성.
+// PLAN-019 (2026-04-21): v1~v7 legacy 격리, v1_0 재시작.
+// v1_1 (2026-04-21): v1_0 측정 후 축 A URL 3유형 / confidence 재정의 / 주기 초반 부정확 허용 / iifiir 임박 제외.
 const VERSIONS = [
   { v: 'v1_0', parent: null },
+  { v: 'v1_1', parent: 'v1_0' },
 ];
 
 function statusFor(v) {
@@ -149,7 +151,8 @@ const README_MD = `# docs/prompts/ — 프롬프트 MD 원본 (거울)
 ## 파일
 
 - \`_template.md\` — 새 버전 추가 시 참고용 틀.
-- \`v1_0.md\` — 활성 버전 (PLAN-019, 2026-04-21 재시작). 소스 2축 분리 (탐색 A · 채택 B) + Haiku 단일.
+- \`v1_0.md\` — dormant. PLAN-019 재시작 초안 (2026-04-21). 소스 2축 분리 + Haiku 단일. v1_0 측정 후 v1_1 도입.
+- \`v1_1.md\` — 활성 버전 (2026-04-21). 축 A URL 3유형 / confidence 소스 신뢰도 재정의 / 주기 초반 부정확 허용 / iifiir 임박 제외.
 - \`legacy/v{4,5,6,7}.md\` — PLAN-019 이전 이력. 참조·롤백용, 런타임 미사용.
 
 ## 버전 명명 규칙

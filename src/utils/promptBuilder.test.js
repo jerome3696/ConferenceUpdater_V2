@@ -27,8 +27,8 @@ describe('buildUpdatePrompt — v1_0 (PLAN-019 재시작, 소스 2축 분리)', 
     venue: 'Prague, Czech Republic',
   };
 
-  it('DEFAULT_UPDATE_VERSION 은 v1_0', () => {
-    expect(DEFAULT_UPDATE_VERSION).toBe('v1_0');
+  it('DEFAULT_UPDATE_VERSION 은 v1_1', () => {
+    expect(DEFAULT_UPDATE_VERSION).toBe('v1_1');
   });
 
   it('system 에 축 A (탐색 순서) + 축 B (채택 규칙) 섹션 존재', () => {

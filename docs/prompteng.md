@@ -33,23 +33,27 @@
 > 단일 run (eval-loop 미사용) 시에는 `docs/eval/results/<timestamp>-<version>.json` 의 `summary` 블록을 사용.
 
 ### 활성 버전
-- **앱 사용 중**: `v1_0` (Haiku 4.5 단일 · Sonnet 폴백 없음)
+- **앱 사용 중**: `v1_1` (Haiku 4.5 단일 · Sonnet 폴백 없음)
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
-  - **소스 2축 분리** (PLAN-019 재시작): 축 A 탐색 순서 (`last.link` → `official_url` → `web_search`) / 축 B 채택 규칙 (dedicated 1:1 허용 · institutional 1:N 하위 경로만)
+  - **v1_1 변경 4건** (v1_0 측정 후): 축 A URL 3유형 분기 (연도형/회차번호형/불변형) · confidence 소스 신뢰도 재정의 (공식/준공식/외부) · 주기 초반 부정확 소스 허용 (null 대신 low) · iifiir.org 이벤트 슬러그 주기-임박 시 제외
+  - 튜닝 상수 (`src/utils/promptBuilder.js` 상단 `V1_1_VARS`): `IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`
   - PLAN-013-D `buildLastEditionPrompt` v1 사전 탐색 체인 연결
 
 ### 잔존 실패 (다음 개선 타겟)
-- **측정 대기** — v1_0 첫 eval-loop run 후 `persistent_failures` 배열 복사
+- **v1_0 기준 (2026-04-21, run_id=20260421-072101)**: persistent_failures 9건 — conf_005(Hannover, golden-set 수정 완료) · conf_006(Cryogenics2027, v1_1 축 A ① 연도형 기대) · conf_007(ICMF 2028 미공개, 주기 초반 부정확 허용 기대) · conf_010(no_expected) · conf_012(THERMINIC, golden-set 수정 완료) · conf_015(ICCFD, golden-set 수정 완료) · conf_019(Gustav Lorentzen, iifiir 임박 제외 기대) · disc_mo520jhk7o(IRACC, last_link 공란화로 난이도 상승 수용) · user_mo04ezfq(BS2027, framer 도메인 유지)
+- **v1_1 측정 후 재평가** 예정
 
 ### 마지막 측정
-- **v1_0**: 측정 대기 (골든셋 27건, `npm run eval:loop -- --version v1_0 --max-iter 3 --threshold 0.9`)
+- **v1_0** (2026-04-21): pass 16/27, stopped_by=max_iter, run_id=20260421-072101
+- **v1_1**: 측정 대기 (`npm run eval:loop -- --version v1_1 --max-iter 3 --threshold 0.9`)
 - 레거시 v1~v7 이력: `docs/legacy/PROMPT_LOG_pre_v1.md`
 
 ### 다음 시도 (next levers)
-- [ ] **v1_0 첫 측정** — eval-loop 3회 · threshold 0.9
+- [ ] **v1_1 첫 측정** — eval-loop 3회 · threshold 0.9
 - [ ] **Dedicated vs Institutional 판별 실패 추적** — 누적 시 `conferences.json` 에 `domain_type` 힌트 추가 검토
-- [ ] **박람회 vs 학회 유형 분기** — v1_0 결과에서 category 별 pass rate 차이 확인 후 v1.1 에서 결정
+- [ ] **박람회 vs 학회 유형 분기** — v1_1 결과에서 category 별 pass rate 차이 확인 후 v1_2 에서 결정
 - [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장 (MVP 후)
+- v1_1 측정 후 추가 튜닝 상수 도입 검토 (§8 v1_1 백로그)
 
 ---
 
@@ -77,7 +81,8 @@
 
 | 버전 | 시점 | 환경 | pass | 평균 토큰 (in/out) | 비고 |
 |---|---|---|---|---|---|
-| v1_0 | 2026-04-21 | Haiku 4.5 + Phase A (Sonnet 폴백 없음) | 측정 대기 | — | PLAN-019 재시작. 소스 2축 분리 (탐색 A · 채택 B), 재사용 레버 A'·C·H·I + Draft 조건부 |
+| v1_0 | 2026-04-21 | Haiku 4.5 + Phase A (Sonnet 폴백 없음) | 16/27 (pass rate 59%, stopped_by=max_iter) | in 1.1M / out 24k (3 iter 합) | PLAN-019 재시작. 소스 2축 분리 (탐색 A · 채택 B), 재사용 레버 A'·C·H·I + Draft 조건부. persistent_failures 9건 — 대부분 골든셋 엄격성 or URL 패턴 추정 미흡 |
+| v1_1 | 2026-04-21 | Haiku 4.5 + Phase A | 측정 대기 | — | v1_0 후속. 축 A URL 3유형 / confidence 소스 재정의 / 주기 초반 부정확 허용 / iifiir 임박 제외. 튜닝 상수 V1_1_VARS 노출 |
 
 > 레거시 v1~v7 이력은 `docs/legacy/PROMPT_LOG_pre_v1.md` (§3 동결) 참조.
 
@@ -228,11 +233,21 @@
 
 ## §8. 미해결 과제
 
-- [ ] v1_0 첫 eval-loop (27건, max-iter 3, threshold 0.9) 및 결과 기록
+- [x] v1_0 첫 eval-loop (27건, max-iter 3, threshold 0.9) 및 결과 기록 — 2026-04-21, run_id=20260421-072101, pass 16/27, stopped_by=max_iter
 - [ ] Dedicated vs Institutional 판별 실패 추적 — 누적 시 `conferences.json` `domain_type` 힌트 추가 검토
 - [ ] 박람회 vs 학회 유형 분기 — v1_0 결과에서 category 별 pass rate 차이 확인 후 v1.1 결정
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
 - [ ] (장기) 정답지 채점 정밀화 — "허용 범위" 필드 추가 등 (P3 패턴 대응)
+
+### v1_1 백로그 (현재 작업 범위 밖, 다음 이터레이션 후보)
+
+v1_1 에서 튜닝 상수 2개 (`IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`) + 내용 변경 4건 (축 A URL 3유형 / confidence 재정의 / 주기 초반 부정확 허용 / iifiir 주기-임박 제외) 도입. 이후 관찰 기반으로 추가 튜닝:
+
+- [ ] **DRAFT_SITE_CONFIDENCE** 상수화 — framer/notion/wix 사이트의 default confidence. 현재 'medium' 로 AI 자가 판단에 맡김. v1_1 측정 후 'low' 로 강제하는 편이 나은지 데이터로 판단
+- [ ] **MIN_LINK_SOURCES** 상수화 — link 를 high 로 판정하기 전 교차검증 최소 소스 수 (현재 기준 없음 · AI 직관 의존). 공식 사이트 외 독립 출처 1건 이상 교차확인 강제 검토
+- [ ] **iifiir 외 institutional 색인 case-by-case** — ashrae.org/conferences, ibpsa.org/conferences 등 각 organizer 색인 페이지별로 주기-임박 시 배제 threshold 개별화 가능성. 현재는 iifiir 만 상수로 분리
+- [ ] **주기 경과율 계산식 정교화** — 현재 `(today − last_end) / (cycle_years × 365)`. last_end 없을 때 fallback 정의 필요. 윤년·주기 비정수(0.5·1.5) 케이스도 확인
+- [ ] **Y1/Y2 상수화 필요성 재검토** — v1_1 에서는 제거 (today 에서 파생). 만약 "특정 연도 예시" 를 프롬프트에 고정 필요한 요구 생기면 재도입
 
 > 완료된 v1~v7 이력은 `docs/legacy/PROMPT_LOG_pre_v1.md`.
