@@ -36,7 +36,7 @@
       "cycle_years": 2,
       "duration_days": 4,
       "region": "유럽",
-      "official_url": "",
+      "official_url": "https://ish.messefrankfurt.com/frankfurt/en.html",
       "note": ""
     },
     {
@@ -521,9 +521,9 @@
       "start_date": "2025-03-17",
       "end_date": "2025-03-21",
       "venue": "Frankfrut, Germany",
-      "link": "",
+      "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
       "source": "user_input",
-      "updated_at": "2026-04-15T12:19:30.074Z"
+      "updated_at": "2026-04-20T05:56:16.312Z"
     },
     {
       "id": "ed_004",
