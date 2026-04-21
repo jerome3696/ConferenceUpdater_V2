@@ -488,6 +488,162 @@
         "organizer": "International Digital Engineering Association (IDEA)",
         "found_at": "2026-04-19T06:07:26.173Z"
       }
+    },
+    {
+      "id": "disc_mo8592i0e0",
+      "starred": 0,
+      "category": "",
+      "field": "공기질",
+      "abbreviation": "Indoor Air",
+      "full_name": "Indoor Air - International Conference of the International Society of Indoor Air Quality and Climate",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://www.indoorair2026.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "ISIAQ founded in 1992",
+          "Premier international scientific platform",
+          "Held biennial since 1978"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "공기질",
+            "en": "indoor air quality"
+          },
+          {
+            "ko": "열쾌적성",
+            "en": "thermal comfort"
+          },
+          {
+            "ko": "시뮬레이션",
+            "en": "smart building technologies"
+          }
+        ],
+        "evidence_url": "https://www.indoorair2026.org/",
+        "organizer": "International Society of Indoor Air Quality and Climate (ISIAQ)",
+        "found_at": "2026-04-21T04:48:56.808Z"
+      }
+    },
+    {
+      "id": "disc_mo8593oimc",
+      "starred": 0,
+      "category": "",
+      "field": "건물에너지모델링",
+      "abbreviation": "COBEE",
+      "full_name": "COBEE - International Conference on Building Energy and Environment",
+      "cycle_years": 3,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://cobee2025.cobee2025.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Springer publishes proceedings",
+          "First held in 2008 in Dalian, China",
+          "EI and SCOPUS indexed"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "건물에너지모델링",
+            "en": "building energy and environment"
+          },
+          {
+            "ko": "시뮬레이션",
+            "en": "simulation"
+          },
+          {
+            "ko": "스마트건물",
+            "en": "smart building systems"
+          }
+        ],
+        "evidence_url": "https://cobee2025.cobee2025.org/",
+        "organizer": "Eindhoven University of Technology",
+        "found_at": "2026-04-21T04:48:58.338Z"
+      }
+    },
+    {
+      "id": "disc_mo859c2sp1",
+      "starred": 0,
+      "category": "",
+      "field": "공기질",
+      "abbreviation": "AIVC",
+      "full_name": "AIVC Conference - Air Infiltration and Ventilation Centre Conference",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://www.aivc.org/events/conferences",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "AIVC is an international center since 1979",
+          "Regularly held annual conferences",
+          "Joint events with TightVent and venticool platforms"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "공기질",
+            "en": "indoor air quality"
+          },
+          {
+            "ko": "건물공조",
+            "en": "ventilation"
+          },
+          {
+            "ko": "열쾌적성",
+            "en": "thermal comfort"
+          }
+        ],
+        "evidence_url": "https://www.aivc.org/events/conferences",
+        "organizer": "Air Infiltration and Ventilation Centre (AIVC)",
+        "found_at": "2026-04-21T04:49:09.220Z"
+      }
+    },
+    {
+      "id": "disc_mo859hc6bf",
+      "starred": 0,
+      "category": "",
+      "field": "공기질",
+      "abbreviation": "IAQVEC",
+      "full_name": "IAQVEC - International Conference on Indoor Air Quality, Ventilation, and Energy Conservation in Buildings",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://iaqvec2026.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Established since 1992",
+          "Multidisciplinary scientific event",
+          "Published proceedings in peer-reviewed journals"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "공기질",
+            "en": "indoor air quality"
+          },
+          {
+            "ko": "건물공조",
+            "en": "building ventilation"
+          },
+          {
+            "ko": "건물에너지모델링",
+            "en": "energy conservation"
+          }
+        ],
+        "evidence_url": "https://iaqvec2026.org/",
+        "organizer": "IAQVEC Association",
+        "found_at": "2026-04-21T04:49:16.038Z"
+      }
     }
   ],
   "editions": [
@@ -1262,11 +1418,55 @@
       "status": "upcoming",
       "start_date": "2026-07-12",
       "end_date": "2026-07-16",
-      "venue": "West Lafayette, IN, United States",
-      "link": "https://chpb.engineering.purdue.edu/herrick-conferences/",
+      "venue": "West Lafayette, Indiana, USA",
+      "link": "https://iifiir.org/en/events/21st-international-refrigeration-and-air-conditioning-conference-at-purdue",
       "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-20T06:39:19.307Z"
+      "updated_at": "2026-04-21T04:49:43.271Z",
+      "anchored": false,
+      "anchor_set_at": null
+    },
+    {
+      "id": "ed_mo8592i0",
+      "conference_id": "disc_mo8592i0e0",
+      "status": "upcoming",
+      "start_date": "2026-06-01",
+      "end_date": "2026-06-05",
+      "venue": "Singapore",
+      "link": "https://www.indoorair2026.org/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T04:48:56.808Z"
+    },
+    {
+      "id": "ed_mo859c2s",
+      "conference_id": "disc_mo859c2sp1",
+      "status": "upcoming",
+      "start_date": "2026-09-30",
+      "end_date": "2026-10-01",
+      "venue": "Incheon, Republic of Korea",
+      "link": "https://www.aivc.org/events/conferences",
+      "confidence": null,
+      "source": "ai_discovery",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T04:49:09.220Z"
+    },
+    {
+      "id": "ed_mo859hc6",
+      "conference_id": "disc_mo859hc6bf",
+      "status": "upcoming",
+      "start_date": "2026-05-18",
+      "end_date": "2026-05-22",
+      "venue": "Los Angeles, California, USA",
+      "link": "https://iaqvec2026.org/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T04:49:16.038Z"
     }
   ]
 }
