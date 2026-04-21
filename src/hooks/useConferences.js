@@ -102,6 +102,9 @@ export function useConferences({ token } = {}) {
     timerRef.current = setTimeout(runCommit, DEBOUNCE_MS);
   };
 
+  // PLAN-024: mutator 들은 `dataRef.current` 를 단일 소스로 읽는다 (`data` 아님).
+  // 같은 렌더 틱 안에서 mutator 가 연속 호출돼도 앞선 변경을 덮어쓰지 않게 하기 위해서.
+  // render-time 파생값(rows/normalized)은 `data` 를 계속 사용 — 그쪽은 stale 이슈 없음.
   const persist = (next) => {
     setData(next);
     dataRef.current = next;
@@ -115,13 +118,15 @@ export function useConferences({ token } = {}) {
   };
 
   const addConference = (conference) => {
-    persist({ ...data, conferences: [...data.conferences, conference] });
+    const current = dataRef.current;
+    persist({ ...current, conferences: [...current.conferences, conference] });
   };
 
   const updateConference = (id, patch) => {
+    const current = dataRef.current;
     persist({
-      ...data,
-      conferences: data.conferences.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+      ...current,
+      conferences: current.conferences.map((c) => (c.id === id ? { ...c, ...patch } : c)),
     });
   };
 
@@ -170,9 +175,10 @@ export function useConferences({ token } = {}) {
   };
 
   const saveConferenceEdit = (id, { master, starred, upcoming, last }, existingUpcomingId, existingLastId) => {
+    const current = dataRef.current;
     let next = {
-      ...data,
-      conferences: data.conferences.map((c) =>
+      ...current,
+      conferences: current.conferences.map((c) =>
         c.id === id ? { ...c, ...master, starred } : c
       ),
     };
@@ -205,8 +211,9 @@ export function useConferences({ token } = {}) {
   // 더 오래된 과거를 덮어쓰지 않도록 보호.
   const applyLastDiscovery = (conferenceId, proposed) => {
     if (!proposed?.start_date) return;
+    const current = dataRef.current;
     const now = new Date().toISOString();
-    const pastsForConf = data.editions.filter(
+    const pastsForConf = current.editions.filter(
       (e) => e.conference_id === conferenceId && e.status === 'past' && e.start_date
     );
     const mostRecent = pastsForConf.sort((a, b) => b.start_date.localeCompare(a.start_date))[0];
@@ -222,14 +229,14 @@ export function useConferences({ token } = {}) {
 
     let editions;
     if (mostRecent) {
-      editions = data.editions.map((e) =>
+      editions = current.editions.map((e) =>
         e.id === mostRecent.id
           ? { ...e, ...fields, status: 'past', source: 'ai_search', updated_at: now }
           : e
       );
     } else {
       editions = [
-        ...data.editions,
+        ...current.editions,
         {
           id: generateEditionId(),
           conference_id: conferenceId,
@@ -240,13 +247,14 @@ export function useConferences({ token } = {}) {
         },
       ];
     }
-    persist({ ...data, editions });
+    persist({ ...current, editions });
   };
 
   // PLAN-013-A: AI 결과 수용 시 기본 anchor=false. 사용자가 "수용 (확정)" 으로 명시 요청한 경우만 true.
   const applyAiUpdate = (conferenceId, proposed, { anchor = false } = {}) => {
+    const current = dataRef.current;
     const now = new Date().toISOString();
-    const existing = data.editions
+    const existing = current.editions
       .filter((e) => e.conference_id === conferenceId && e.status === 'upcoming')
       .sort((a, b) => (a.start_date || '').localeCompare(b.start_date || ''))[0];
 
@@ -263,14 +271,14 @@ export function useConferences({ token } = {}) {
 
     let editions;
     if (existing) {
-      editions = data.editions.map((e) =>
+      editions = current.editions.map((e) =>
         e.id === existing.id
           ? { ...e, ...fields, status: 'upcoming', source: 'ai_search', updated_at: now }
           : e
       );
     } else {
       editions = [
-        ...data.editions,
+        ...current.editions,
         {
           id: generateEditionId(),
           conference_id: conferenceId,
@@ -281,7 +289,7 @@ export function useConferences({ token } = {}) {
         },
       ];
     }
-    persist({ ...data, editions });
+    persist({ ...current, editions });
   };
 
   // PLAN-011-C: discovery 후보 승인 → master + (있으면) upcoming edition 동시 생성.
@@ -292,8 +300,9 @@ export function useConferences({ token } = {}) {
     const fullName = typeof candidate.full_name === 'string' ? candidate.full_name.trim() : '';
     if (!fullName) return null;
 
+    const current = dataRef.current;
     let id = generateDiscoveryConferenceId();
-    const existingIds = new Set(data.conferences.map((c) => c.id));
+    const existingIds = new Set(current.conferences.map((c) => c.id));
     while (existingIds.has(id)) id = generateDiscoveryConferenceId();
 
     const cycle = Number.isFinite(candidate.cycle_years) ? candidate.cycle_years : 0;
@@ -324,7 +333,7 @@ export function useConferences({ token } = {}) {
     const hasUpcoming = u && (u.start_date || u.end_date || u.venue || u.link);
     const editions = hasUpcoming
       ? [
-        ...data.editions,
+        ...current.editions,
         {
           id: generateEditionId(),
           conference_id: id,
@@ -340,17 +349,18 @@ export function useConferences({ token } = {}) {
           updated_at: new Date().toISOString(),
         },
       ]
-      : data.editions;
+      : current.editions;
 
-    persist({ ...data, conferences: [...data.conferences, master], editions });
+    persist({ ...current, conferences: [...current.conferences, master], editions });
     return id;
   };
 
   const deleteConference = (id) => {
+    const current = dataRef.current;
     persist({
-      ...data,
-      conferences: data.conferences.filter((c) => c.id !== id),
-      editions: data.editions.filter((e) => e.conference_id !== id),
+      ...current,
+      conferences: current.conferences.filter((c) => c.id !== id),
+      editions: current.editions.filter((e) => e.conference_id !== id),
     });
   };
 
