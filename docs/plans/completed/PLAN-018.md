@@ -1,9 +1,10 @@
 # PLAN-018: prompt-designer Skill + 문서 갱신 (PR-5)
 
-> **상태**: active
+> **상태**: completed
 > **생성일**: 2026-04-20
+> **완료일**: 2026-04-20
 > **브랜치**: `feature/PLAN-018-prompt-designer`
-> **연관 PR**: TBD (PR-4 `feature/PLAN-017-eval-loop` 위에 스택)
+> **연관 PR**: #24 (일괄 머지 e925a66 / 개별 커밋 9fd1e95)
 > **트랙**: F.2 프롬프트 평가 체계화 · PR-5 (최종)
 
 ---
