@@ -1,10 +1,14 @@
 # 학회 DB 관리 웹앱 — 개발 가이드 v3
 
+> **상위 문서**: `docs/roadmap.md` (장기 Phase·상업화 로드맵)
+> **현재 Phase**: **A.0 (준비기)** — 서버 전환 설계 중. PLAN-026 스택 비교(Supabase 권고) + PLAN-027 로드맵 체계화 진행.
+> **하위 문서**: `docs/plans/active/PLAN-xxx.md` (개별 과제)
+>
 > **문서 버전**: v3.2 (pending-only 슬림화)
 > **최종 수정일**: 2026-04-21
 > **전임자**: `docs/legacy/dev-guide-v2.md` (Post-MVP Track A/B/C 완료)
 > **완료된 v3 작업**: `docs/plans/completed/` (PLAN-009~019 + PR pending PLAN-024/025)
-> **배경 자료**: `docs/blueprint.md` §7.2 우선순위, `docs/reference/HARNESS_MASTER.md`
+> **배경 자료**: `docs/blueprint.md` §7.2.1 Option 2/4 아키텍처, `docs/reference/HARNESS_MASTER.md`
 
 ---
 
