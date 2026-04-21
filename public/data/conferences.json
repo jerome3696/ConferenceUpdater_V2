@@ -488,6 +488,84 @@
         "organizer": "International Digital Engineering Association (IDEA)",
         "found_at": "2026-04-19T06:07:26.173Z"
       }
+    },
+    {
+      "id": "disc_mo8592i0e0",
+      "starred": 0,
+      "category": "",
+      "field": "공기질",
+      "abbreviation": "Indoor Air",
+      "full_name": "Indoor Air - International Conference of the International Society of Indoor Air Quality and Climate",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://www.indoorair2026.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "ISIAQ founded in 1992",
+          "Premier international scientific platform",
+          "Held biennial since 1978"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "공기질",
+            "en": "indoor air quality"
+          },
+          {
+            "ko": "열쾌적성",
+            "en": "thermal comfort"
+          },
+          {
+            "ko": "시뮬레이션",
+            "en": "smart building technologies"
+          }
+        ],
+        "evidence_url": "https://www.indoorair2026.org/",
+        "organizer": "International Society of Indoor Air Quality and Climate (ISIAQ)",
+        "found_at": "2026-04-21T04:48:56.808Z"
+      }
+    },
+    {
+      "id": "disc_mo8593oimc",
+      "starred": 0,
+      "category": "",
+      "field": "건물에너지모델링",
+      "abbreviation": "COBEE",
+      "full_name": "COBEE - International Conference on Building Energy and Environment",
+      "cycle_years": 3,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://cobee2025.cobee2025.org/",
+      "note": "",
+      "source": "ai_discovery",
+      "discovery_meta": {
+        "predatory_score": "low",
+        "predatory_reasons": [
+          "Springer publishes proceedings",
+          "First held in 2008 in Dalian, China",
+          "EI and SCOPUS indexed"
+        ],
+        "matched_keywords": [
+          {
+            "ko": "건물에너지모델링",
+            "en": "building energy and environment"
+          },
+          {
+            "ko": "시뮬레이션",
+            "en": "simulation"
+          },
+          {
+            "ko": "스마트건물",
+            "en": "smart building systems"
+          }
+        ],
+        "evidence_url": "https://cobee2025.cobee2025.org/",
+        "organizer": "Eindhoven University of Technology",
+        "found_at": "2026-04-21T04:48:58.338Z"
+      }
     }
   ],
   "editions": [
@@ -1267,6 +1345,20 @@
       "confidence": "high",
       "source": "ai_search",
       "updated_at": "2026-04-20T06:39:19.307Z"
+    },
+    {
+      "id": "ed_mo8592i0",
+      "conference_id": "disc_mo8592i0e0",
+      "status": "upcoming",
+      "start_date": "2026-06-01",
+      "end_date": "2026-06-05",
+      "venue": "Singapore",
+      "link": "https://www.indoorair2026.org/",
+      "confidence": null,
+      "source": "ai_discovery",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T04:48:56.808Z"
     }
   ]
 }
