@@ -2,17 +2,18 @@
 
 - 열유체·건물공조 분야 국제 학회 DB 관리 React SPA. 
 - Claude API 웹검색으로 학회 정보 자동 업데이트. 
-- **아키텍처는 단계적 전환 중** — 현재: GitHub Pages 정적 + JSON/localStorage 단일 사용자 / 향후: 서버 도입 → 개인 DB 제공 제품화 (`docs/blueprint.md` §7).
+- **아키텍처는 단계적 전환 중** — 현재: GitHub Pages 정적 + JSON/localStorage 단일 사용자 / 향후: 서버 도입 → 개인 DB 제공 제품화 (`docs/roadmap.md`).
 - 배포: https://jerome3696.github.io/ConferenceUpdater_V2/
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. PLAN-019 진행 — v1_0 측정(16/27) 후 v1_1 도입 및 측정 (19/27, persistent 9→5). 다음: v1_2 튜닝 (4년 주기 케이스, draft site confidence, ICMF JSON 안정성).** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-019.md`.
+**현재: Phase A.0 (서버 전환 설계).** PLAN-026 스택 비교(Supabase 권고) + PLAN-027 로드맵 체계화. v1_1 프롬프트(19/27) 측정 완료, v1_2 튜닝 보류. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
 
 ## 문서 맵 (작업 종류별)
 
 | 언제 | 무엇을 읽어라 |
 |---|---|
+| 장기 로드맵·상업화 Phase (어느 Phase?) | `docs/roadmap.md` |
 | Step·트랙 진행 / 진행 상황 확인 | `docs/dev-guide-v3.md` (완료된 v1·v2는 `docs/legacy/`) |
 | 기능 설계 / 구현 가능성 판단 | `docs/blueprint.md` |
 | 프롬프트 변경·평가 | `docs/prompteng.md` (현황판 §1, 레버 §4, 패턴 §6) |
@@ -20,8 +21,6 @@ MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(
 | 코드 구조 탐색 | `docs/structure.md` |
 | 사용 중 이슈 수집·일괄 처리 | `docs/qa-backlog.md` |
 | 새 기능 플랜 작성 | `docs/plans/TEMPLATE.md` |
-
-`docs/legacy/`·`docs/reference/`는 명시 요청 없으면 진입 불요.
 
 ## 작업 흐름
 1. 플랜 작성 → `docs/plans/active/PLAN-xxx.md`
