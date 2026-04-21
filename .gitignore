@@ -38,3 +38,7 @@ scripts/output/
 .env
 .env.*
 !.env.example
+
+# Tooling workspaces (Serena MCP, oh-my-claudecode) — per-user, not shared
+.serena/
+.omc/
