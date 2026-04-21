@@ -48,7 +48,7 @@
 | Track G | 플랜 | 대상 | 예상 효과 | 공수 | 위험 |
 |---------|------|------|----------|------|------|
 | G.1 | PLAN-020 | `useUpdateQueue.js` last-edition 추출 | 278 → ~250 | S | 저 |
-| G.2 | PLAN-021 | `promptBuilder.js` 외부화 (MD 템플릿 로드) | 684 → ~280 | M | 저 |
+| G.2 | PLAN-021 | `promptBuilder.js` 외부화 (MD 템플릿 로드) | 684 → ~450 | M | 저 |
 | G.3 | PLAN-022 | `responseParser.js` BaseParser 통합 | 305 → ~250, 중복 6·5·5·5회 해소 | M | 중 |
 | G.4 | PLAN-023 | `DiscoveryPanel.jsx` 3개 훅 분리 | 367 → ~120 ×3 | L | 고 |
 
@@ -59,3 +59,4 @@
 - **판단 노트**: `DATE_RE` 는 `responseParser.js` 내부 단일 정의·5회 재사용으로 중복 아님 (모듈 내 재사용은 정상).
 - **공통 Button 추출**: 10개 파일 영향·스타일 미세 차이 → 디자인 회귀 점검 필요. Track G에 포함하지 않고 별도 검토.
 - **리팩토링 우선순위**: G.2 > G.1 > G.3 > G.4. G.2 는 v1_2 프롬프트 튜닝 **전에** 완료하면 튜닝 과정이 깔끔.
+- **promptBuilder 현재 구조 (2026-04-21 확인)**: v1_0 + v1_1 두 버전이 4 kind(update/verify/discovery/lastEdition) × system/user 조합으로 내장. 외부화하더라도 분기 로직·4 kind × 2 버전 공통 헬퍼는 남아 ~450줄 선이 현실적 바닥 (초기 목표 ~280 은 비현실적, architect/code-reviewer 2026-04-21 리뷰).

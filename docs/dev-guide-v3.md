@@ -76,8 +76,9 @@ Option 2 → 2.5 → Option 4 순서. 각 단계가 다음 단계의 전제.
 - [ ] **F.3** **E2E 테스트 도입 (Playwright)**
   - 캘린더 뷰·ICS 다운로드·폼 모달·업데이트 큐 회귀 방지
   - 유닛 테스트(326건)는 코드 정합만 확인 — 브라우저 UX 회귀는 아직 수동 확인 의존
-- [ ] **F.4** **qa-backlog 주기적 처리**
+- [ ] **F.4** **qa-backlog 주기적 처리** — **현재 Active 0건 (대기)**
   - 실사용에서 누적된 `docs/qa-backlog.md` 를 5~10건 단위 batch 플랜화
+  - 누적 전까지 트리거 없음. 체감 이슈 발생 시 먼저 qa-backlog 에 추가
 - [ ] **F.5** **프롬프트 실패 로그 analyzer** (기존 F.2 에서 이동)
   - eval 결과 10회+ 축적 시점에 트리거. 공통 실패 패턴 자동 추출 → 다음 버전 레버 후보
 
@@ -88,6 +89,7 @@ Option 2 → 2.5 → Option 4 순서. 각 단계가 다음 단계의 전제.
   - `fetchLastEditionIfNeeded()` 헬퍼 추출. 278줄 → 250줄 목표
 - [ ] **G.2** **PLAN-021 — promptBuilder.js 외부화** (M 공수, 저위험) — v1_2 튜닝 **전에** 완료 권장
   - 684줄 (Critical). system/user 템플릿 raw text를 `docs/prompts/v*.md` 로 이관, 빌더는 파일 로드 + 변수 주입만
+  - **목표 684 → ~450** (v1_0+v1_1 × 4 kind × system/user 분기 로직 잔존. 초기 ~280 목표는 비현실적)
 - [ ] **G.3** **PLAN-022 — responseParser 통합** (M 공수, 중간 위험)
   - 5개 파서의 공통 JSON 추출/검증을 `BaseParser` 로 추상화. 305줄 → 250줄 목표
 - [ ] **G.4** **PLAN-023 — DiscoveryPanel 상태 분해** (L 공수, 높은 위험)
