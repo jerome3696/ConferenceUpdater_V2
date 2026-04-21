@@ -95,7 +95,7 @@ ConferenceFinder V2의 **서버 백엔드 스택**을 선택한다. Cloudflare W
 
 ## 5. 단계 (Steps)
 
-- [ ] Step 1 — 이 문서 내 권고안(Supabase) 사용자 최종 승인
+- [x] Step 1 — 이 문서 내 권고안(Supabase) 사용자 최종 승인 (2026-04-21 승인, `jerome3696@gmail.com`)
 - [ ] Step 2 — Supabase 프로젝트 생성 + 로컬 CLI 초기화 (`supabase init`)
 - [ ] Step 3 — Resend SMTP 계정 개설·연동 (Day 1 작업, magic link 테스트)
 - [ ] Step 4 — 후속 플랜 분기:
@@ -106,11 +106,11 @@ ConferenceFinder V2의 **서버 백엔드 스택**을 선택한다. Cloudflare W
 
 ## 6. 검증 (Verification)
 
-- [ ] 3개 스택 비교 매트릭스가 정확한 수치·출처로 기재됨
-- [ ] "왜 Supabase인가"의 근거가 반증 가능한 형태로 명시됨 (대안 재검토 트리거 포함)
-- [ ] 사용자 승인 서명 — 스택 변경 시 본 문서 §4.4 재작성 요구
-- [ ] `bash scripts/verify-task.sh` 통과 (문서 변경이므로 lint·test만)
-- [ ] `docs/blueprint.md` §7.2 서버 전환 섹션에 선택 스택 기록 (본 플랜 완료 시점)
+- [x] 3개 스택 비교 매트릭스가 정확한 수치·출처로 기재됨
+- [x] "왜 Supabase인가"의 근거가 반증 가능한 형태로 명시됨 (대안 재검토 트리거 포함)
+- [x] 사용자 승인 서명 — 스택 변경 시 본 문서 §4.4 재작성 요구 (2026-04-21)
+- [x] `bash scripts/verify-task.sh` 통과 (문서 변경이므로 lint·test만) — 2026-04-21 ✅ 5/5
+- [x] `docs/blueprint.md` §7.2 서버 전환 섹션에 선택 스택 기록 (본 플랜 완료 시점)
 
 ## 7. 리스크·롤백
 
@@ -135,3 +135,4 @@ Step 4의 3개 분기 플랜 + Phase 1 구현 PLAN들:
 ## 9. 작업 로그
 
 - **2026-04-21**: 상위 전략 플랜(3-spicy-manatee v3) 승인 직후 생성. 3개 스택을 document-specialist 3병렬 조사(2026-04 기준 최신). Supabase 권고. 사용자 최종 승인 대기.
+- **2026-04-21**: **사용자 승인 완료** (`jerome3696@gmail.com`). "내 PC 24/7 켜놓기" 우려는 3개 스택 모두 완전 관리형 서버리스라 해당 없음을 확인 후 승인. Step 2~4(Supabase 프로젝트 생성·Resend 연동·후속 플랜 3건 분기)는 별도 브랜치/PR로 진행 예정 (PR scope 분리 위함). 본 PLAN-026은 Step 1·§6 완료 시점에 머지 후 `completed/` 이동.
