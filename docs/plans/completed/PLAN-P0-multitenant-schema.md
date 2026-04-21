@@ -99,7 +99,7 @@ erDiagram
 |---|---|---|---|
 | `id` | uuid | PK, FK → auth.users.id ON DELETE CASCADE | |
 | `email` | text | NOT NULL, UNIQUE | `auth.users.email` 미러 (조회 편의) |
-| `role` | text | NOT NULL, CHECK (role IN ('viewer','editor','admin')), DEFAULT 'viewer' | 권한 |
+| `role` | text | NOT NULL, CHECK (role IN ('user','admin')), DEFAULT 'user' | 권한 — v1.1 정합: viewer/editor 분리 폐지, 모든 user 공용 DB 기여 가능 |
 | `display_name` | text | NULL | UI 표시명 |
 | `created_at` | timestamptz | NOT NULL, DEFAULT now() | |
 | `last_login_at` | timestamptz | NULL | Auth trigger 로 갱신 |
@@ -195,14 +195,16 @@ erDiagram
 
 표기: ✅ 허용, ❌ 거부, 🔧 서버(service_role)만, 🧪 조건부(본인 row 한정 `user_id = auth.uid()`).
 
-| 테이블 | viewer SELECT | viewer INSERT | viewer UPDATE | viewer DELETE | editor/admin 추가 |
+**v1.1 정합**: role 2단계 (user·admin) — 모든 인증된 user 가 공용 DB 기여 가능. Edge Function 이 감사 로그 기록 후 service_role 로 upstream 쓰기 수행(RLS 우회). 클라이언트 직접 UPDATE 는 금지하여 감사 누락 방지.
+
+| 테이블 | user SELECT | user INSERT | user UPDATE | user DELETE | admin 추가 |
 |---|:-:|:-:|:-:|:-:|---|
-| `users` | 🧪 본인 | ❌ (Auth trigger) | 🧪 본인 (role 제외) | ❌ | admin: 모든 row SELECT + role UPDATE |
-| `conferences_upstream` | ✅ 모두 | ❌ | ❌ | ❌ | editor: INSERT/UPDATE/DELETE |
-| `editions_upstream` | ✅ 모두 | ❌ | ❌ | ❌ | editor: INSERT/UPDATE/DELETE |
-| `user_conferences` | 🧪 본인 | 🧪 본인 | 🧪 본인 | 🧪 본인 | admin: 전체 SELECT (지원용) |
-| `api_usage_log` | 🧪 본인 | 🔧 서버만 | ❌ | ❌ | admin: 전체 SELECT |
-| `quotas` | 🧪 본인 | 🔧 서버만 | 🔧 서버만 | ❌ | admin: 전체 SELECT + limit UPDATE |
+| `users` | 🧪 본인 | ❌ (Auth trigger) | 🧪 본인 (role 제외) | ❌ | 모든 row SELECT + role UPDATE |
+| `conferences_upstream` | ✅ 모두 | 🔧 서버(Edge Function) | 🔧 서버(Edge Function) | ❌ | DELETE + 직접 UPDATE |
+| `editions_upstream` | ✅ 모두 | 🔧 서버(Edge Function) | 🔧 서버(Edge Function) | ❌ | DELETE + 직접 UPDATE |
+| `user_conferences` | 🧪 본인 | 🧪 본인 | 🧪 본인 | 🧪 본인 | 전체 SELECT (지원용) |
+| `api_usage_log` | 🧪 본인 | 🔧 서버만 | ❌ | ❌ | 전체 SELECT |
+| `quotas` | 🧪 본인 | 🔧 서버만 | 🔧 서버만 | ❌ | 전체 SELECT + limit UPDATE |
 
 정책 SQL 의사코드 (대표):
 ```sql
@@ -210,16 +212,16 @@ erDiagram
 CREATE POLICY uc_self ON user_conferences
   FOR ALL USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
 
--- conferences_upstream editor 이상만 쓰기
+-- conferences_upstream 읽기 전원, 쓰기는 Edge Function (service_role) 독점
 CREATE POLICY cu_read  ON conferences_upstream FOR SELECT USING (true);
-CREATE POLICY cu_write ON conferences_upstream FOR ALL
-  USING ((SELECT role FROM users WHERE id = auth.uid()) IN ('editor','admin'))
-  WITH CHECK ((SELECT role FROM users WHERE id = auth.uid()) IN ('editor','admin'));
+-- INSERT/UPDATE 정책 없음 → service_role 만 통과. admin 은 DB 직접 수정 필요 시 service_role key 사용.
 
 -- quotas 는 서버만 (service_role bypass RLS, client 는 SELECT 만)
 CREATE POLICY q_self_read ON quotas FOR SELECT USING (user_id = auth.uid());
 -- UPDATE/INSERT 는 RLS 로 막고, Edge Function 이 service_role 로 수행.
 ```
+
+**왜 Edge Function 독점인가**: 직접 RLS 로 user 쓰기 허용 시 감사 로그 기록 누락 가능. Edge Function 이 한 트랜잭션에서 `INSERT INTO api_usage_log + UPSERT INTO conferences_upstream` 을 묶어 처리 → 모든 공용 변경이 추적됨 (Phase B flag 시스템·Phase C 평판 모델의 전제).
 
 ### 4.3 공용 ↔ 개인 override 머지 규칙
 
@@ -249,12 +251,15 @@ function mergeConference(upstream, userLayer) {
 }
 ```
 
-**Write 정책**:
-- **starred / personal_note 편집** → `user_conferences` upsert (권한 불요)
-- **공용 필드 편집** (cycle_years·full_name 등):
-  - editor+: `conferences_upstream` UPDATE → 모든 사용자 반영
-  - viewer: `user_conferences.overrides` 에 해당 필드만 추가 → 본인만 다르게 보임
+**Write 정책** (v1.1 정합: 3채널 기여 모델):
+- **starred / personal_note / overrides 편집** → `user_conferences` upsert (본인 RLS, 권한 불요)
+- **공용 필드 편집** (cycle_years·full_name·회차 등) → 3채널 모두 **Edge Function 경유**:
+  1. **운영자 큐레이션 시드** (admin, 마이그레이션 스크립트): `conferences_upstream` / `editions_upstream` 직접 upsert
+  2. **AI 자동 검색 결과** (user·admin 공통): Edge Function 이 TTL 선참조 후 호출 → 결과를 `conferences_upstream` 에 저장 + `api_usage_log` 기록
+  3. **수동 입력** (user·admin): Edge Function `POST /api/conference` → 입력값 검증 + `conferences_upstream` upsert + `edit_log` 기록 (append-only 감사 로그)
+- **개인 override 레이어** (`user_conferences.overrides`): "나만 이 값이 다르게 보여야 함" 선언. 공용 수정과는 별개의 UX. 기본은 upstream 따라감.
 - **충돌 해결 원칙**: overrides 는 항상 upstream 을 덮어씀. upstream 값이 override 와 같아지면 프론트에서 해당 override 키 삭제 권장 (stale cleanup).
+- **감사 로그 (신규)**: 모든 공용 쓰기는 `api_usage_log` (AI 호출) 또는 `edit_log` (수동 입력) 에 user_id·대상·diff 기록. Phase B flag·Phase C 평판 모델의 데이터 기반.
 
 ### 4.4 대안 결정 (3건)
 
@@ -264,8 +269,17 @@ function mergeConference(upstream, userLayer) {
 **4.4.2 starred·note 테이블: 단일 vs 분리 → 단일 `user_conferences`**
 - 근거: 개인 레이어 자체가 희소(30명 × 32학회 = 최대 960 row, 실제론 ⅓ 수준). 분리 시 starred-only row / note-only row 를 각각 upsert → 조인 2배. 단일 테이블 + 기본값 0/''/'{}' 가 단순. starred 만 변경 시에도 row 하나.
 
-**4.4.3 공용값 편집 권한: editor role 필요 (viewer 는 personal override 만)**
-- 근거: Phase A 30명 파일럿 = 나 한 명 'admin', 필요 시 1~2명 'editor'. 익명 다수가 공용값 편집 허용하면 reverting 관리 불가. viewer 가 개인적 수정 욕구 있으면 override 레이어로 본인만 반영 → "내 뷰만 바꾸고 싶어요" 요구 충족.
+**4.4.3 공용값 편집 권한: v1.1 — role 2단계 (user·admin), 모든 user 공용 DB 기여 가능 + Edge Function 독점 쓰기**
+
+초기 v1 은 viewer/editor/admin 3단계였으나, v1.1 에서 다음 이유로 2단계로 단순화:
+
+- Phase A 파일럿 = 초대 기반 30명 → 악의적 편집 동기 낮음 (C-2 화이트리스트).
+- 3채널 기여 모델 (§4.3) 하에서 "AI 자동 검색 결과" 가 공용 DB 의 주요 소스 → AI 호출 권한과 공용 쓰기 권한을 viewer/editor 로 분리할 실익 적음.
+- editor 역할 분리 시 "누구에게 editor 부여할지" 운영 부담 + 사용자 혼란 ("둘 다 업데이트 되는데 뭐가 다르죠?").
+- Edge Function 이 모든 공용 쓰기 독점 → 감사 로그 빠짐없이 기록 + Phase B flag / Phase C 평판 모델의 데이터 기반 확보.
+- admin 은 role UPDATE · service_role 직접 편집 권한 + 예산 초과 후 호출 유지 (디버깅).
+
+개인 override (`user_conferences.overrides`) 는 유지: "나만 이 값이 다르게 보여야 함" 요구 (시각 차이 선호, 비표준 메타) 에 대응.
 
 ### 4.5 마이그레이션 전략 (1회성)
 
@@ -364,3 +378,4 @@ for (const e of data.editions) {
 
 - **2026-04-21 (초안)**: 스켈레톤 생성. 구조는 roadmap.md §6.3 기반, 세부 결정 보류.
 - **2026-04-21 (v1 본문)**: 6테이블 컬럼·인덱스 확정, RLS 매트릭스 작성, §4.4 대안 3건 결정, 마이그레이션 의사코드 추가. `editions_upstream` 를 §3 범위에 추가(5→6 테이블). 쿼터 주기 정책 요약(§4.6) — 상세는 `PLAN-P0-quota-policy` 로 위임.
+- **2026-04-22 (v1.1 정합)**: PLAN-P0-longterm-vision 3채널 기여 모델 반영. role viewer/editor/admin → user/admin 2단계 단순화 (§4.1.1). RLS 매트릭스에서 editor 열 제거 + 공용 쓰기 Edge Function(service_role) 독점 (§4.2). §4.3 Write 정책 3채널(시드·AI·수동) 으로 재작성 + 감사 로그 도입. §4.4.3 결정 갱신.
