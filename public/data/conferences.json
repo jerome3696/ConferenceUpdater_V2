@@ -1414,6 +1414,18 @@
       "anchored": false,
       "anchor_set_at": null,
       "updated_at": "2026-04-21T04:49:16.038Z"
+    },
+    {
+      "id": "ed_mo88lj4w",
+      "conference_id": "disc_mo8593oimc",
+      "status": "past",
+      "start_date": "2022-07-25",
+      "end_date": "2022-07-29",
+      "venue": "Montreal, Quebec, Canada",
+      "link": "https://www.cobee2022.org/",
+      "confidence": "high",
+      "source": "ai_search",
+      "updated_at": "2026-04-21T06:22:37.088Z"
     }
   ]
 }
