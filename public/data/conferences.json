@@ -568,45 +568,6 @@
       }
     },
     {
-      "id": "disc_mo859c2sp1",
-      "starred": 0,
-      "category": "",
-      "field": "공기질",
-      "abbreviation": "AIVC",
-      "full_name": "AIVC Conference - Air Infiltration and Ventilation Centre Conference",
-      "cycle_years": 1,
-      "duration_days": 0,
-      "region": "전세계",
-      "official_url": "https://www.aivc.org/events/conferences",
-      "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "AIVC is an international center since 1979",
-          "Regularly held annual conferences",
-          "Joint events with TightVent and venticool platforms"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "공기질",
-            "en": "indoor air quality"
-          },
-          {
-            "ko": "건물공조",
-            "en": "ventilation"
-          },
-          {
-            "ko": "열쾌적성",
-            "en": "thermal comfort"
-          }
-        ],
-        "evidence_url": "https://www.aivc.org/events/conferences",
-        "organizer": "Air Infiltration and Ventilation Centre (AIVC)",
-        "found_at": "2026-04-21T04:49:09.220Z"
-      }
-    },
-    {
       "id": "disc_mo859hc6bf",
       "starred": 0,
       "category": "",
@@ -1439,20 +1400,6 @@
       "anchored": false,
       "anchor_set_at": null,
       "updated_at": "2026-04-21T04:48:56.808Z"
-    },
-    {
-      "id": "ed_mo859c2s",
-      "conference_id": "disc_mo859c2sp1",
-      "status": "upcoming",
-      "start_date": "2026-09-30",
-      "end_date": "2026-10-01",
-      "venue": "Incheon, Republic of Korea",
-      "link": "https://www.aivc.org/events/conferences",
-      "confidence": null,
-      "source": "ai_discovery",
-      "anchored": false,
-      "anchor_set_at": null,
-      "updated_at": "2026-04-21T04:49:09.220Z"
     },
     {
       "id": "ed_mo859hc6",
