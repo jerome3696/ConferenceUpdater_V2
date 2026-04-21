@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. F.1 Phase 1 Last-edition 1차 채움 완료 (PR #21, 2026-04-20) — past 보유 master 2→29 전수. 다음: F.1 Phase 2 (update 프롬프트/로직 정교화).** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-011.md`.
+MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(캘린더) + PLAN-010(scope 3-option + ICS + 즐겨찾기 이진화) + QA Batch 1~2. **현재: dev-guide v3. PLAN-019 진행 — v1_0 측정(16/27) 후 v1_1 도입 및 측정 (19/27, persistent 9→5). 다음: v1_2 튜닝 (4년 주기 케이스, draft site confidence, ICMF JSON 안정성).** 상세: `docs/dev-guide-v3.md`, `docs/plans/active/PLAN-019.md`.
 
 ## 문서 맵 (작업 종류별)
 
@@ -49,7 +49,7 @@ MVP v1.0.0 완료 → Post-MVP (dev-guide v2) Track A·B·C 완료 — PLAN-009(
 - 대화형 프롬프트 우회용으로 파괴 플래그 쓰지 말고 사용자에게 `!<command>` 직접 실행 요청.
 
 ## 비자명한 코드 제약
-- 프롬프트 변경은 `src/utils/promptBuilder.js`만 수정 (버전 기반, v1·v2·v3·v4 공존, 활성: v4)
+- 프롬프트 변경은 `src/utils/promptBuilder.js` + `docs/prompts/v{N}_{M}.md` **양쪽 동기** (동기화 테스트로 묶임 — 한쪽만 고치면 CI 실패). 이전 버전 불변, 활성: v1_1 (2026-04-21, v1_0 측정 후 개선)
 - `src/services/claudeApi.js`는 브라우저·Node 양쪽에서 사용 (브라우저 전용 API 금지)
 - `responseParser.js` ↔ `UpdateCard.jsx`/`VerificationCard.jsx`의 JSON 구조 일치 필수 — 하나 바꾸면 나머지 확인
 

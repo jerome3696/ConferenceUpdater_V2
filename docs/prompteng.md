@@ -24,37 +24,43 @@
 
 ## §1. 빠른 현황판 (Active)
 
+> **현황판 갱신 절차**: 새 run 이 끝나면 `docs/eval/runs/<run-id>/run.json` 을 열어 아래 필드를 복사해 "마지막 측정" 블록에 반영한다. 자동화는 미적용 — 사람이 복사.
+> - `run_id`, `version`, `stopped_by`, `iterations.length`
+> - 최종 iter 의 `pass` / `partial` / `fail_or_error` / `total`
+> - `persistent_failures` 배열 → "잔존 실패" 에 반영
+> - `by_cycle_years_total` → cycle 버킷 편향 분석
+>
+> 단일 run (eval-loop 미사용) 시에는 `docs/eval/results/<timestamp>-<version>.json` 의 `summary` 블록을 사용.
+
 ### 활성 버전
-- **앱 사용 중**: `v4` (Haiku 4.5 + Phase A 적용)
+- **앱 사용 중**: `v1_1` (Haiku 4.5 단일 · Sonnet 폴백 없음)
   - `web_search` `max_uses: 5` 캡 / `maxTokens: 1024` (kind=update)
-  - **Haiku→Sonnet 재시도** (PLAN-005, 2026-04-18): 1차 Haiku 결과 `start_date=null`이면 Sonnet 4.6 + `web_fetch` 로 1회 재시도
-- **v5 휴면**: `dedicated_url` 힌트 라인 추가 버전. `DEFAULT_UPDATE_VERSION=v4` 유지. eval 통과 후 활성 검토
-- **v6 휴면 (신규)**: PLAN-006 — Link–Confidence 상호구속, Venue 포맷(USA/Canada/그외) 엄격화, 3순위 색인 페이지 허용 명료화, framer.ai 연성화(draft 규칙). 파서 `normalizeUpdateData` 안전망 동반
-- **마지막 측정(v6)**: 2026-04-18 / **pass 15 / partial 1 / fail 3 (19건)** / avg input 34,613 · output 729 토큰
-  - 결과 파일: `docs/eval/results/2026-04-18T00-28-11-v6.json`
-  - 직전(v3): 2026-04-17 / 19/19 (100%) / avg in 41,651 · out 722 — `docs/eval/results/2026-04-17T12-42-33-v3.json`
-- **v4 / v5 eval**: 미실행. v6 측정으로 우선 비교 종료 (사용자 결정 2026-04-18). 향후 필요 시 `npm run eval -- --version v4|v5`
+  - **v1_1 변경 4건** (v1_0 측정 후): 축 A URL 3유형 분기 (연도형/회차번호형/불변형) · confidence 소스 신뢰도 재정의 (공식/준공식/외부) · 주기 초반 부정확 소스 허용 (null 대신 low) · iifiir.org 이벤트 슬러그 주기-임박 시 제외
+  - 튜닝 상수 (`src/utils/promptBuilder.js` 상단 `V1_1_VARS`): `IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`
+  - PLAN-013-D `buildLastEditionPrompt` v1 사전 탐색 체인 연결
 
 ### 잔존 실패 (다음 개선 타겟)
-- **[P2 해소] conf_006 IIR Cryogenics** — `official_url` 이 금지 도메인(iir-conferences-series)이었음. 2026-04-18 `cryogenics-conference.eu` 로 교체 (PLAN-005 Part 1). 브라우저 확인 필요
-- **[P6 대응] conf_015 ICCFD** — Haiku `web_search` 가 홈페이지 평문 날짜 누락 → Sonnet 4.6 + `web_fetch` 재시도로 보정 (PLAN-005 Part 3). `dedicated_url=https://iccfd13.polimi.it` 힌트도 v5 에 추가
-- **[P2 부분 미해결] conf_019 Gustav** — eval에서는 source_url 매칭으로 pass지만 전용 사이트(iir-gl-2026.net) 미발굴. 레버 E(임박 학회 재검증) 필요
-- **[P8 대응] conf_006 1차 run** — `confidence=high` + `link=null` 자기모순 관찰 → v6 Link–Confidence 상호구속 + 파서 `normalizeUpdateData` 백필
-- **[P9 대응] conf_001 ASHRAE / conf_008 ITherm** — `Orlando, United States`/`Chicago, USA` 처럼 주(state) 누락 → v6 Venue 포맷 규칙
-- **[P10 대응] conf_022 BS 2027** — (a) framer.ai 하드 금지가 과잉 일반화, (b) `ibpsa.org/conferences/` 3순위 허용 vs 시리즈 금지 충돌 → v6 색인 페이지 허용 명료화 + draft 연성화
+- **v1_1 기준 (2026-04-21, run_id=20260421-082859)**: persistent_failures 5건 (v1_0 9건 → 5건, 골든셋 수정 4건 + 프롬프트 변경 4건 효과) —
+  - `conf_006` (IIR Cryogenics): link=✓ (cryogenics-conference.eu), start/end=null (공식 미공개). 주기 진행률 초반 부정확 허용이 적용되었으나 AI 가 보수적으로 null. `fields.link=pass` 지만 iter 3 중 partial 2 회로 persistent_failures 포함
+  - `conf_007` (ICMF): 3 iter 중 parse_fail 1 회 + score 0 2 회. JSON 출력 안정성 문제 (시스템 프롬프트 규격 재확인 필요)
+  - `conf_010` (TPTPR): `no_expected` — 골든셋 미정답. pass 카운트에서 제외하는 구조적 처리 필요 (v1_2 논의)
+  - `conf_017` (PRTEC, cycle=4y 초반): 주기 진행률 0.33 으로 초반이나 expected 2027-03-14 Honolulu 존재. 레버 부족 — 4년 주기 초반에도 expected 있는 케이스 커버 필요
+  - `user_mo04ezfq` (BS 2027 framer): AI 가 `bs2027.framer.ai` (dates/venue 정확) 로 medium 반환했으나 골든셋 link 공란과 불일치 → link=fail. 골든셋 수정 방향 (link 허용) 고려 대상
+- iter 별 변동: iter 1 → 17/27, iter 2 → 20/27, iter 3 → 19/27. cycle 2y 버킷이 5→7→7 로 개선 (축 A ① 연도형 추정이 적중)
+- v1_0 대비 개선: THERMINIC · ICCFD · Hannover · ACRA 등 6건이 적어도 1 iter 이상 pass 로 전환. v1_0 persistent 9건 중 4건 (conf_005 · conf_012 · conf_015 · conf_019) 이탈
+
+### 마지막 측정
+- **v1_0** (2026-04-21): pass 16/27, stopped_by=max_iter, run_id=20260421-072101
+- **v1_1** (2026-04-21): pass 19/27 (iter 3), stopped_by=max_iter, run_id=20260421-082859, avg in=42k out=1.1k · cycle=0y 1/3, 1y 19/21, 2y 19/33, 3y 11/12, 4y 6/12
+- 레거시 v1~v7 이력: `docs/legacy/PROMPT_LOG_pre_v1.md`
 
 ### 다음 시도 (next levers)
-- [x] **A. today 앵커** + **B. 도메인 블랙리스트** — v2 적용 완료 (2026-04-17)
-- [x] **A'. today 앵커 정밀화** — v3 적용 완료 (2026-04-17). 19/19 pass, P4 완전 해소
-- [x] **활성 전환**: `DEFAULT_UPDATE_VERSION` v3 → v4 (2026-04-17)
-- [x] **C. 부분정보 처리 규칙** — v4: confidence 기준 명시 + link 4순위 + 날짜 탐색 강화 + 시리즈 null 강화
-- [x] **F. Haiku→Sonnet 재시도** — PLAN-005: `start_date=null` 트리거, 1회 제한 (2026-04-18)
-- [x] **G. dedicated_url 힌트** — v5 옵션: `conferences.json` 에 `dedicated_url` 있으면 프롬프트에 한 줄 주입 (2026-04-18)
-- [x] **H. Link–Confidence 상호구속** — v6: `high/medium` 이면 link non-null 강제, 파서 백필 안전망 병행 (PLAN-006, 2026-04-18)
-- [x] **I. Venue 포맷 정규화** — v6: US `City, State, USA` / Canada `City, Province, Canada` / 그 외 `City, Country` (Korea·UK 표기 고정) (PLAN-006, 2026-04-18)
-- [x] **J. Draft 사이트 연성화 + 3순위 색인 페이지 허용 명료화** — v6: framer.ai 하드 금지 제거, confidence=low + notes='draft/prototype' 조건부 사용. `ibpsa.org/conferences/` 류 색인 페이지는 3순위로 공식 허용 (PLAN-006, 2026-04-18)
-- [x] **v6 eval 확인** (2026-04-18): 15 pass / 1 partial / 3 fail. v3 100% 대비 표면 회귀 — conf_010은 의도된 보수성, conf_012/015는 진짜 회귀. v4/v5는 미측정 (사용자 결정으로 비교 종료)
-- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장. MVP 후 본격 검토
+- [ ] **cycle=4y 초반·후반 양쪽 저하 원인 분석** — PRTEC (초반) · IHTC (후반) 양 끝 모두 실패. 4년 주기 특성인지 소수 케이스 편향인지
+- [ ] **draft site confidence 강제** — user_mo04ezfq 사례. framer/notion 류 high→low 강제로 골든셋 허용 폭 확보 (v1_1 백로그 DRAFT_SITE_CONFIDENCE)
+- [ ] **ICMF JSON 출력 안정성** — parse_fail 1회. 시스템 프롬프트 JSON 규격 강화 검토
+- [ ] **Dedicated vs Institutional 판별 실패 추적** — v1_1 에서 식별된 신규 실패 없음. 누적 시 `conferences.json` `domain_type` 힌트 검토
+- [ ] **박람회 vs 학회 유형 분기** — category 별 pass rate 차이 분석 (v1_1 결과 raw 로 측정 가능)
+- [ ] **E. 임박 학회 공식사이트 추종** — `updateLogic.shouldSearch` imminent 판단 확장 (MVP 후)
 
 ---
 
@@ -82,13 +88,10 @@
 
 | 버전 | 시점 | 환경 | pass | 평균 토큰 (in/out) | 비고 |
 |---|---|---|---|---|---|
-| v1 | 2026-04-15 | Sonnet 4 | 13/17 (76%) | (미계측) | 초기. past 회차 + 비공식 도메인 4건 fail |
-| v1 | 2026-04-16 | Haiku 4.5 + Phase A | **16/17 (94%)** | 34,510 / 649 | `max_uses 5` 캡 효과로 품질 상승 (의외) |
-| v2 | 2026-04-17 | Haiku 4.5 + Phase A | **16/19 (84%)** | 39,954 / 677 | 레버 A+B 적용. P1·P2 일부 해결. P4(today 앵커 과잉 교정) 신규 발생 |
-| v3 | 2026-04-17 | Haiku 4.5 + Phase A | **19/19 (100%)** | 41,651 / 722 | 레버 A' 적용. P4 3건 완전 해소 (IEA HPC·ICBCHT·IHTC), P1·P2 유지 |
-| v4 | 2026-04-17 | Haiku 4.5 + Phase A | (미측정) | — | 레버 C: confidence 기준·link 4순위·하위 페이지 탐색 의무 |
-| v5 | 2026-04-18 | Haiku + Phase A + (`dedicated_url` 힌트) + Sonnet 4.6 폴백 | (미측정) | — | 레버 F·G. v4 system 동일, user에 `dedicated_url` 있을 때만 힌트 1줄 + 사용 지침 추가 |
-| v6 | 2026-04-18 | Haiku + Phase A + Sonnet 4.6 폴백 + 파서 `normalizeUpdateData` | **15/19 pass + 1 partial + 3 fail (79%/5%/16%)** | 34,613 / 729 | 레버 H·I·J. v3 100% → v6 79% 회귀 표면적, 단 conf_010은 의도된 보수성(link 빈 반환)으로 추정. conf_012/015 진짜 회귀 |
+| v1_0 | 2026-04-21 | Haiku 4.5 + Phase A (Sonnet 폴백 없음) | 16/27 (pass rate 59%, stopped_by=max_iter) | in 1.1M / out 24k (3 iter 합) | PLAN-019 재시작. 소스 2축 분리 (탐색 A · 채택 B), 재사용 레버 A'·C·H·I + Draft 조건부. persistent_failures 9건 — 대부분 골든셋 엄격성 or URL 패턴 추정 미흡 |
+| v1_1 | 2026-04-21 | Haiku 4.5 + Phase A | 19/27 (pass rate 70%, stopped_by=max_iter) | in 1.1M / out 30k (3 iter 합) | v1_0 후속. 축 A URL 3유형 / confidence 소스 재정의 / 주기 초반 부정확 허용 / iifiir 임박 제외. persistent_failures 9→5. cycle 2y 버킷 5→7 개선 |
+
+> 레거시 v1~v7 이력은 `docs/legacy/PROMPT_LOG_pre_v1.md` (§3 동결) 참조.
 
 ---
 
@@ -122,241 +125,54 @@
 
 각 실행은 시간순. 환경·결과·변경 케이스·가설 검증 여부를 기록.
 
-### 2026-04-15 — v1 / Sonnet 4 (초기 검증)
+> 2026-04-21 PLAN-019 로 로그 초기화. v1~v7 이력은 `docs/legacy/PROMPT_LOG_pre_v1.md`.
+> 새 엔트리 포맷: **날짜 — v{N}**, "변경 내용 / 결과 (run.json) / 케이스별 변화 / 가설 검증 / 잔존 과제" 5소제목 권장.
 
-#### 작성 의도
-- `blueprint.md` §5.3 / §5.4 초안을 거의 그대로 구현
-- 구조화된 JSON 응답을 강제하기 위해 ` ```json ` 코드펜스 예시를 프롬프트에 포함
-- 확인 불가 필드는 `null`로 두게 유도 (fabrication 방지)
-- `source_url`, `confidence` 필드 추가 (blueprint 원문에는 없음 — 실패 원인 분석용)
-- 시스템 프롬프트에 WASET 등 약탈적 학회 출처 배제 명시
+### 2026-04-21 — v1_0 첫 측정 (PLAN-019 재시작 후)
 
-#### 구현 위치
-- `src/utils/promptBuilder.js` — `buildUpdatePrompt` / `buildVerifyPrompt` (v1)
-- `src/services/responseParser.js` — `parseUpdateResponse`, `parseVerifyResponse`
+**변경 내용**: PLAN-019 로 v1~v7 을 legacy/ 로 격리하고 v1_0 부터 재시작. 소스 2축 분리 (축 A 탐색 순서 / 축 B 채택 규칙), Dedicated (1:1) vs Institutional (1:N) 도메인 판별, Haiku 4.5 단일 (Sonnet 폴백 제거).
 
-#### 결과 — 17건 전체 실행
-- pass **13 / fail 4 (76%)**
-- 결과 파일: `docs/eval/results/2026-04-15T22-38-24-v1.json`
-- 인프라 이슈 0건 (초기엔 17건 중 14건이 429였으나 `claudeApi.js` retry-after 파싱 + `eval-prompt.js` 단발 재시도 추가 후 전건 완주)
+**결과** (`docs/eval/runs/20260421-072101/run.json`): pass 16/27 (59%), stopped_by=max_iter, persistent_failures 9건.
 
-#### 실패 4건 패턴
-| id | AI link | 기대 | 분류 |
-|---|---|---|---|
-| conf_010 | ceee.umd.edu/tptpr2025 (2025 과거 회차) | iifiir.org/en | past 회차 반환 |
-| conf_011 | ecos2025.org/ (2025 Paris, 종료) | ecos2026.insae.ro | past 회차 반환 |
-| conf_015 | easychair.org/smart-program/ICCFD13 | iccfd.org | 비공식/총합 사이트 선호 |
-| conf_022 | bs2027.framer.ai (프로토타입) | bs2027.org | 드래프트/비공식 도메인 선호 |
+**케이스별 변화** (v7 → v1_0 중 직접 비교 의미 있는 것):
+- 새 패턴 잘 작동: conf_016 IHTC (ihtc18.org), conf_018 ICR (icr2027.org), conf_009 ICC (cryocooler.org dedicated 인식)
+- 실패: conf_005 Hannover (today=start 엣지), conf_006/015/019 URL 패턴 추정 미흡, conf_012 THERMINIC 부분일치 미허용, conf_007 ICMF 보수적 null
 
-추가 의심 (pass 처리됐지만): conf_001 ASHRAE — 2025 Orlando(이미 종료) 반환. URL은 ashrae.org 하위라 매칭됐을 뿐 사실상 past.
+**가설 검증**: 소스 2축 분리는 URL 채택에서 깨끗한 rule → 7/27 케이스에서 ❌ link (기관 루트) 정확 거부. 그러나 ① URL 패턴 추정 규칙이 약해서 cryogenics2023 → cryogenics2027 같은 단순 연도 치환을 놓침.
+
+**잔존 과제**: persistent_failures 9건 분석 → 4건 (conf_005/012/015, disc_mo520jhk7o IRACC) 은 골든셋 엄격성, 5건 (conf_006/019/020, user_mo04ezfq, conf_007) 은 프롬프트 약점. v1_1 에서 프롬프트 변경 4건 + 골든셋 수정으로 대응.
 
 ---
 
-### 2026-04-16 — v1 / Haiku 4.5 + Phase A
+### 2026-04-21 — v1_1 (URL 3유형 / confidence 소스 / 주기 초반 허용 / iifiir 임박)
 
-#### 변경 내용 (프롬프트 텍스트는 v1 그대로)
-주변 호출 조건만 변경:
-1. **eval 러너 모델 일치** — 이전 측정은 Sonnet 4. `scripts/eval-prompt.js`가 `MODELS.update`(Haiku 4.5)를 import해 앱과 동일 조건으로 측정.
-2. **Phase A** (`docs/legacy/rate_limit_strategy.md` §4):
-   - `src/services/claudeApi.js` — `web_search` 도구에 `max_uses: 5` 캡
-   - `src/hooks/useUpdateQueue.js` — `maxTokens` 2048 → 1024 (kind=update)
-3. **eval 러너 계측 추가** — 결과 JSON에 `response.usage` 기록.
+**변경 내용** (commit d1a549d): 튜닝 상수 2개 (`IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`) + 내용 변경 4건.
+- (a) 축 A ① URL 패턴 3유형 분기 (연도형/회차번호형/불변형) — `ecos2024`→`ecos2026`, `ihtc17`→`ihtc18`, 불변형은 루트 그대로
+- (b) Confidence 3-level 소스 신뢰도 재정의 (공식=high / draft·준공식=medium / 외부 단신=low)
+- (c) 주기 초반 (cycle_progress < 0.5) 부정확 소스 low 로 채택 허용 (null 보다 조기 탐지 우선)
+- (d) iifiir 이벤트 슬러그 — 주기 ≥0.7 (임박) 금지 / <0.7 허용
 
-#### 결과 — 17건 전체 실행
-- pass **16/17 (94%)** — 결과 파일: `docs/eval/results/2026-04-16T13-14-08-v1.json`
-- rate_limit 0건 (이전엔 14건 발생 후 재시도로 회복)
-- 토큰 소비: total input 586,669 / output 11,033 / **avg input 34,510 / output 649 per call**
-- `stop_reason=max_tokens` 0/17 (maxTokens 1024 축소로 인한 JSON 잘림 없음)
+**결과** (`docs/eval/runs/20260421-082859/run.json`): pass 19/27 (70%, iter 3), persistent_failures 5건. 평균 in=42k out=1.1k tokens (v1_0 유사).
+- iter 1 → 17/27, iter 2 → 20/27, iter 3 → 19/27 — 노이즈 있으나 전반적 개선
+- cycle 버킷: 0y 1/3 (conf_002 ASEAN, 2 iter pass / 1 iter fail), 1y 19/21, 2y 19/33 (v1_0 대비 크게 개선), 3y 11/12, 4y 6/12 (양극단 실패)
 
-#### 케이스별 변화 (Sonnet → Haiku + Phase A)
-| id | 2026-04-15 (Sonnet) | 2026-04-16 (Haiku + Phase A) |
-|---|---|---|
-| conf_001 ASHRAE | past 회차(2025 Orlando), 의심 pass | 2026 Winter 정답 |
-| conf_010 TPTPR | past 회차 fail | iifiir.org 정답 |
-| conf_011 ECOS | past 회차(2025 Paris) fail | ecos2026.insae.ro 정답 |
-| conf_015 ICCFD | easychair.org fail | **여전히 easychair.org fail** |
-| conf_022 Building Sim | bs2027.framer.ai fail | ibpsa.org 정답 |
+**케이스별 변화** (v1_0 → v1_1):
+- 신규 pass (v1_0 persistent → v1_1 이탈): conf_005 Hannover · conf_012 THERMINIC · conf_015 ICCFD · conf_019 IIR Gustav Lorentzen (축 A ① 연도형 적중 + iifiir 임박 제외)
+- 여전히 persistent: conf_006 (start/end null, 공식 미공개) · conf_007 ICMF (parse_fail 1회 + 보수적 null) · conf_010 (no_expected) · conf_017 PRTEC (4년 초반에도 expected 존재) · user_mo04ezfq BS2027 (framer link 골든셋 충돌)
+- 신규 partial: conf_006 (link=pass, date=null) · disc_mo51rke0v1 IWCB (link=pass, venue=pass, date=null)
 
-#### 가설 — 왜 품질이 올라갔나
-`max_uses: 5` 캡이 의도치 않게 **검색 범위 수렴 효과**를 냈다. Sonnet은 검색을 확장하다 비공식·past 도메인에 걸려 자기 함정에 빠졌으나, 5회 제한은 공식 도메인 발견 직후 종료를 유도. 모델 다운그레이드(Sonnet → Haiku)에도 품질이 오른 건 이 효과가 모델 차이를 상쇄했음을 시사.
+**가설 검증**:
+- (a) URL 3유형 분기: ✅ 연도형 적중 다수 (conf_011 ecos2026, conf_015 iccfd13, conf_016 ihtc18)
+- (b) confidence 재정의: ✅ 외부 단신 low, 공식 high 로 의도대로 분포. 다만 draft (framer) 는 여전히 medium 으로 AI 재량 판단 → DRAFT_SITE_CONFIDENCE 상수화 후보
+- (c) 주기 초반 low 허용: ⚠️ 부분 효과 — AI 는 여전히 null 로 보수 회귀 (conf_006 · conf_017). 프롬프트 강도 부족 가능성
+- (d) iifiir 임박 제외: ✅ conf_019 Gustav (iir-gl-2026.net 성공), conf_006 도 이벤트 루트가 아닌 cryogenics-conference.eu 로 이동
 
-#### 잔존 실패
-- **conf_015 ICCFD**: v1의 비공식 도메인 배제 지시(WASET 등)가 easychair까지 커버 못함. v2 도메인 블랙리스트(레버 B) 과제.
+**잔존 과제**:
+- 4년 주기 양극단 (conf_017 초반 · conf_016 후반 IHTC 는 pass 지만 cycle=4y 전체 6/12) — 소수 케이스 편향 확인 필요
+- conf_007 ICMF JSON 출력 안정성 (3 iter 중 parse_fail 1 회)
+- user_mo04ezfq — 골든셋 수정 방향 (draft link 허용) 논의 필요
 
-#### Rate limit 시사점
-- Tier 1 한도 30k ITPM 대비 단일 호출 avg 34,510 → sequential은 통과하나 병렬·고빈도 상황에선 위험
-- 앱 sequential 흐름 한정으로는 Phase B/C 불필요. 상세는 `docs/legacy/rate_limit_strategy.md` §4.5, §8.
-
----
-
-### 2026-04-16 — Step 3.6 실전 검증 (앱 브라우저, 4건)
-
-#### 조건
-- Phase A 적용 (max_uses 5, maxTokens 1024, Haiku 4.5)
-- 앱 UI에서 개별 [업데이트] 버튼으로 실행, 공식사이트 수동 대조
-- eval 17건과 별개. 앱 큐 흐름(승인 대기 → 수용 → 테이블 반영 → GitHub 저장) 검증 포함
-
-#### 결과
-| 학회 | 결과 | AI 반환 | 관찰 |
-|---|---|---|---|
-| IIR GL 2026 (열물성/냉매) | pass | iifiir.org 리스팅 페이지 | 공식 `iir-gl-2026.net` 대비 리스팅 사이트 선호. 정보는 정확 |
-| IHTC | pass | 2026-08-02~07 / Rio de Janeiro | 완벽 |
-| ICCFD | pass | easychair.org/smart-program/iccfd13 | **eval conf_015과 동일 실패 패턴 재현** — 공식 `iccfd.org` 대신 easychair |
-| ICBCHT | pass | Cambridge, USA / 2026-06-14~17 / sites.mit.edu/icbcht12 | 기존 "Boston" → AI가 Cambridge로 정밀화 (MIT는 Cambridge, MA) — AI가 원본보다 정확 |
-
-#### 새 관찰
-1. **리스팅/플랫폼 사이트 선호 (반복 패턴)** — ICCFD easychair, IIR GL iifiir.org. v1의 WASET 블랙리스트 미커버. 레버 B 재확인.
-2. **AI가 원본보다 정밀한 케이스** — ICBCHT Cambridge. 단순 일치 검사로는 이런 개선을 pass로만 뭉뚱그림. 정답지 채점 정밀화 여지 (MVP 후).
-3. **임박 학회 공식사이트 추종 아이디어** — 시작일까지 N일 이내면 link가 있어도 공식 도메인 재검증. 레버 E로 이관.
-
-#### 결론
-- 4건 100% pass, UX 흐름 정상 동작
-- 품질 개선은 v2 프롬프트로 이월
-
----
-
-### 2026-04-17 — v2 / Haiku 4.5 + Phase A
-
-#### 변경 내용 (v1 → v2)
-- `UPDATE_SYSTEM_V2` 신규: 날짜 규칙·링크 우선순위·이름 매칭 섹션 구조화
-- `buildUpdateUserV2`: `const today = new Date().toISOString().slice(0, 10)` 런타임 주입, 금일 명시
-- 레버 A: "오늘 이후 회차만 반환" 명시 / 레버 B: easychair·framer·wikicfp 등 블랙리스트 + 링크 우선순위(1·2·3순위) 명시
-
-#### 결과 — 19건 실행 (golden-set 3건 신규 추가 반영)
-- pass **16/19 (84%)** — 결과 파일: `docs/eval/results/2026-04-17T05-46-34-v2.json`
-- 토큰: avg input 39,954 / output 677 (v1 대비 input +16% — 시스템 프롬프트 증가 영향)
-- `stop_reason=max_tokens` 0/19
-
-#### 케이스별 변화 (v1 → v2)
-| id | v1 | v2 | 비고 |
-|---|---|---|---|
-| conf_011 ECOS | ecos2025.org ❌ | ecos2026.insae.ro ✅ | **P1 수정** — today 앵커 효과 |
-| conf_015 ICCFD | easychair.org ❌ | iccfd.org ✅ | **P2 수정** — 블랙리스트 효과 |
-| conf_013 IEA HPC | hpc2026.org ✅ | heatpumpingtechnologies.org ❌ | **신규 회귀 (P4)** — AI가 5월 26일을 "이미 경과"로 오인 |
-| conf_016 IHTC | ihtc18.org ✅ | astfe.org ❌ | **신규 회귀 (P4)** — AI가 8월 2일을 "이미 지나간 것"으로 오인 |
-| conf_014 ICBCHT | (신규 golden-set) | null ❌ | **P4** — AI가 6월 14일을 "이미 진행 중"으로 오인, ICBCHT13(2029) 탐색 |
-
-#### 가설 검증
-- **레버 A 효과**: P1(past 회차) 수정 확인 ✅. 단, 날짜 비교 지시 표현이 모호해 역방향 오인 유발(P4). "시작일이 과거면 금지" → "시작일 > 오늘이어야 upcoming" 로 표현 정밀화 필요
-- **레버 B 효과**: easychair 블랙리스트 효과 확인 ✅. 그러나 iifiir.org는 2순위(주관기관 이벤트 페이지) 허용 범위라 eval pass. 전용 사이트(cryogenics-conference.eu) 미발굴은 아직 미해결.
-
-#### 잔존 과제
-- P4 해결: v3에서 today 앵커 표현 명확화 — "시작일이 YYYY-MM-DD 보다 **이후**인 경우만 upcoming" 부등호 명시
-
----
-
-### 2026-04-17 — v3 / Haiku 4.5 + Phase A
-
-#### 변경 내용 (v2 → v3)
-- `UPDATE_SYSTEM_V3` 신규: 날짜 규칙을 **부등호 명시**로 교체 — "`start_date` 문자열이 오늘(`YYYY-MM-DD`) 문자열보다 크면 upcoming"
-- `buildUpdateUserV3`: 반환 직전 **필수 검증 블록** 추가 — "같은 연도니까 이미 지났다" 같은 연도 기반 단락 추론 명시적 금지
-- 검증 예시 7건(오늘 기준 전·후 분기 점검)을 프롬프트에 포함. 월/일 자릿수 단위 비교 규칙으로 일반화
-
-#### 결과 — 19건 실행 (golden-set 유지)
-- pass **19/19 (100%)** 🎯 — 결과 파일: `docs/eval/results/2026-04-17T12-42-33-v3.json`
-- 토큰: avg input **41,651** / output **722** (v2 대비 input +4% / output +7% — 검증 예시 블록 비용)
-- `stop_reason=max_tokens` 0/19
-
-#### 케이스별 변화 (v2 → v3)
-| id | v2 | v3 | 비고 |
-|---|---|---|---|
-| conf_013 IEA HPC | heatpumpingtechnologies.org ❌ | hpc2026.org ✅ | **P4 해소** — 5월 26일을 upcoming으로 정확히 인식 |
-| conf_014 ICBCHT | null ❌ | sites.mit.edu/icbcht12/ ✅ | **P4 해소** — 6월 14일을 upcoming으로 정확히 인식 |
-| conf_016 IHTC | astfe.org ❌ | ihtc18.org ✅ | **P4 해소** — 8월 2일을 upcoming으로 정확히 인식 |
-| 나머지 16건 | 유지 | 유지 | P1·P2 수정 케이스 모두 유지 |
-
-#### 가설 검증
-- **레버 A' 효과**: 부등호 명시 + 검증 예시 7건으로 P4 **완전 해소** ✅. "이후/이전" 한국어 표현의 모호성이 단일 실패 축이었음 재확인
-- **토큰 비용**: 검증 블록의 +4% input / +7% output은 허용 범위. 100% pass 달성 대비 충분히 수용 가능
-
-#### 잔존 과제
-- **P2 부분 미해결**: conf_006 IIR Cryogenics, conf_019 Gustav Lorentzen — 전용 사이트 미발굴 상태(source_url 매칭으로 pass). 레버 E(임박 학회 공식사이트 재검증)로 대응 예정
-- **활성 전환 의사결정**: `DEFAULT_UPDATE_VERSION` v1 → v3
-
----
-
-### 2026-04-17 — v4 / Haiku 4.5 + Phase A
-
-#### 변경 내용 (v3 → v4)
-- `UPDATE_SYSTEM_V4`: `[신뢰도 기준]` 섹션 신규 — high/medium/low 판정 기준 명시
-- `UPDATE_SYSTEM_V4`: `[링크 우선순위]` 4순위 추가 — 공식 회차 페이지 없을 때 출처 URL 허용 (confidence=low 강제)
-- `UPDATE_SYSTEM_V4`: 시리즈/일반 페이지 link=null 강화 — "회차 specific 없으면 link=null" 명시, 금지 예시 2건 추가
-- `buildUpdateUserV4`: `[기타 주의]` 공식사이트 내 하위 페이지 탐색 의무 추가
-
-#### 결과
-- eval: **미실행** — `npm run eval -- --version v4` 실행 후 기록 예정
-- 브라우저 수동 확인: ICMF / ICCFD / TPTPR 3케이스 확인 필요
-
-#### 배경 패턴
-- **P5** ICMF: 날짜 미확인인데 confidence=medium, 출처 URL link 미반영
-- **P6** ICCFD: 공식사이트 홈에 날짜 없어서 하위 페이지 미탐색
-- **P2 재발** TPTPR: 금지 도메인 명시에도 시리즈 페이지 link 사용
-
----
-
-### 2026-04-18 — PLAN-005: eval 3-tier + Haiku→Sonnet 재시도 + v5 (dedicated_url 힌트)
-
-#### 변경 내용
-1. **Part 1: conf_006 `official_url` 교체** — `iifiir.org/en/iir-conferences-series`(v4 금지 도메인) → `cryogenics-conference.eu/`. 금지 도메인을 마스터 링크로 보관하던 모순 제거. golden-set.csv 도 동기화
-2. **Part 2: eval 3-tier 채점 (`scripts/eval-prompt.js` `scoreUrl`)** — URL 매치 + `aiData.start_date` 있음 → `pass` / URL 매치 but `start_date=null` → **`partial`** / URL 불일치 → `fail`. 이전 "19/19 pass" 착시 제거. 결과 JSON에 `summary.partial` 추가
-3. **Part 3-a: `MODELS.updateFallback='claude-sonnet-4-6'`** 신규 (`src/config/models.js`)
-4. **Part 3-b: `callClaude` `webFetch` 옵션** — `web_fetch_20250910` tool push (`src/services/claudeApi.js`). Haiku는 호출 금지 (책임은 호출부)
-5. **Part 3-c: `useUpdateQueue` 재시도 블록** — `parsed.ok && !parsed.data.start_date` 조건에서 Sonnet 4.6 + `web_fetch` 로 1회 재호출. 2차 파싱 성공 시 결과 교체, 실패면 1차 유지. `retry` 필드로 관찰성 확보(`'sonnet' | 'sonnet_parse_fail' | 'sonnet_error:<kind>'`)
-6. **Part 3-d: v5 템플릿 + `dedicated_url` 필드** — `UPDATE_SYSTEM_V5=UPDATE_SYSTEM_V4` 복사, `buildUpdateUserV5` 에서 `conference.dedicated_url` 있을 때만 "회차 전용 사이트(힌트): …" + 사용 지침 1줄 주입. `conferences.json` conf_015 에 `https://iccfd13.polimi.it` 기록. `DEFAULT_UPDATE_VERSION=v4` 유지
-
-#### 결과
-- eval: **미실행** — v4·v5 각각 측정 필요 (3-tier 집계 확인)
-- 단위 테스트: v5 힌트 주입 + Haiku/Sonnet 재시도 분기 5종 (`useUpdateQueue.test.js` 신규, 100/100 통과)
-
-#### 가설 (측정 대기)
-- Part 1 효과: conf_006 `partial` → `pass` 전환 (cryogenics-conference.eu 에서 날짜 직접 추출)
-- Part 3 효과: conf_015 가 1차 Haiku에서 `start_date=null` 이어도 Sonnet+web_fetch 재시도로 2026-07-06 추출 → `pass`
-- 비용: Sonnet 재시도 호출만 Sonnet 요금 (1M token 기준 입력 $3 / 출력 $15). 대부분 Haiku로 끝나야 함
-
-#### 잔존 과제
-- P5 `ICMF`: 여전히 open — v4 confidence 지침이 충분한지 측정 필요
-- P2 `conf_019 Gustav`: 전용 사이트 미발굴 문제. 필요하면 `dedicated_url` 로 보조하거나 레버 E 진행
-
----
-
-### 2026-04-18 — PLAN-006: v6 프롬프트 + 파서 안전망
-
-#### 변경 내용
-1. **Part 1: `UPDATE_SYSTEM_V6` + `buildUpdateUserV6` 신규** (`src/utils/promptBuilder.js`) — v4·v5 불변
-   - [Link–Confidence 상호구속] 섹션: `confidence=high|medium` 이면 link non-null 강제, link=null이면 confidence=low 강제 (레버 H)
-   - [링크 우선순위] 재정리: 3순위(주관기관 컨퍼런스 색인 페이지)에서 해당 회차를 명시적으로 나열하는 경우 허용 명시. `iifiir.org/en/events/<슬러그>` 직접 이벤트 URL은 2순위로 편입, 일반 `/events` 루트만 금지
-   - [Venue 포맷 — 엄격] 섹션 신규: US/Canada/기타 3분기, 국가명 정규화(`USA`/`UK`/`Korea`) + 예시 4건 (레버 I)
-   - [Draft/초안 사이트 처리] 섹션 신규: framer.ai/notion.site/wix.com 등 빌더 사이트를 link로 사용 허용, confidence=low 강제 + notes='draft/prototype' (레버 J)
-   - 자기검증 체크리스트를 user 프롬프트에 주입 (venue 포맷 / link–confidence / source_url 기반 link)
-2. **Part 2: 파서 안전망** (`src/services/responseParser.js`)
-   - `BANNED_LINK_DOMAINS` 상수 export — 프롬프트 템플릿 리터럴과 파서가 공유하는 단일 공급원
-   - `normalizeUpdateData(data)` 신규 export + `parseUpdateResponse` 마지막 단계 자동 호출
-   - 백필 조건: `link==null && source_url 유효(금지 미매칭) && start_date 존재` → `link=source_url` + confidence 1단계 다운그레이드(high→medium, medium→low, low→low) + notes 에 `[파서 백필: source_url → link]` 마커
-3. **Part 3: 단위 테스트**
-   - `responseParser.test.js`: `BANNED_LINK_DOMAINS`(2종) + `normalizeUpdateData`(12종) 신규 — framer.ai 미포함 / 백필 성공·차단 분기 / confidence 다운그레이드 3분기 / parseUpdateResponse 통합 동작
-   - `promptBuilder.test.js`: v6 분기 7종 — Link–Confidence 텍스트, Venue 포맷 예시, Draft 섹션, framer.ai 금지리스트 미등장, 3순위 색인 허용, 자기검증 체크리스트, dedicated_url 힌트 (v5 동일 동작)
-
-#### 결과
-- eval (2026-04-18, `--version v6`): **pass 15 / partial 1 / fail 3 (19건)**, avg input 34,613 · output 729, `stop_reason=max_tokens` 0/19 — `docs/eval/results/2026-04-18T00-28-11-v6.json`
-  - **fail**: conf_010 TPTPR (`ai_link_missing` — 17s, link 빈 반환), conf_012 THERMINIC (`url_mismatch` → `ipcei-me-ct.eu/events/...` 오답), conf_015 ICCFD (`url_mismatch` → `iccfd13.polimi.it`, 합리적 추측이나 golden과 mismatch)
-  - **partial**: conf_006 IIR Cryogenics (URL pass, `start_date=null` — draft 연성화 효과 가능)
-  - **v3(19/19) → v6(15/19) 표면적 회귀** — conf_010은 레버 H 의도된 보수성으로 추정(확신 없으면 link 비우기), conf_012/015는 진짜 회귀. 향후 follow-up 분석 대상
-- 단위 테스트: 전건 122/122 통과 (신규 +21: 파서 14, 프롬프트 7)
-
-#### 가설 (측정 대기)
-- 레버 H 효과: v6 에서 `link=null + confidence=high` 자기모순 0건 (v4 재현 기준 대비)
-- 레버 I 효과: v4 응답에서 관찰된 US 주(state) 누락 2건(conf_001·008) → v6 에서 `City, State, USA` 준수
-- 레버 J 효과: conf_022 BS 2027 같은 케이스에서 `bs2027.framer.ai` link 채워지고 confidence=low + notes='draft/prototype' 표기. 혹은 `ibpsa.org/conferences/` 색인 페이지를 3순위로 채용
-- 파서 안전망 효과: v4 활성 동안에도 `link=null` 오탐 일부 자동 백필 (단, 날짜 있는 경우만)
-- 토큰 비용: v4 대비 +10~15% 예상 (3개 신규 섹션). 허용선 초과 시 [Venue 포맷] 예시 축소
-
-#### 활성 전환 정책
-- `DEFAULT_UPDATE_VERSION='v4'` 유지. eval 3-tier 측정에서 v6 가 v4 대비 partial/fail 감소 확인 후 별도 커밋으로 전환
-
-#### 잔존 과제
-- **DB 잔여 오염**: 기존 `conferences.json`/`editions` 의 `United States`/state 누락/framer 링크는 손대지 않음 — 다음 업데이트 때 자동 수렴 예정
-- **v6 토큰 비용**: 레버 H·I·J 누적으로 input 증가 예상. eval 결과로 허용선 판단
-- **`BANNED_LINK_DOMAINS` 단일 공급원 의존**: 프롬프트와 파서가 같은 상수 참조 → 수정 시 두 테스트 스위트 동시 회귀 확인
+<!-- 다음 엔트리 자리: 2026-MM-DD — v1_2 / 후보 변경 -->
 
 ---
 
@@ -468,18 +284,22 @@
 
 ## §8. 미해결 과제
 
-- [x] v2 프롬프트 구현 (레버 A + B) 및 v1/v2 비교 실행 (2026-04-17) — 16/19(84%). P4 신규 발생
-- [x] v3 프롬프트 구현: 레버 A' (today 앵커 정밀화 — 부등호 + 검증 예시) (2026-04-17)
-- [x] v3 eval 실행 → P4 해결 여부 검증 (2026-04-17) — 19/19 (100%), P4 3건 완전 해소
-- [x] 활성 전환 의사결정: `DEFAULT_UPDATE_VERSION` v3 → v4 (2026-04-17)
-- [x] eval 러너에 `usage.input_tokens/output_tokens` 기록 추가 (2026-04-16)
-- [x] eval 3-tier 채점(pass/partial/fail) (PLAN-005, 2026-04-18) — URL만 맞고 start_date=null인 착시 드러냄
-- [x] Haiku→Sonnet 재시도 인프라 (PLAN-005, 2026-04-18)
-- [x] v5 `dedicated_url` 힌트 옵션 (PLAN-005, 2026-04-18) — `DEFAULT_UPDATE_VERSION=v4` 유지, 측정 후 활성 전환 검토
-- [x] v6 Link–Confidence 상호구속 + Venue 포맷 + draft 연성화 + 파서 안전망 (PLAN-006, 2026-04-18)
-- [ ] v4·v5·v6 eval 실행 및 3-tier 결과 기록
-- [ ] conf_006 외 `official_url`에 금지 도메인 저장된 학회 스크리닝 (P7 확장)
-- [ ] DB 잔여 venue 오염(`United States`·주 누락·framer 링크) 일괄 갱신 — 다음 업데이트 때 자동 수렴 또는 일회성 스크립트
+- [x] v1_0 첫 eval-loop (27건, max-iter 3, threshold 0.9) 및 결과 기록 — 2026-04-21, run_id=20260421-072101, pass 16/27, stopped_by=max_iter
+- [x] v1_1 첫 eval-loop — 2026-04-21, run_id=20260421-082859, pass 19/27, stopped_by=max_iter (persistent_failures 9→5)
+- [ ] Dedicated vs Institutional 판별 실패 추적 — 누적 시 `conferences.json` `domain_type` 힌트 추가 검토
+- [ ] 박람회 vs 학회 유형 분기 — v1_1 결과에서 category 별 pass rate 차이 확인 후 v1_2 결정
 - [ ] 레버 E: `updateLogic.shouldSearch` imminent(임박) 판단 확장 (MVP 후)
 - [ ] (장기) 결과 10회+ 축적 시 반자동 log analyzer 슬래시 커맨드 구성
 - [ ] (장기) 정답지 채점 정밀화 — "허용 범위" 필드 추가 등 (P3 패턴 대응)
+
+### v1_1 백로그 (현재 작업 범위 밖, 다음 이터레이션 후보)
+
+v1_1 에서 튜닝 상수 2개 (`IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`) + 내용 변경 4건 (축 A URL 3유형 / confidence 재정의 / 주기 초반 부정확 허용 / iifiir 주기-임박 제외) 도입. 이후 관찰 기반으로 추가 튜닝:
+
+- [ ] **DRAFT_SITE_CONFIDENCE** 상수화 — framer/notion/wix 사이트의 default confidence. 현재 'medium' 로 AI 자가 판단에 맡김. v1_1 측정 후 'low' 로 강제하는 편이 나은지 데이터로 판단
+- [ ] **MIN_LINK_SOURCES** 상수화 — link 를 high 로 판정하기 전 교차검증 최소 소스 수 (현재 기준 없음 · AI 직관 의존). 공식 사이트 외 독립 출처 1건 이상 교차확인 강제 검토
+- [ ] **iifiir 외 institutional 색인 case-by-case** — ashrae.org/conferences, ibpsa.org/conferences 등 각 organizer 색인 페이지별로 주기-임박 시 배제 threshold 개별화 가능성. 현재는 iifiir 만 상수로 분리
+- [ ] **주기 경과율 계산식 정교화** — 현재 `(today − last_end) / (cycle_years × 365)`. last_end 없을 때 fallback 정의 필요. 윤년·주기 비정수(0.5·1.5) 케이스도 확인
+- [ ] **Y1/Y2 상수화 필요성 재검토** — v1_1 에서는 제거 (today 에서 파생). 만약 "특정 연도 예시" 를 프롬프트에 고정 필요한 요구 생기면 재도입
+
+> 완료된 v1~v7 이력은 `docs/legacy/PROMPT_LOG_pre_v1.md`.
