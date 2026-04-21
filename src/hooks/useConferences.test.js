@@ -505,6 +505,67 @@ describe('addConferenceFromDiscovery', () => {
   });
 });
 
+// --- PLAN-024: 연속 mutator 호출 안전성 (stale closure 방어) ---
+
+describe('PLAN-024 — 같은 틱 내 mutator 연속 호출 시 상태 누적', () => {
+  it('addConference 두 번 연속 호출 → 두 학회 모두 보존', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const A = { id: 'cA', full_name: 'Conf A', starred: 0 };
+    const B = { id: 'cB', full_name: 'Conf B', starred: 0 };
+
+    act(() => {
+      result.current.addConference(A);
+      result.current.addConference(B);
+    });
+
+    const ids = result.current.data.conferences.map((c) => c.id);
+    expect(ids).toEqual(['cA', 'cB']);
+  });
+
+  it('deleteConference 후 즉시 addConference → 삭제·추가 모두 반영', async () => {
+    loadConferences.mockResolvedValue({ data: makeData([CONFERENCE], []), sha: null });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    const NEW = { id: 'cNew', full_name: 'New Conf', starred: 0 };
+
+    act(() => {
+      result.current.deleteConference('c1');
+      result.current.addConference(NEW);
+    });
+
+    const ids = result.current.data.conferences.map((c) => c.id);
+    expect(ids).toEqual(['cNew']);
+  });
+
+  it('applyAiUpdate 두 번 연속 (서로 다른 학회) → 둘 다 반영', async () => {
+    const C2 = { ...CONFERENCE, id: 'c2', full_name: 'Conf Two' };
+    loadConferences.mockResolvedValue({
+      data: makeData([CONFERENCE, C2], []),
+      sha: null,
+    });
+    const { result } = renderHook(() => useConferences());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    act(() => {
+      result.current.applyAiUpdate('c1', {
+        start_date: '2027-01-01', end_date: '2027-01-03', venue: 'V1', link: null,
+      });
+      result.current.applyAiUpdate('c2', {
+        start_date: '2027-02-01', end_date: '2027-02-03', venue: 'V2', link: null,
+      });
+    });
+
+    const eds = result.current.data.editions;
+    expect(eds).toHaveLength(2);
+    const venues = eds.map((e) => e.venue).sort();
+    expect(venues).toEqual(['V1', 'V2']);
+  });
+});
+
 // --- rows 계산 ---
 
 describe('rows 계산', () => {
