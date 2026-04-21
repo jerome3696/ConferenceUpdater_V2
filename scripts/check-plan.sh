@@ -8,11 +8,20 @@ if [[ "$BRANCH" =~ ^(fix|docs|chore)/ ]] || [[ "$BRANCH" =~ ^(main|master|develo
   exit 0
 fi
 
-# feature/PLAN-NNN-... 패턴
-if [[ "$BRANCH" =~ ^feature/PLAN-([0-9]+) ]]; then
+# feature/PLAN-NNN-... 또는 feature/PLAN-P0-<slug>-... 패턴
+# - PLAN-026까지는 순수 숫자 ID.
+# - Phase A.0 준비기 skeleton 은 `PLAN-P0-<slug>.md` 로 관리 (multitenant-schema·quota-policy·auth-flow).
+PLAN_ID=""
+if [[ "$BRANCH" =~ ^feature/(PLAN-P0-[a-z][a-z0-9-]*)-v[0-9]+$ ]]; then
+  PLAN_ID="${BASH_REMATCH[1]}"
+elif [[ "$BRANCH" =~ ^feature/(PLAN-P0-[a-z][a-z0-9-]*)$ ]]; then
+  PLAN_ID="${BASH_REMATCH[1]}"
+elif [[ "$BRANCH" =~ ^feature/PLAN-([0-9]+) ]]; then
   PLAN_ID="PLAN-${BASH_REMATCH[1]}"
-  PLAN_FILE="docs/plans/active/${PLAN_ID}.md"
+fi
 
+if [[ -n "$PLAN_ID" ]]; then
+  PLAN_FILE="docs/plans/active/${PLAN_ID}.md"
   if [[ ! -f "$PLAN_FILE" ]]; then
     echo ""
     echo "❌ 플랜 문서 없음: $PLAN_FILE"
@@ -21,7 +30,6 @@ if [[ "$BRANCH" =~ ^feature/PLAN-([0-9]+) ]]; then
     echo ""
     exit 1
   fi
-
   echo "✅ 플랜 확인: $PLAN_FILE"
   exit 0
 fi
@@ -30,7 +38,7 @@ fi
 if [[ "$BRANCH" =~ ^feature/ ]]; then
   echo ""
   echo "❌ feature 브랜치명에 PLAN ID 없음: $BRANCH"
-  echo "   올바른 형식: feature/PLAN-NNN-설명"
+  echo "   올바른 형식: feature/PLAN-NNN-설명 또는 feature/PLAN-P0-<slug>[-vN]"
   echo ""
   exit 1
 fi
