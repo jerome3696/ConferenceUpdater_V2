@@ -3,7 +3,7 @@
 > **문서 위치**: 상위 — 없음 (북극성)
 > **하위 문서**: `docs/dev-guide-v3.md` (현재 sprint), `docs/plans/active/PLAN-xxx.md` (과제)
 > **최종 수정일**: 2026-04-21
-> **현재 Phase**: **A 준비기** — Phase 0 (서버 전환 설계 중, 스택=Supabase 권고 대기)
+> **현재 Phase**: **A 준비기** — Phase 0 (서버 전환 설계 중, **스택=Supabase 확정** · 스키마/쿼터/Auth 설계 진행)
 
 ---
 
@@ -39,7 +39,7 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 ## 3. Phase A — 30명 파일럿 (1-6개월)
 
 ### A.0 준비기 (현재 위치)
-- **A.0.1** 서버 스택 결정 → `PLAN-026` (Supabase 권고, 승인 대기)
+- **A.0.1** 서버 스택 결정 → `PLAN-026` ✅ **Supabase 확정** (completed)
 - **A.0.2** 멀티테넌트 스키마 설계 → `PLAN-P0-multitenant-schema`
 - **A.0.3** 쿼터 정책 상세 → `PLAN-P0-quota-policy`
 - **A.0.4** 인증 플로우 + Resend SMTP → `PLAN-P0-auth-flow`
@@ -142,11 +142,11 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 
 | Phase | PLAN | 상태 | 브랜치 |
 |---|---|---|---|
-| A.0.1 | `PLAN-026` 서버 스택 비교 | active | `feature/PLAN-026-server-stack-comparison` |
+| A.0.1 | `PLAN-026` 서버 스택 비교 | ✅ completed | (merged) |
 | A.0 | `PLAN-027` ultra-plan roadmap | active | `feature/PLAN-027-ultra-plan-roadmap` |
-| A.0.2 | `PLAN-P0-multitenant-schema` | 예정 | - |
-| A.0.3 | `PLAN-P0-quota-policy` | 예정 | - |
-| A.0.4 | `PLAN-P0-auth-flow` | 예정 | - |
+| A.0.2 | `PLAN-P0-multitenant-schema` | 착수 대기 (skeleton 작성됨) | - |
+| A.0.3 | `PLAN-P0-quota-policy` | 착수 대기 (skeleton 작성됨) | - |
+| A.0.4 | `PLAN-P0-auth-flow` | 착수 대기 (skeleton 작성됨) | - |
 | A.1 | `PLAN-028-api-proxy-mvp` | 예정 | - |
 | A.2 | `PLAN-029-client-migration` | 예정 | - |
 | B.1 | `PLAN-030-prompt-v2.0-parametric` | 예정 | - |
@@ -158,7 +158,7 @@ Phase B·C 세부 PLAN은 Phase A 완료 시 구체화.
 
 ## 9. 스택 결정 참조
 
-→ `docs/plans/active/PLAN-026.md` §4.4 — **Supabase 선택 근거 (PostgreSQL + 네이티브 RLS + 혼자 개발 친화)**
+→ `docs/plans/completed/PLAN-026.md` §4.4 — **Supabase 선택 근거 (PostgreSQL + 네이티브 RLS + 혼자 개발 친화)**
 
 **대안 재검토 트리거**:
 - Supabase 가격 인상 50%+ / Free 티어 축소
