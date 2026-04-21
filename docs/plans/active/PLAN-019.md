@@ -61,18 +61,24 @@ v1~v7 레거시 격리 후 새 v1_0 프롬프트 작성. 핵심은 **소스 2축
 ## 5. 단계
 
 - [x] Step 0 — 골든셋 27건 사용자 선별 커밋
-- [ ] Step 1 — 레거시 격리 (git mv docs/prompts/v{4..7}.md → legacy/, §3·§5 추출)
-- [ ] Step 2 — 코드 정리 (updateFallback 제거 · v1~v7 TEMPLATES 삭제)
-- [ ] Step 3 — v1_0 신규 프롬프트 작성 (promptBuilder.js + docs/prompts/v1_0.md)
-- [ ] Step 4 — 문서 갱신 (prompteng.md · CLAUDE.md · README)
-- [ ] Step 5 — verify-task.sh + 커밋
+- [x] Step 1 — 레거시 격리 (git mv docs/prompts/v{4..7}.md → legacy/, §3·§5 추출)
+- [x] Step 2 — 코드 정리 (updateFallback 제거 · v1~v7 TEMPLATES 삭제)
+- [x] Step 3 — v1_0 신규 프롬프트 작성 (promptBuilder.js + docs/prompts/v1_0.md)
+- [x] Step 4 — 문서 갱신 (prompteng.md · CLAUDE.md · README)
+- [x] Step 5 — verify-task.sh + 커밋 (f928faa)
+- [x] Step 6 — v1_0 첫 eval-loop (run_id=20260421-072101, pass 16/27)
+- [x] Step 7 — 골든셋 수정 4건 (conf_005/007/012/015 + IRACC last_link) + v1_1 프롬프트 설계 (축 A URL 3유형 / confidence 소스 / 주기 초반 허용 / iifiir 임박)
+- [x] Step 8 — v1_1 코드·MD·docs 작성 + verify 5/5 통과 (d1a549d)
+- [x] Step 9 — v1_1 eval-loop (run_id=20260421-082859, pass 19/27, persistent 9→5)
+- [x] Step 10 — v1_1 잔존 실패 분석 + 골든셋 추가 수정 (conf_007 cycle=3 dates blank, conf_017 cycle=3) + 측정 결과 문서화 (861e799)
 
 ## 6. 검증
 
-- [ ] `bash scripts/verify-task.sh` 5/5 통과
-- [ ] `promptBuilder.sync.test.js` v1_0 strict equal
-- [ ] `npm run eval:loop -- --version v1_0 --max-iter 3 --threshold 0.9` → `runs/<id>/run.json` (후속 세션)
-- [ ] 실전 브라우저 spot check 3~5건 (conf_015 · conf_022 등)
+- [x] `bash scripts/verify-task.sh` 5/5 통과 (v1_0 · v1_1 모두)
+- [x] `promptBuilder.sync.test.js` v1_0 · v1_1 strict equal
+- [x] `npm run eval:loop -- --version v1_0 --max-iter 3 --threshold 0.9` → `runs/20260421-072101/run.json`
+- [x] `npm run eval:loop -- --version v1_1 --max-iter 3 --threshold 0.9` → `runs/20260421-082859/run.json`
+- [ ] 실전 브라우저 spot check 3~5건 (후속 세션, conf_015 · conf_022 등)
 
 ## 7. 리스크·롤백
 
@@ -80,12 +86,22 @@ v1~v7 레거시 격리 후 새 v1_0 프롬프트 작성. 핵심은 **소스 2축
 - **위험**: Haiku 단독 회귀로 `start_date=null` 증가. 완화: eval-loop 3회 반복으로 노이즈 분리.
 - **롤백**: `docs/prompts/legacy/v7.md` 기반으로 v7 복원, `DEFAULT_UPDATE_VERSION='v7'`. git revert.
 
-## 8. 후속
+## 8. 후속 (다음 이터레이션 후보)
 
-- **v1.1 유형 분기 검토**: 박람회/학회 pass rate 차이 확인 후
-- **Last-edition 프롬프트 v2**: main v1_0 결과 보고 필요 시 개정
+- **conf_006 IIR Cryogenics date null**: link 맞지만 start/end=null. AI notes 에 "과거 패턴 2023:4/25-28, 2019:4/7-11" 언급해놓고도 추정 반환 안 함. v1_2 에서 "공식 미공개 + 주기 초반 + last 기반 과거 패턴 추정 → low 로 반환 허용" 레버 검토
+- **conf_007 ICMF JSON parse_fail**: 3 iter 중 2 회 parse_fail (preamble 분석 단락 + JSON 없이 종료). 시스템 프롬프트 JSON-only 강제 문구 강화 검토
+- **conf_017 PRTEC cycle anomaly**: DB cycle=4 기준 "2028 예상" 인데 실제는 2027 (2024+2년 3개월). 골든셋 cycle=3 로 수정됐으나 `public/data/conferences.json` 은 미수정. **입력 DB 교정 or anomaly 케이스 수용 정책** 결정 필요
+- **conf_010 TPTPR no_expected**: 골든셋 미정답. eval 스키마에 `no_expected` 제외 옵션 추가 검토
+- **`public/data/conferences.json` cycle 교정**: conf_007 (2→3), conf_017 (4→3) 프롬프트 input 도 실제 주기 반영 필요. 반영 시 v1_1 재측정
+- **DRAFT_SITE_CONFIDENCE 상수화**: user_mo04ezfq BS2027 는 **실질적 성공** (AI 가 bs2027.framer.ai + dates + venue 정확 반환). 골든셋 쪽을 수정하거나 AI draft 사이트 confidence=medium 정책 유지 판단
+- **박람회 vs 학회 유형 분기**: v1_1 결과 raw 로 category 별 pass rate 측정 가능
 - **`domain_type` 필드**: Dedicated vs Institutional 판별 실패 누적 시 `conferences.json` 에 결정론적 힌트 추가
+- **Last-edition 프롬프트 v2**: main v1_1 결과 보고 필요 시 개정
 
 ## 9. 작업 로그
 
-- 2026-04-21: PLAN-018 (PR-5) 로컬 완료 (9fd1e95) 뒤 바로 착수.
+- 2026-04-21 아침: PLAN-018 (PR-5) 로컬 완료 (9fd1e95) 뒤 바로 착수. v1_0 코드·MD·docs 작성 후 verify 5/5, commit f928faa.
+- 2026-04-21 오전: v1_0 첫 eval-loop (run_id=20260421-072101, pass 16/27, persistent 9건). 실패 9건 분석 후 4건 (conf_005 Hannover today-edge, conf_012 THERMINIC, conf_015 ICCFD, disc_mo520jhk7o IRACC last_link) 은 골든셋 엄격성으로 판정 → 사용자가 골든셋 수정.
+- 2026-04-21 정오: v1_1 프롬프트 설계 — 튜닝 상수 2개 (`IIFIIR_STRICT_FROM=0.7`, `EARLY_INACCURATE_UNTIL=0.5`) + 내용 변경 4건 (축 A URL 3유형 / confidence 소스 재정의 / 주기 초반 low 허용 / iifiir 주기-임박 제외). 상수 파일 상단 노출하여 튜닝 용이성 확보. commit d1a549d.
+- 2026-04-21 오후: v1_1 eval-loop (run_id=20260421-082859, pass 19/27, persistent 9→5). 개선 4건 (conf_005·012·015·019) 확인. 문서화 (commit 861e799).
+- 2026-04-21 저녁: 잔존 5건 케이스별 심층 분석 — conf_006 link 성공/date null (보수적 AI), conf_007 JSON parse_fail (3 iter 중 2), conf_017 주기 anomaly, user_mo04ezfq 실질적 성공. 사용자가 골든셋 추가 수정 (conf_007 cycle 2→3 dates blank, conf_017 cycle 4→3). 다른 컴퓨터 이동 전 PR 생성.
