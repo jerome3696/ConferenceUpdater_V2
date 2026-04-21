@@ -259,7 +259,7 @@
       "duration_days": 4,
       "region": "아시아",
       "official_url": "",
-      "note": ""
+      "note": "ACRA series biennial (11th 2024 Jeju → 12th 2026 Taichung)."
     },
     {
       "id": "conf_021",
@@ -1064,7 +1064,7 @@
       "link": "http://www.jsmf.gr.jp/icmf2022/",
       "source": "ai_backfill",
       "confidence": "high",
-      "notes": "ICMF-2023 (11th edition). Held April 2-7 2023, Kobe. Biennial; next edition would be 2025/2026 but not yet confirmed in searches.",
+      "notes": "ICMF-2023 (11th edition). Held April 2-7 2023, Kobe. 3-year cycle (2013 Jeju → 2016 Florence → 2019 Rio → 2022/2023 Kobe); next edition 2025/2026 but not yet confirmed in searches.",
       "updated_at": "2026-04-20T05:11:46.716Z",
       "source_url": "https://blog.sintef.com/energy/multiphase-flow-researchers-at-the-international-conference-on-multiphase-flow-kobe-2023/"
     },
@@ -1190,7 +1190,7 @@
       "link": "https://ihtc17.org/",
       "source": "ai_backfill",
       "confidence": "high",
-      "notes": "IHTC-17, August 14-18 2023, Cape Town. 4y cycle.",
+      "notes": "IHTC-17, August 14-18 2023, Cape Town. 4y cycle historically (IHTC-14 2010, 15 2014, 16 2018). IHTC-17 delayed from 2022 due to pandemic, IHTC-18 moved earlier to 2026 → 3y gap in recent two editions.",
       "updated_at": "2026-04-20T05:11:46.716Z",
       "source_url": "https://ihtcdigitallibrary.com/conferences/ihtc17.html"
     },
