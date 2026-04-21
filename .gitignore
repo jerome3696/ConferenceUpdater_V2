@@ -34,6 +34,9 @@ docs/eval/golden-set.parsed.json
 # Script 산출물 (검수 brief, xlsx 내보내기, 원격 스냅샷 등)
 scripts/output/
 
+# eval-loop 실행 결과 — 로컬 측정마다 재생성, 공유 대상 아님
+docs/eval/runs/
+
 # Env files (never commit secrets)
 .env
 .env.*
