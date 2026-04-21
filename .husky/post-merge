@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 # 머지 후 feature/PLAN-xxx 플랜 문서를 active/ → completed/ 자동 이동
+# 지원 형식:
+#   - PLAN-NNN          (숫자 ID)
+#   - PLAN-P0-<slug>    (Phase A.0 준비기 skeleton)
+#   - PLAN-P0-<slug>-vN (-vN 접미사는 제거하고 slug 로만 아카이브)
 
 MERGE_MSG=$(git log -1 --pretty=%s)
 
-# 머지 메시지에서 PLAN ID 추출
-# 예: "Merge pull request #X from jerome3696/feature/PLAN-001-..."
-# 예: "Merge branch 'feature/PLAN-001-...'"
-if [[ "$MERGE_MSG" =~ PLAN-([0-9]+) ]]; then
+PLAN_ID=""
+if [[ "$MERGE_MSG" =~ (PLAN-P0-[a-z][a-z0-9-]*) ]]; then
+  PLAN_ID="${BASH_REMATCH[1]}"
+  # 브랜치명에 붙은 -vN 접미사 제거 (예: PLAN-P0-multitenant-schema-v1 → PLAN-P0-multitenant-schema)
+  PLAN_ID="${PLAN_ID%-v[0-9]*}"
+elif [[ "$MERGE_MSG" =~ PLAN-([0-9]+) ]]; then
   PLAN_ID="PLAN-${BASH_REMATCH[1]}"
+fi
+
+if [[ -n "$PLAN_ID" ]]; then
   PLAN_FILE="docs/plans/active/${PLAN_ID}.md"
   DEST_FILE="docs/plans/completed/${PLAN_ID}.md"
 
