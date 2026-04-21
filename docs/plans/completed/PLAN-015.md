@@ -1,9 +1,10 @@
 # PLAN-015: 골든셋 XLSX 일원화 + CSV 마이그레이션 (PR-2)
 
-> **상태**: active
+> **상태**: completed
 > **생성일**: 2026-04-20
+> **완료일**: 2026-04-20
 > **브랜치**: `feature/PLAN-015-golden-xlsx`
-> **연관 PR**: TBD (PR-1 `feature/PLAN-014-prompt-md-sync` 위에 스택)
+> **연관 PR**: #24 (일괄 머지 e925a66 / 개별 커밋 8fa114c)
 > **트랙**: F (운영 품질) — F.2 프롬프트 평가 체계화 · PR-2
 
 ---
