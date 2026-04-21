@@ -74,9 +74,7 @@ export function normalizeUpdateData(data) {
   return data;
 }
 
-/**
- * 텍스트에서 JSON 블록을 추출. 코드펜스, 바깥 중괄호 순서로 시도.
- */
+// 텍스트에서 JSON 블록을 추출. 코드펜스, 바깥 중괄호 순서로 시도. throw 없음 — 실패는 null.
 function extractJson(text) {
   if (!text) return null;
   const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
@@ -91,24 +89,26 @@ function extractJson(text) {
   return null;
 }
 
-/**
- * 업데이트 응답 파싱.
- * @returns {{ok:true, data:object} | {ok:false, reason:string, raw:string, parsed?:any}}
- *   reason: 'empty' | 'no_json' | 'invalid_json' | 'schema_mismatch'
- */
-export function parseUpdateResponse(text) {
+// 5개 parser 공용 헤드: empty → no_json → object 검사. 실패는 reason 포함 early-return 객체, 성공은 { ok:true, data }.
+function extractObjectPayload(text) {
   if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
-
-  let data;
-  try {
-    data = extractJson(text);
-  } catch (e) {
-    return { ok: false, reason: 'invalid_json', raw: text };
-  }
+  const data = extractJson(text);
   if (data === null) return { ok: false, reason: 'no_json', raw: text };
   if (typeof data !== 'object' || Array.isArray(data)) {
     return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
   }
+  return { ok: true, data };
+}
+
+/**
+ * 업데이트 응답 파싱.
+ * @returns {{ok:true, data:object} | {ok:false, reason:string, raw:string, parsed?:any}}
+ *   reason: 'empty' | 'no_json' | 'schema_mismatch'
+ */
+export function parseUpdateResponse(text) {
+  const pre = extractObjectPayload(text);
+  if (!pre.ok) return pre;
+  const { data } = pre;
 
   const missing = UPDATE_SCHEMA.required.filter((k) => !(k in data));
   if (missing.length === UPDATE_SCHEMA.required.length) {
@@ -138,12 +138,9 @@ export function parseUpdateResponse(text) {
  * @param {string} [todayIso]  YYYY-MM-DD. 기본값 현재 시스템 날짜.
  */
 export function parseLastEditionResponse(text, todayIso) {
-  if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
-  const data = extractJson(text);
-  if (data === null) return { ok: false, reason: 'no_json', raw: text };
-  if (typeof data !== 'object' || Array.isArray(data)) {
-    return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
-  }
+  const pre = extractObjectPayload(text);
+  if (!pre.ok) return pre;
+  const { data } = pre;
 
   const s = data.start_date;
   const e = data.end_date;
@@ -175,12 +172,9 @@ const PREDATORY_LEVELS = new Set(['low', 'medium', 'high']);
  *   reason: 'empty' | 'no_json' | 'schema_mismatch'
  */
 export function parseDiscoveryExpandResponse(text) {
-  if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
-  const data = extractJson(text);
-  if (data === null) return { ok: false, reason: 'no_json', raw: text };
-  if (typeof data !== 'object' || Array.isArray(data)) {
-    return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
-  }
+  const pre = extractObjectPayload(text);
+  if (!pre.ok) return pre;
+  const { data } = pre;
   const arr = data.keywords;
   if (!Array.isArray(arr)) return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
 
@@ -216,12 +210,9 @@ export function parseDiscoveryExpandResponse(text) {
  * @returns {{ok:true, candidates:Candidate[]} | {ok:false, reason:string, raw:string, parsed?:any}}
  */
 export function parseDiscoverySearchResponse(text) {
-  if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
-  const data = extractJson(text);
-  if (data === null) return { ok: false, reason: 'no_json', raw: text };
-  if (typeof data !== 'object' || Array.isArray(data)) {
-    return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
-  }
+  const pre = extractObjectPayload(text);
+  if (!pre.ok) return pre;
+  const { data } = pre;
   const arr = data.candidates;
   if (!Array.isArray(arr)) return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
 
@@ -293,12 +284,9 @@ export function parseDiscoverySearchResponse(text) {
  * 검증 응답 파싱. 각 필드별 { status, correct } 기대.
  */
 export function parseVerifyResponse(text) {
-  if (!text || !text.trim()) return { ok: false, reason: 'empty', raw: text || '' };
-  const data = extractJson(text);
-  if (data === null) return { ok: false, reason: 'no_json', raw: text };
-  if (typeof data !== 'object' || Array.isArray(data)) {
-    return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
-  }
+  const pre = extractObjectPayload(text);
+  if (!pre.ok) return pre;
+  const { data } = pre;
   const hasAny = VERIFY_FIELDS.some((f) => data[f] && typeof data[f] === 'object');
   if (!hasAny) return { ok: false, reason: 'schema_mismatch', raw: text, parsed: data };
   return { ok: true, data };
