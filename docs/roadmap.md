@@ -40,8 +40,8 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 
 ### A.0 준비기 (현재 위치)
 - **A.0.1** 서버 스택 결정 → `PLAN-026` ✅ **Supabase 확정** (completed)
-- **A.0.2** 멀티테넌트 스키마 설계 → `PLAN-P0-multitenant-schema`
-- **A.0.3** 쿼터 정책 상세 → `PLAN-P0-quota-policy`
+- **A.0.2** 멀티테넌트 스키마 설계 → `PLAN-P0-multitenant-schema` ✅ 완료 (completed)
+- **A.0.3** 쿼터 정책 상세 → `PLAN-P0-quota-policy` (진행 예정)
 - **A.0.4** 인증 플로우 + Resend SMTP → `PLAN-P0-auth-flow`
 
 ### A.1 서버 MVP
@@ -144,8 +144,8 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 |---|---|---|---|
 | A.0.1 | `PLAN-026` 서버 스택 비교 | ✅ completed | (merged) |
 | A.0 | `PLAN-027` ultra-plan roadmap | active | `feature/PLAN-027-ultra-plan-roadmap` |
-| A.0.2 | `PLAN-P0-multitenant-schema` | 착수 대기 (skeleton 작성됨) | - |
-| A.0.3 | `PLAN-P0-quota-policy` | 착수 대기 (skeleton 작성됨) | - |
+| A.0.2 | `PLAN-P0-multitenant-schema` | ✅ completed | (merged) |
+| A.0.3 | `PLAN-P0-quota-policy` | 진행 예정 (skeleton 작성됨) | - |
 | A.0.4 | `PLAN-P0-auth-flow` | 착수 대기 (skeleton 작성됨) | - |
 | A.1 | `PLAN-028-api-proxy-mvp` | 예정 | - |
 | A.2 | `PLAN-029-client-migration` | 예정 | - |
