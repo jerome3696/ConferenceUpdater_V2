@@ -12,7 +12,7 @@ max_rows = 1000
 
 [db]
 port = 54322
-major_version = 15
+major_version = 17
 
 [studio]
 enabled = true
@@ -39,5 +39,5 @@ secure_password_change = false
 # Resend SMTP (API key · from 주소는 대시보드에서 수동 설정)
 # docs/supabase-deploy.md 참조
 
-[functions]
-verify_jwt = false  # claude-proxy 는 수동 검증 (service_role 호출 분기 때문)
+[functions.claude-proxy]
+verify_jwt = false  # 수동 검증 (service_role 호출 분기 때문)

@@ -55,7 +55,7 @@ VITE_SUPABASE_ANON_KEY=<anon_key>
 
 ```bash
 supabase db push
-# supabase/migrations/0001_initial_schema.sql 이 적용됨
+# supabase/migrations/20260422000001_initial_schema.sql 이 적용됨
 ```
 
 **검증**:
@@ -194,7 +194,7 @@ SELECT monthly_budget_used();
 supabase functions delete claude-proxy
 
 # DB 롤백 (데이터 유실 — 백업 확인 후)
-psql "$DATABASE_URL" -f supabase/migrations/0002_rollback_0001.sql
+psql "$DATABASE_URL" -f supabase/rollbacks/rollback_0001.sql
 ```
 
 브라우저 클라이언트는 PLAN-029 이전까지 기존 `claudeApi.js` 경로 유지 → 서버 장애 시 즉시 구버전 사용 가능.
@@ -207,4 +207,4 @@ psql "$DATABASE_URL" -f supabase/migrations/0002_rollback_0001.sql
 - `docs/plans/completed/PLAN-P0-multitenant-schema.md` — 스키마 명세
 - `docs/plans/completed/PLAN-P0-quota-policy.md` — 쿼터·예산 정책
 - `docs/plans/completed/PLAN-P0-auth-flow.md` — 인증 UX
-- `supabase/migrations/0001_initial_schema.sql` — 실제 SQL
+- `supabase/migrations/20260422000001_initial_schema.sql` — 실제 SQL
