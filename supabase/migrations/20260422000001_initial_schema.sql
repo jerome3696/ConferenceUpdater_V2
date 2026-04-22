@@ -91,9 +91,11 @@ CREATE TABLE public.api_usage_log (
   status            text        NOT NULL CHECK (status IN ('success','error','quota_block','cached'))
 );
 
-CREATE INDEX api_usage_log_user_ts_idx    ON public.api_usage_log(user_id, ts DESC);
-CREATE INDEX api_usage_log_ts_idx         ON public.api_usage_log(ts);
-CREATE INDEX api_usage_log_monthly_idx    ON public.api_usage_log(user_id, endpoint, date_trunc('month', ts));
+CREATE INDEX api_usage_log_user_ts_idx      ON public.api_usage_log(user_id, ts DESC);
+CREATE INDEX api_usage_log_ts_idx           ON public.api_usage_log(ts);
+-- 월 집계는 (user_id, endpoint, ts) 범위 스캔으로 해결.
+-- date_trunc 는 STABLE 이라 index expression 으로 사용 불가 (IMMUTABLE 요구).
+CREATE INDEX api_usage_log_user_ep_ts_idx   ON public.api_usage_log(user_id, endpoint, ts DESC);
 
 -- ============================================================
 -- 6) quotas — 사용자별 현재 주기 사용량 (dual counter)
