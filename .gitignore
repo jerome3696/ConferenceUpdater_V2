@@ -45,3 +45,7 @@ docs/eval/runs/
 # Tooling workspaces (Serena MCP, oh-my-claudecode) — per-user, not shared
 .serena/
 .omc/
+
+# Supabase CLI 로컬 상태 (PLAN-028)
+supabase/.temp/
+supabase/.branches/
