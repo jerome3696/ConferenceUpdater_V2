@@ -1,0 +1,43 @@
+# PLAN-028 Supabase local/prod shared config
+# 사용자 수동 작업: project_id 는 `supabase init` 후 본인 프로젝트로 교체
+
+project_id = "REPLACE_WITH_YOUR_PROJECT_REF"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = [
+  "http://localhost:5173",
+  "https://jerome3696.github.io",
+  "https://jerome3696.github.io/ConferenceUpdater_V2",
+]
+jwt_expiry = 3600
+enable_signup = true
+
+# Magic link 전용 (PLAN-P0-auth-flow)
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
+secure_password_change = false
+
+# Resend SMTP (API key · from 주소는 대시보드에서 수동 설정)
+# docs/supabase-deploy.md 참조
+
+[functions]
+verify_jwt = false  # claude-proxy 는 수동 검증 (service_role 호출 분기 때문)
