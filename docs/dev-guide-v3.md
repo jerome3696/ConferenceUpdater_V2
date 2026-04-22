@@ -1,7 +1,7 @@
 # 학회 DB 관리 웹앱 — 개발 가이드 v3
 
 > **상위 문서**: `docs/roadmap.md` (장기 Phase·상업화 로드맵)
-> **현재 Phase**: **A.0 (준비기)** — 서버 전환 설계 중. PLAN-026 스택 비교(Supabase 권고) + PLAN-027 로드맵 체계화 진행.
+> **현재 Phase**: **A.1 서버 MVP** — A.0 5개 P0 플랜 완료 (스키마·쿼터·Auth·장기비전). PLAN-028 migration SQL + Edge Function 작성 중.
 > **하위 문서**: `docs/plans/active/PLAN-xxx.md` (개별 과제)
 >
 > **문서 버전**: v3.2 (pending-only 슬림화)

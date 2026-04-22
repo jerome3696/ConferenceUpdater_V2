@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-**현재: Phase A.0 (서버 전환 설계).** PLAN-026 스택 비교(Supabase 권고) + PLAN-027 로드맵 체계화. v1_1 프롬프트(19/27) 측정 완료, v1_2 튜닝 보류. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
+**현재: Phase A.1 (서버 MVP).** A.0 5개 P0 플랜 완료 (스키마·쿼터·Auth·장기비전). PLAN-028 migration SQL + Edge Function 작성 중. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
 
 ## 문서 맵 (작업 종류별)
 

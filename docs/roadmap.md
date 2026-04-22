@@ -3,7 +3,7 @@
 > **문서 위치**: 상위 — 없음 (북극성)
 > **하위 문서**: `docs/dev-guide-v3.md` (현재 sprint), `docs/plans/active/PLAN-xxx.md` (과제)
 > **최종 수정일**: 2026-04-22
-> **현재 Phase**: **A 준비기** — Phase 0 (스키마·쿼터·Auth v1 완료 → 장기 비전 정합 중 · PLAN-028 착수 대기)
+> **현재 Phase**: **A.1 서버 MVP 착수** — A.0 5개 P0 플랜 모두 완료 · PLAN-028 진행 중 (migration SQL + Edge Function scaffold)
 
 ---
 
@@ -43,7 +43,7 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 - **A.0.2** 멀티테넌트 스키마 설계 → `PLAN-P0-multitenant-schema` ✅ completed (editor role 제거·user 단일화로 v1.1 정합)
 - **A.0.3** 쿼터 정책 상세 → `PLAN-P0-quota-policy` ✅ completed (user 30명 기준 $30.3/월, 안전마진 40%)
 - **A.0.4** 인증 플로우 + Resend SMTP → `PLAN-P0-auth-flow` ✅ completed
-- **A.0.5** 장기 비전 정합 (3채널 기여 · 공용 DB 선참조 · 분야 온보딩) → `PLAN-P0-longterm-vision` active
+- **A.0.5** 장기 비전 정합 (3채널 기여 · 공용 DB 선참조 · 분야 온보딩) → `PLAN-P0-longterm-vision` ✅ completed
 
 ### A.1 서버 MVP
 - Supabase 프로젝트 + Auth + DB 스키마 적용 (user·admin 2단계 role)
@@ -160,9 +160,9 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 | A.0.2 | `PLAN-P0-multitenant-schema` | ✅ completed (v1.1 정합) | (merged) |
 | A.0.3 | `PLAN-P0-quota-policy` | ✅ completed (v1.1 정합) | (merged) |
 | A.0.4 | `PLAN-P0-auth-flow` | ✅ completed (v1.1 정합) | (merged) |
-| A.0.5 | `PLAN-P0-longterm-vision` | active | `chore/longterm-vision-align` |
-| A.1 | `PLAN-028-api-proxy-mvp` | 예정 | - |
-| A.2 | `PLAN-029-client-migration` | 예정 | - |
+| A.0.5 | `PLAN-P0-longterm-vision` | ✅ completed | (merged) |
+| A.1 | `PLAN-028-api-proxy-mvp` | active | `feature/PLAN-028-api-proxy-mvp` |
+| A.2 | `PLAN-029-client-migration` | active (spec 확정, 구현 대기) | (A.1 merge 이후 생성) |
 | B.1 | `PLAN-030-field-onboarding-prompt-v2` | 예정 | - |
 | B.2 | `PLAN-031-upstream-cache-dynamic-ttl` | 예정 | - |
 
