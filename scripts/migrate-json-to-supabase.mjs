@@ -35,9 +35,11 @@ log(`source: ${conferences.length} conferences, ${editions.length} editions`);
 
 // ── 변환 함수 ────────────────────────────────────────────────
 function toUpstreamConference(c) {
+  // CHECK 제약: category IN ('학회','박람회'). 빈 값(disc_* 잔여)은 '학회' 로 normalize.
+  const category = c.category && c.category.trim() ? c.category : '학회';
   return {
     id: c.id,
-    category: c.category,
+    category,
     field: c.field,
     abbreviation: c.abbreviation || null,
     full_name: c.full_name,
@@ -51,7 +53,19 @@ function toUpstreamConference(c) {
   };
 }
 
+// CHECK: source IN ('ai_search','user_input','backfill','initial_import')
+// 레거시 값(ai_discovery·ai_backfill) 을 스키마에 맞게 normalize
+const SOURCE_MAP = {
+  ai_search: 'ai_search',
+  user_input: 'user_input',
+  backfill: 'backfill',
+  initial_import: 'initial_import',
+  ai_discovery: 'ai_search',   // 발굴 프롬프트 결과 → 동일 버킷
+  ai_backfill: 'backfill',     // 레거시 표기
+};
+
 function toUpstreamEdition(e) {
+  const src = e.source ?? 'initial_import';
   return {
     id: e.id,
     conference_id: e.conference_id,
@@ -60,7 +74,7 @@ function toUpstreamEdition(e) {
     end_date: e.end_date || null,
     venue: e.venue || null,
     link: e.link || null,
-    source: e.source ?? 'initial_import',
+    source: SOURCE_MAP[src] ?? 'initial_import',
     confidence: e.confidence ?? null,
     notes: e.notes ?? null,
     updated_at: e.updated_at ?? new Date().toISOString(),
