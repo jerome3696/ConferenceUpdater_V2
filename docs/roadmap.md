@@ -162,7 +162,7 @@ ConferenceFinder V2는 1인 SPA로 시작했으나, **명확한 상업화 로드
 | A.0.4 | `PLAN-P0-auth-flow` | ✅ completed (v1.1 정합) | (merged) |
 | A.0.5 | `PLAN-P0-longterm-vision` | ✅ completed | (merged) |
 | A.1 | `PLAN-028-api-proxy-mvp` | active | `feature/PLAN-028-api-proxy-mvp` |
-| A.2 | `PLAN-029-client-migration` | 예정 | - |
+| A.2 | `PLAN-029-client-migration` | active (spec 확정, 구현 대기) | (A.1 merge 이후 생성) |
 | B.1 | `PLAN-030-field-onboarding-prompt-v2` | 예정 | - |
 | B.2 | `PLAN-031-upstream-cache-dynamic-ttl` | 예정 | - |
 
