@@ -2,7 +2,11 @@
 // PLAN-021 (2026-04-21): 도메인별 5개 모듈로 분리. 공개 API·import 경로 불변.
 // 새 버전 추가 시 해당 도메인 모듈에 system+builder 를 추가하고 아래 TEMPLATES 에 키 하나 등록.
 
-import { UPDATE_SYSTEM_V1_0, buildUpdateUserV1_0, UPDATE_SYSTEM_V1_1, buildUpdateUserV1_1 } from './prompts/update.js';
+import {
+  UPDATE_SYSTEM_V1_0, buildUpdateUserV1_0,
+  UPDATE_SYSTEM_V1_1, buildUpdateUserV1_1,
+  UPDATE_SYSTEM_V1_2, buildUpdateUserV1_2,
+} from './prompts/update.js';
 import { VERIFY_SYSTEM_V1, buildVerifyUserV1 } from './prompts/verify.js';
 import { LAST_EDITION_SYSTEM_V1, buildLastEditionUserV1 } from './prompts/lastEdition.js';
 import {
@@ -16,6 +20,7 @@ const TEMPLATES = {
   update: {
     v1_0: { system: UPDATE_SYSTEM_V1_0, user: buildUpdateUserV1_0 },
     v1_1: { system: UPDATE_SYSTEM_V1_1, user: buildUpdateUserV1_1 },
+    v1_2: { system: UPDATE_SYSTEM_V1_2, user: buildUpdateUserV1_2 },
   },
   verify: {
     v1: { system: VERIFY_SYSTEM_V1, user: buildVerifyUserV1 },
@@ -31,7 +36,7 @@ const TEMPLATES = {
   },
 };
 
-export const DEFAULT_UPDATE_VERSION = 'v1_1';
+export const DEFAULT_UPDATE_VERSION = 'v1_2';
 export const DEFAULT_VERIFY_VERSION = 'v1';
 export const DEFAULT_DISCOVERY_EXPAND_VERSION = 'v1';
 export const DEFAULT_DISCOVERY_SEARCH_VERSION = 'v1';
