@@ -3,8 +3,30 @@
 
 export const UPDATE_SCHEMA = {
   required: ['start_date', 'end_date', 'venue', 'link'],
-  optional: ['source_url', 'confidence', 'notes'],
+  optional: ['source_url', 'confidence', 'notes', '_sources'],
 };
+
+// PLAN-032 v1_2: AI 응답의 `_sources` 객체를 정규화. 각 필드별 URL 배열만 통과.
+// optional — v1_1 이하 응답에는 없음. 그래도 깨지지 않게 graceful.
+export function normalizeFieldSources(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const allowedFields = ['start_date', 'end_date', 'venue', 'link'];
+  const out = {};
+  let hasAny = false;
+  for (const f of allowedFields) {
+    const v = raw[f];
+    if (!v) continue;
+    const arr = Array.isArray(v) ? v : [v];
+    const urls = arr
+      .filter((u) => typeof u === 'string')
+      .map((u) => u.trim())
+      .filter((u) => u.length > 0);
+    if (urls.length === 0) continue;
+    out[f] = urls;
+    hasAny = true;
+  }
+  return hasAny ? out : null;
+}
 
 export const VERIFY_FIELDS = [
   'full_name', 'abbreviation', 'cycle_years', 'duration_days', 'region', 'official_url',
@@ -123,6 +145,10 @@ export function parseUpdateResponse(text) {
   }
 
   normalizeUpdateData(data);
+
+  // PLAN-032: _sources 정규화 (v1_2 응답 필드별 출처 URL 배열)
+  const sources = normalizeFieldSources(data._sources);
+  if (sources) data._sources = sources; else delete data._sources;
 
   return { ok: true, data, missing };
 }

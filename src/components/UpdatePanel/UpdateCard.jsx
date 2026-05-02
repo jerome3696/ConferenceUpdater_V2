@@ -20,7 +20,24 @@ function ConfidenceBadge({ value }) {
   return <span className={`px-1.5 py-0.5 rounded text-[11px] font-semibold ${cls}`}>신뢰도 {value}</span>;
 }
 
-function DiffRow({ label, oldValue, newValue }) {
+function FieldSourceLink({ urls }) {
+  if (!urls || urls.length === 0) return null;
+  const first = urls[0];
+  const tooltip = urls.length > 1 ? urls.join('\n') : first;
+  return (
+    <a
+      href={first}
+      target="_blank"
+      rel="noreferrer"
+      title={tooltip}
+      className="ml-1 text-[10px] text-blue-500 hover:text-blue-700 hover:underline align-middle"
+    >
+      [근거]
+    </a>
+  );
+}
+
+function DiffRow({ label, oldValue, newValue, sources }) {
   const changed = (oldValue || '') !== (newValue || '');
   return (
     <div className="grid grid-cols-[80px_1fr_1fr] gap-2 py-1 border-b border-slate-100 last:border-0 text-xs">
@@ -28,6 +45,7 @@ function DiffRow({ label, oldValue, newValue }) {
       <div className={`text-slate-600 ${changed ? 'line-through' : ''}`}>{oldValue || <span className="text-slate-300">없음</span>}</div>
       <div className={changed ? 'font-semibold text-emerald-700' : 'text-slate-600'}>
         {newValue || <span className="text-slate-300">없음</span>}
+        {newValue && <FieldSourceLink urls={sources} />}
       </div>
     </div>
   );
@@ -123,10 +141,10 @@ export default function UpdateCard({ current, onAccept, onReject, onCancel }) {
               <div>현재</div>
               <div>제안</div>
             </div>
-            <DiffRow label="시작일" oldValue={oldUpcoming.start_date} newValue={result.start_date} />
-            <DiffRow label="종료일" oldValue={oldUpcoming.end_date} newValue={result.end_date} />
-            <DiffRow label="장소" oldValue={oldUpcoming.venue} newValue={result.venue} />
-            <DiffRow label="링크" oldValue={oldUpcoming.link} newValue={result.link} />
+            <DiffRow label="시작일" oldValue={oldUpcoming.start_date} newValue={result.start_date} sources={result._sources?.start_date} />
+            <DiffRow label="종료일" oldValue={oldUpcoming.end_date} newValue={result.end_date} sources={result._sources?.end_date} />
+            <DiffRow label="장소" oldValue={oldUpcoming.venue} newValue={result.venue} sources={result._sources?.venue} />
+            <DiffRow label="링크" oldValue={oldUpcoming.link} newValue={result.link} sources={result._sources?.link} />
 
             {(result.confidence || result.source_url || result.notes) && (
               <div className="mt-2 p-2 bg-slate-50 border border-slate-200 rounded text-[11px] text-slate-600 space-y-1">

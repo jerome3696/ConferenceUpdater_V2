@@ -26,7 +26,7 @@ const REF_LAST_EDITION = {
 };
 const REF_TODAY_ISO = '2026-04-21T00:00:00.000Z';
 
-const VERSIONS = ['v1_0', 'v1_1'];
+const VERSIONS = ['v1_0', 'v1_1', 'v1_2'];
 
 // outer fence = 4-backtick. MD 에서 `````text` 로 연 블록의 내용을 순서대로 반환.
 function extractCodeBlocks(md) {

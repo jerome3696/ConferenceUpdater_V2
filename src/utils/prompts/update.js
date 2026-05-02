@@ -290,3 +290,90 @@ start_date > ${today} 인 회차만 upcoming. start_date <= ${today} 면 반환 
 }
 \`\`\``;
 }
+
+// v1_2 — v1_1 의 단일 source_url 을 **필드별 출처 URL 배열** (`_sources`) 으로 확장.
+// 사용자가 각 필드(start_date / end_date / venue / link) 별로 근거 URL 을 직접 검증할 수 있도록.
+// 시스템 프롬프트는 v1_1 그대로 + "_sources 강제" 한 단락 추가.
+export const UPDATE_SYSTEM_V1_2 = `${UPDATE_SYSTEM_V1_1}
+
+[출처 URL — 필드별 강제]
+각 필드 (start_date / end_date / venue / link) 의 값을 결정한 근거 URL 을 응답 JSON 의 \`_sources\` 객체 안에 \`<field>: [url1, url2]\` 형식으로 1~2개씩 반드시 포함하세요. 출처는 web_search/web_fetch 로 실제 확인한 페이지의 URL 이어야 하고, 추측·생성하지 마세요. 값이 null 인 필드는 _sources 에서 생략 가능합니다. 단일 출처면 단일 원소 배열로 반환.`;
+
+export function buildUpdateUserV1_2(conference, lastEdition) {
+  // user 프롬프트 본문은 v1_1 동일 + 응답 스키마 _sources 추가
+  const today = new Date().toISOString().slice(0, 10);
+  const {
+    full_name = '',
+    abbreviation = '',
+    cycle_years = 0,
+    official_url = '',
+  } = conference;
+  const lastLine = formatLastEdition(lastEdition);
+
+  let cycleProgressLine = '주기 진행률: 계산 불가 (last 회차 정보 없음)';
+  if (cycle_years > 0 && lastEdition) {
+    const anchor = lastEdition.end_date || lastEdition.start_date;
+    if (anchor) {
+      const anchorMs = Date.parse(anchor);
+      const todayMs = Date.parse(today);
+      if (Number.isFinite(anchorMs) && Number.isFinite(todayMs)) {
+        const elapsed = (todayMs - anchorMs) / (1000 * 60 * 60 * 24);
+        const progress = elapsed / (cycle_years * 365);
+        cycleProgressLine = `주기 진행률 (cycle_progress): ${progress.toFixed(2)} (= ${Math.round(elapsed)}일 경과 / ${cycle_years * 365}일 주기)`;
+      }
+    }
+  }
+
+  const lastLinkHint = lastEdition?.link
+    ? '\n- 마지막 개최 link 제공됨 → 축 A ①: URL 유형 (연도형/회차번호형/불변형) 판별 후 해당 분기 적용.'
+    : '';
+
+  return `다음 학회의 다음(upcoming) 개최 정보를 찾아주세요.
+
+오늘: ${today}
+
+학회명: ${full_name}
+약칭: ${abbreviation || '없음'}
+주기: ${cycle_years ? `${cycle_years}년` : '미상'}
+공식사이트: ${official_url || '없음'}
+마지막 개최: ${lastLine}
+${cycleProgressLine}
+
+[upcoming 판별]
+start_date > ${today} 인 회차만 upcoming. start_date <= ${today} 면 반환 금지 (과거 또는 당일). 주기를 고려해 다음 회차를 탐색하되 정보 없으면 start_date/end_date/venue/link 모두 null.
+
+[반환 직전 자기검증 체크리스트]
+1. upcoming.link == official_url 인 경우: 해당 도메인이 **dedicated (1:1)** 인지 **institutional (1:N)** 인지 판별. Institutional 이면 하위 specific 경로로 대체하거나 link=null.
+2. start_date > today (부등호·자릿수 비교) 재확인.
+3. link vs confidence 일관성: confidence 'high'/'medium' 이면 link 는 non-null.
+4. venue 포맷: 미국 "City, State, USA" / 캐나다 "City, Province, Canada" / 그 외 "City, Country".
+5. **주기 진행률 규칙 적용**:
+   - cycle_progress < ${V1_1_VARS.IIFIIR_STRICT_FROM}: iifiir 슬러그 OK. cycle_progress ≥ ${V1_1_VARS.IIFIIR_STRICT_FROM}: 회차 전용 독립 도메인 탐색 1회 이상 시도했는지 확인.
+   - cycle_progress < ${V1_1_VARS.EARLY_INACCURATE_UNTIL}: 공식 정보 부재 시 부정확 소스 기반 venue/시점을 confidence='low' 로 반환 허용.
+6. **_sources 필수**: start_date / end_date / venue / link 의 각 non-null 값마다 검증 가능한 근거 URL 1~2개를 _sources 에 명시.
+
+[기타 주의]
+- 공식사이트를 발견했으나 홈에 날짜가 없을 경우, 하위 페이지(Important Dates / Program / Venue / About / Registration 등)를 추가 탐색.${lastLinkHint}
+
+찾아야 할 정보: 시작일·종료일 (YYYY-MM-DD), 장소 (venue 포맷), 공식 링크 (축 B 규칙).
+
+반드시 아래 JSON 형식으로만 응답. 확인 불가 필드는 null.
+
+\`\`\`json
+{
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "venue": "City, State, USA | City, Country",
+  "link": "https://...",
+  "source_url": "근거가 된 출처 URL (overall — _sources 가 비어있을 때 fallback)",
+  "confidence": "high" | "medium" | "low",
+  "notes": "부가 설명 (선택)",
+  "_sources": {
+    "start_date": ["https://..."],
+    "end_date":   ["https://..."],
+    "venue":      ["https://..."],
+    "link":       ["https://..."]
+  }
+}
+\`\`\``;
+}
