@@ -2,7 +2,6 @@
   "conferences": [
     {
       "id": "conf_001",
-      "starred": 0,
       "category": "학회",
       "field": "냉동공조",
       "abbreviation": "",
@@ -11,11 +10,13 @@
       "duration_days": 5,
       "region": "미주",
       "official_url": "https://www.ashrae.org/conferences",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_002",
-      "starred": 0,
       "category": "박람회",
       "field": "건물공조",
       "abbreviation": "",
@@ -24,11 +25,13 @@
       "duration_days": 3,
       "region": "아시아",
       "official_url": "https://www.aseanhvacexpo.com/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_003",
-      "starred": 0,
       "category": "박람회",
       "field": "냉동공조",
       "abbreviation": "ISH",
@@ -37,11 +40,13 @@
       "duration_days": 4,
       "region": "유럽",
       "official_url": "https://ish.messefrankfurt.com/frankfurt/en.html",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_004",
-      "starred": 0,
       "category": "학회",
       "field": "유체기기",
       "abbreviation": "ETC",
@@ -50,11 +55,13 @@
       "duration_days": 5,
       "region": "유럽",
       "official_url": "https://www.euroturbo.eu",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_005",
-      "starred": 0,
       "category": "박람회",
       "field": "공학일반",
       "abbreviation": "",
@@ -63,11 +70,13 @@
       "duration_days": 5,
       "region": "유럽",
       "official_url": "https://www.hannovermesse.de",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_006",
-      "starred": 0,
       "category": "학회",
       "field": "극저온",
       "abbreviation": "",
@@ -76,11 +85,13 @@
       "duration_days": 5,
       "region": "유럽",
       "official_url": "https://www.cryogenics-conference.eu/",
-      "note": "IIR 시리즈"
+      "note": "IIR 시리즈",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_007",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "ICMF",
@@ -89,11 +100,13 @@
       "duration_days": 5,
       "region": "유럽",
       "official_url": "",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_008",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "ITherm",
@@ -102,11 +115,13 @@
       "duration_days": 4,
       "region": "미주",
       "official_url": "https://www.ieee-itherm.net/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_009",
-      "starred": 0,
       "category": "학회",
       "field": "극저온",
       "abbreviation": "ICC",
@@ -115,11 +130,13 @@
       "duration_days": 4,
       "region": "미주",
       "official_url": "https://cryocooler.org/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_010",
-      "starred": 0,
       "category": "학회",
       "field": "열물성/냉매",
       "abbreviation": "TPTPR",
@@ -128,11 +145,13 @@
       "duration_days": 4,
       "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_011",
-      "starred": 0,
       "category": "학회",
       "field": "신재생",
       "abbreviation": "ECOS",
@@ -141,11 +160,13 @@
       "duration_days": 5,
       "region": "전세계",
       "official_url": "https://ecos2023.com/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_012",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "THERMINIC",
@@ -154,11 +175,13 @@
       "duration_days": 3,
       "region": "유럽",
       "official_url": "https://therminic.eu/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_013",
-      "starred": 0,
       "category": "학회",
       "field": "냉동공조",
       "abbreviation": "",
@@ -167,11 +190,13 @@
       "duration_days": 4,
       "region": "전세계",
       "official_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_014",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "ICBCHT",
@@ -180,11 +205,13 @@
       "duration_days": 3,
       "region": "전세계",
       "official_url": "https://sites.mit.edu/icbcht12/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_015",
-      "starred": 0,
       "category": "학회",
       "field": "유체역학",
       "abbreviation": "ICCFD",
@@ -193,12 +220,13 @@
       "duration_days": 5,
       "region": "전세계",
       "official_url": "https://www.iccfd.org/",
-      "dedicated_url": "https://iccfd13.polimi.it",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_016",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "IHTC",
@@ -207,11 +235,13 @@
       "duration_days": 5,
       "region": "전세계",
       "official_url": "https://www.astfe.org/conferences/",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_017",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "PRTEC",
@@ -220,11 +250,13 @@
       "duration_days": 4,
       "region": "미주",
       "official_url": "",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_018",
-      "starred": 0,
       "category": "학회",
       "field": "냉동공조",
       "abbreviation": "ICR",
@@ -233,11 +265,13 @@
       "duration_days": 6,
       "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
-      "note": "IIR 시리즈"
+      "note": "IIR 시리즈",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_019",
-      "starred": 0,
       "category": "학회",
       "field": "열물성/냉매",
       "abbreviation": "",
@@ -246,11 +280,13 @@
       "duration_days": 4,
       "region": "전세계",
       "official_url": "https://iifiir.org/en/iir-conferences-series",
-      "note": "IIR 시리즈"
+      "note": "IIR 시리즈",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_020",
-      "starred": 0,
       "category": "학회",
       "field": "냉동공조",
       "abbreviation": "ACRA",
@@ -259,11 +295,13 @@
       "duration_days": 4,
       "region": "아시아",
       "official_url": "",
-      "note": "ACRA series biennial (11th 2024 Jeju → 12th 2026 Taichung)."
+      "note": "ACRA series biennial (11th 2024 Jeju → 12th 2026 Taichung).",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "conf_021",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "IHPC&S",
@@ -272,11 +310,13 @@
       "duration_days": 5,
       "region": "전세계",
       "official_url": "",
-      "note": ""
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "user_mo04ezfq",
-      "starred": 0,
       "category": "학회",
       "field": "건물공조",
       "abbreviation": "BS",
@@ -286,11 +326,12 @@
       "region": "전세계",
       "official_url": "https://ibpsa.org/",
       "note": "",
-      "source": "user_input"
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "user_mo342nwc",
-      "starred": 0,
       "category": "학회",
       "field": "열전달",
       "abbreviation": "MNHMT2027",
@@ -300,11 +341,12 @@
       "region": "전세계",
       "official_url": "https://www.ichmt.org/",
       "note": "",
-      "source": "user_input"
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "user_mo347qjj",
-      "starred": 0,
       "category": "학회",
       "field": "건물공조",
       "abbreviation": "",
@@ -314,117 +356,12 @@
       "region": "전세계",
       "official_url": "https://ishs.org/",
       "note": "",
-      "source": "user_input"
-    },
-    {
-      "id": "disc_mo51rke0v1",
       "starred": 0,
-      "category": "학회",
-      "field": "열저장",
-      "abbreviation": "IWCB",
-      "full_name": "International Workshop on Carnot Batteries",
-      "cycle_years": 2,
-      "duration_days": 0,
-      "region": "유럽",
-      "official_url": "https://event.dlr.de/en/event/4th-international-workshop-on-carnot-batteries/",
-      "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "Organized by established research institutions (KIT, University of Stuttgart, DLR)",
-          "IEA Storage Annex 36 endorsed",
-          "Clear peer-reviewed proceedings"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "카르노배터리",
-            "en": "Carnot battery"
-          },
-          {
-            "ko": "열저장",
-            "en": "thermal energy storage"
-          }
-        ],
-        "evidence_url": "https://iea-es.org/events/international-workshop-on-carnot-batteries/",
-        "organizer": "KIT, University of Stuttgart, DLR",
-        "found_at": "2026-04-19T00:48:02.808Z"
-      }
-    },
-    {
-      "id": "disc_mo520jhk7o",
-      "starred": 0,
-      "category": "학회",
-      "field": "냉동공조",
-      "abbreviation": "IRACC",
-      "full_name": "International Refrigeration and Air Conditioning Conference at Purdue (Harrick Conference)",
-      "cycle_years": 2,
-      "duration_days": 0,
-      "region": "전세계",
-      "official_url": "https://docs.lib.purdue.edu/iracc/",
-      "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "high",
-        "predatory_reasons": [
-          "Hosted by Purdue since 1972",
-          "800+ international experts annually",
-          "IIR partnership",
-          "[휴] 금지 도메인 iifiir.org"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "냉동 사이클",
-            "en": "refrigeration cycle"
-          },
-          {
-            "ko": "저온 공학",
-            "en": "air conditioning"
-          }
-        ],
-        "evidence_url": "https://iifiir.org/en/events/21st-international-refrigeration-and-air-conditioning-conference-at-purdue",
-        "organizer": "Purdue University, Ray W. Herrick Laboratories",
-        "found_at": "2026-04-19T00:55:01.544Z"
-      }
-    },
-    {
-      "id": "disc_mo5215jjv5",
-      "starred": 0,
-      "category": "학회",
-      "field": "에너지 저장",
-      "abbreviation": "SSTES",
-      "full_name": "Swiss Symposium Thermal Energy Storage",
-      "cycle_years": 1,
-      "duration_days": 0,
-      "region": "유럽",
-      "official_url": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage",
-      "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "Organized by HSLU",
-          "Annual recurring event",
-          "Established series since at least 13th edition"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "에너지 저장",
-            "en": "thermal energy storage"
-          },
-          {
-            "ko": "저온 공학",
-            "en": "energy storage technologies"
-          }
-        ],
-        "evidence_url": "https://iea-es.org/events/13th-swiss-symposium-thermal-energy-storage/",
-        "organizer": "Lucerne University of Applied Sciences and Arts, Competence Center for Thermal Energy Storage",
-        "found_at": "2026-04-19T00:55:30.127Z"
-      }
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "disc_mo5d5wybn7",
-      "starred": 0,
       "category": "학회",
       "field": "제어공학",
       "abbreviation": "CDC",
@@ -434,33 +371,57 @@
       "region": "전세계",
       "official_url": "",
       "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "IEEE official conference",
-          "Annual premier conference since 1971",
-          "Top-tier control systems conference",
-          "[휴] 신뢰 출판사·단체 매칭 (ieee) — 감점"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "모델예측제어",
-            "en": "model predictive control"
-          },
-          {
-            "ko": "산업공정",
-            "en": "산업공정"
-          }
-        ],
-        "evidence_url": "https://cdc2026.ieeecss.org/",
-        "organizer": "IEEE Control Systems Society",
-        "found_at": "2026-04-19T06:07:08.051Z"
-      }
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
+    },
+    {
+      "id": "disc_mo51rke0v1",
+      "category": "학회",
+      "field": "열저장",
+      "abbreviation": "IWCB",
+      "full_name": "International Workshop on Carnot Batteries",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "https://event.dlr.de/en/event/4th-international-workshop-on-carnot-batteries/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
+    },
+    {
+      "id": "disc_mo520jhk7o",
+      "category": "학회",
+      "field": "냉동공조",
+      "abbreviation": "IRACC",
+      "full_name": "International Refrigeration and Air Conditioning Conference at Purdue (Harrick Conference)",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://docs.lib.purdue.edu/iracc/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
+    },
+    {
+      "id": "disc_mo5215jjv5",
+      "category": "학회",
+      "field": "에너지 저장",
+      "abbreviation": "SSTES",
+      "full_name": "Swiss Symposium Thermal Energy Storage",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "disc_mo5d6axpa3",
-      "starred": 0,
       "category": "학회",
       "field": "디지털트윈",
       "abbreviation": "DigiTwin",
@@ -470,29 +431,13 @@
       "region": "전세계",
       "official_url": "https://dtiac.com/",
       "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "Organized by IDEA (International Digital Engineering Association)",
-          "Established series since 2019",
-          "Clear academic governance"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "디지털트윈",
-            "en": "디지털트윈"
-          }
-        ],
-        "evidence_url": "https://dtiac.com/",
-        "organizer": "International Digital Engineering Association (IDEA)",
-        "found_at": "2026-04-19T06:07:26.173Z"
-      }
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "disc_mo8592i0e0",
-      "starred": 0,
-      "category": "",
+      "category": "학회",
       "field": "공기질",
       "abbreviation": "Indoor Air",
       "full_name": "Indoor Air - International Conference of the International Society of Indoor Air Quality and Climate",
@@ -501,37 +446,13 @@
       "region": "전세계",
       "official_url": "https://www.indoorair2026.org/",
       "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "ISIAQ founded in 1992",
-          "Premier international scientific platform",
-          "Held biennial since 1978"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "공기질",
-            "en": "indoor air quality"
-          },
-          {
-            "ko": "열쾌적성",
-            "en": "thermal comfort"
-          },
-          {
-            "ko": "시뮬레이션",
-            "en": "smart building technologies"
-          }
-        ],
-        "evidence_url": "https://www.indoorair2026.org/",
-        "organizer": "International Society of Indoor Air Quality and Climate (ISIAQ)",
-        "found_at": "2026-04-21T04:48:56.808Z"
-      }
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "disc_mo8593oimc",
-      "starred": 0,
-      "category": "",
+      "category": "학회",
       "field": "건물에너지모델링",
       "abbreviation": "COBEE",
       "full_name": "COBEE - International Conference on Building Energy and Environment",
@@ -540,37 +461,13 @@
       "region": "전세계",
       "official_url": "https://cobee2025.cobee2025.org/",
       "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "Springer publishes proceedings",
-          "First held in 2008 in Dalian, China",
-          "EI and SCOPUS indexed"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "건물에너지모델링",
-            "en": "building energy and environment"
-          },
-          {
-            "ko": "시뮬레이션",
-            "en": "simulation"
-          },
-          {
-            "ko": "스마트건물",
-            "en": "smart building systems"
-          }
-        ],
-        "evidence_url": "https://cobee2025.cobee2025.org/",
-        "organizer": "Eindhoven University of Technology",
-        "found_at": "2026-04-21T04:48:58.338Z"
-      }
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     },
     {
       "id": "disc_mo859hc6bf",
-      "starred": 0,
-      "category": "",
+      "category": "학회",
       "field": "공기질",
       "abbreviation": "IAQVEC",
       "full_name": "IAQVEC - International Conference on Indoor Air Quality, Ventilation, and Energy Conservation in Buildings",
@@ -579,32 +476,9 @@
       "region": "전세계",
       "official_url": "https://iaqvec2026.org/",
       "note": "",
-      "source": "ai_discovery",
-      "discovery_meta": {
-        "predatory_score": "low",
-        "predatory_reasons": [
-          "Established since 1992",
-          "Multidisciplinary scientific event",
-          "Published proceedings in peer-reviewed journals"
-        ],
-        "matched_keywords": [
-          {
-            "ko": "공기질",
-            "en": "indoor air quality"
-          },
-          {
-            "ko": "건물공조",
-            "en": "building ventilation"
-          },
-          {
-            "ko": "건물에너지모델링",
-            "en": "energy conservation"
-          }
-        ],
-        "evidence_url": "https://iaqvec2026.org/",
-        "organizer": "IAQVEC Association",
-        "found_at": "2026-04-21T04:49:16.038Z"
-      }
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream"
     }
   ],
   "editions": [
@@ -617,8 +491,10 @@
       "venue": "Chicago, USA",
       "link": "https://www.ashrae.org/conferences/2027-winter-conference",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:57:55.984Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:57:55.984+00:00"
     },
     {
       "id": "ed_002",
@@ -629,7 +505,10 @@
       "venue": null,
       "link": null,
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:23:30.192Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-16T13:23:30.192+00:00"
     },
     {
       "id": "ed_003",
@@ -640,7 +519,10 @@
       "venue": "Frankfrut, Germany",
       "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
       "source": "user_input",
-      "updated_at": "2026-04-20T05:56:16.312Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:56:16.312+00:00"
     },
     {
       "id": "ed_004",
@@ -651,8 +533,10 @@
       "venue": "Gdańsk, Poland",
       "link": "https://www.etc17.eu/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:58:07.544Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:58:07.544+00:00"
     },
     {
       "id": "ed_005",
@@ -663,7 +547,10 @@
       "venue": "Hannover, Germany",
       "link": "https://www.hannovermesse.de/en/",
       "source": "user_input",
-      "updated_at": "2026-04-15T12:20:33.181Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-15T12:20:33.181+00:00"
     },
     {
       "id": "ed_006",
@@ -674,8 +561,10 @@
       "venue": "Dresden, Germany",
       "link": "https://www.cryogenics-conference.eu/cryogenics2027/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:53:10.998Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:53:10.998+00:00"
     },
     {
       "id": "ed_007",
@@ -686,8 +575,10 @@
       "venue": "Vancouver, Canada",
       "link": null,
       "source": "ai_search",
-      "updated_at": "2026-04-20T06:38:39.248Z",
-      "confidence": "low"
+      "confidence": "low",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T06:38:39.248+00:00"
     },
     {
       "id": "ed_008",
@@ -698,8 +589,10 @@
       "venue": "Orlando, United States",
       "link": "https://www.ieee-itherm.net/may-26-29-2026-conference/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:57:37.455Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:57:37.455+00:00"
     },
     {
       "id": "ed_009",
@@ -710,8 +603,10 @@
       "venue": "Syracuse, New York, United States",
       "link": "https://cryocooler.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:57:24.984Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:57:24.984+00:00"
     },
     {
       "id": "ed_010",
@@ -722,8 +617,10 @@
       "venue": null,
       "link": null,
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:59:57.636Z",
-      "confidence": "low"
+      "confidence": "low",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T15:59:57.636+00:00"
     },
     {
       "id": "ed_011",
@@ -734,7 +631,10 @@
       "venue": "Constanța, Romania",
       "link": "https://ecos2026.insae.ro/",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:24:39.622Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-16T13:24:39.622+00:00"
     },
     {
       "id": "ed_012",
@@ -745,8 +645,10 @@
       "venue": "Berlin-Köpenick, Germany",
       "link": "https://therminic.eu/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:23.932Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:23.932+00:00"
     },
     {
       "id": "ed_013",
@@ -757,8 +659,10 @@
       "venue": "Vienna, Austria",
       "link": "https://hpc2026.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:33.509Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:33.509+00:00"
     },
     {
       "id": "ed_014",
@@ -769,8 +673,10 @@
       "venue": "Cambridge, USA",
       "link": "https://sites.mit.edu/icbcht12/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:26.018Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:26.018+00:00"
     },
     {
       "id": "ed_015",
@@ -781,8 +687,10 @@
       "venue": "Milan, Italy",
       "link": "https://iccfd13.polimi.it",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:27.893Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:27.893+00:00"
     },
     {
       "id": "ed_016",
@@ -793,8 +701,10 @@
       "venue": "Rio de Janeiro, Brazil",
       "link": "https://ihtc18.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:29.694Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:29.694+00:00"
     },
     {
       "id": "ed_017",
@@ -805,8 +715,10 @@
       "venue": "Honolulu, USA",
       "link": "https://www.prtec2027.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:38.287Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:38.287+00:00"
     },
     {
       "id": "ed_018",
@@ -817,8 +729,10 @@
       "venue": "Seoul, Republic of Korea",
       "link": "https://www.icr2027.org/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:43.007Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:43.007+00:00"
     },
     {
       "id": "ed_mo0owb4h",
@@ -829,8 +743,10 @@
       "venue": "Vienna, Austria",
       "link": "https://ibpsa.org/conferences/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:23:40.989Z",
-      "confidence": "medium"
+      "confidence": "medium",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:23:40.989+00:00"
     },
     {
       "id": "ed_mo1fi2f1",
@@ -841,7 +757,10 @@
       "venue": "Hamilton, New Zealand",
       "link": "https://iifiir.org/en/events/17th-iir-gustav-lorentzen-conference-on-naturals-refrigerants-gl-2026",
       "source": "ai_search",
-      "updated_at": "2026-04-16T12:01:29.533Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-16T12:01:29.533+00:00"
     },
     {
       "id": "ed_mo1ifljh",
@@ -852,19 +771,24 @@
       "venue": "Frankfurt am Main, Germany",
       "link": "https://ish.messefrankfurt.com/frankfurt/en.html",
       "source": "ai_search",
-      "updated_at": "2026-04-16T13:23:33.197Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-16T13:23:33.197+00:00"
     },
     {
       "id": "ed_mo1ifst3",
       "conference_id": "conf_005",
       "status": "upcoming",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-24",
+      "start_date": "2027-04-05",
+      "end_date": "2027-04-08",
       "venue": "Hannover, Germany",
       "link": "https://www.hannovermesse.de",
       "source": "ai_search",
-      "updated_at": "2026-04-17T15:57:35.090Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-05-02T15:16:52.421Z"
     },
     {
       "id": "ed_mo1ihhw0",
@@ -875,8 +799,10 @@
       "venue": "Taichung, Taiwan",
       "link": "https://sites.google.com/view/hvac-acra2026/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:22:58.921Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:22:58.921+00:00"
     },
     {
       "id": "ed_mo1ihjbm",
@@ -887,8 +813,10 @@
       "venue": "Gdańsk, Poland",
       "link": "https://ihpcs.org/ihpcs2026/",
       "source": "ai_search",
-      "updated_at": "2026-04-18T12:23:00.315Z",
-      "confidence": "high"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-18T12:23:00.315+00:00"
     },
     {
       "id": "ed_mo342x2j",
@@ -898,9 +826,11 @@
       "end_date": "2027-01-11",
       "venue": "Napoli, Italy",
       "link": "https://www.ichmt.org/mnhmt-2027",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-17T16:17:19.339Z"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T16:17:19.339+00:00"
     },
     {
       "id": "ed_mo348475",
@@ -910,45 +840,11 @@
       "end_date": "2027-06-10",
       "venue": "Wageningen, Netherlands",
       "link": "https://www.ishs.org/symposium/854",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-17T16:21:21.857Z"
-    },
-    {
-      "id": "ed_mo4b66iv",
-      "conference_id": "disc_mo4asr0xda",
-      "status": "upcoming",
-      "start_date": "2026-05-18",
-      "end_date": "2026-05-22",
-      "venue": "Los Angeles, California, USA",
-      "link": "https://iaqvec2026.org/",
       "confidence": "high",
-      "source": "ai_search",
-      "updated_at": "2026-04-18T12:23:35.047Z"
-    },
-    {
-      "id": "ed_mo4b67ry",
-      "conference_id": "disc_mo4atuc4nq",
-      "status": "upcoming",
-      "start_date": "2026-08-02",
-      "end_date": "2026-08-07",
-      "venue": "Pacific Grove, CA, United States",
-      "link": "https://www.aceee.org/2026-summer-study-energy-efficiency-buildings",
-      "confidence": "high",
-      "source": "ai_search",
-      "updated_at": "2026-04-18T12:23:36.670Z"
-    },
-    {
-      "id": "ed_mo4b69gd",
-      "conference_id": "disc_mo4auw08jt",
-      "status": "upcoming",
-      "start_date": "2026-06-14",
-      "end_date": "2026-06-18",
-      "venue": "Singapore, Singapore",
-      "link": "https://www.indoorair2026.org/",
-      "confidence": "high",
-      "source": "ai_search",
-      "updated_at": "2026-04-18T12:23:38.845Z"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-17T16:21:21.857+00:00"
     },
     {
       "id": "ed_mo51rke0",
@@ -958,9 +854,11 @@
       "end_date": "2026-09-23",
       "venue": "Stuttgart, Germany",
       "link": "https://event.dlr.de/en/event/5th-international-workshop-on-carnot-batteries-iwcb/",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-20T06:39:13.134Z"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T06:39:13.134+00:00"
     },
     {
       "id": "ed_mo5215jk",
@@ -970,9 +868,11 @@
       "end_date": null,
       "venue": null,
       "link": null,
-      "confidence": "low",
       "source": "ai_search",
-      "updated_at": "2026-04-20T06:39:29.003Z"
+      "confidence": "low",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T06:39:29.003+00:00"
     },
     {
       "id": "ed_mo5d5wyb",
@@ -982,9 +882,11 @@
       "end_date": "2026-12-18",
       "venue": "Honolulu, Hawaii, USA",
       "link": "https://cdc2026.ieeecss.org/",
+      "source": "ai_search",
       "confidence": null,
-      "source": "ai_discovery",
-      "updated_at": "2026-04-19T06:07:08.051Z"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-19T06:07:08.051+00:00"
     },
     {
       "id": "ed_mo5d6axp",
@@ -994,9 +896,11 @@
       "end_date": "2026-08-08",
       "venue": "Oxford, United Kingdom",
       "link": "https://dtiac.com/digitwin2026/index.aspx",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-20T06:39:34.036Z"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T06:39:34.036+00:00"
     },
     {
       "id": "ed_last_001",
@@ -1006,11 +910,11 @@
       "end_date": "2026-02-04",
       "venue": "Caesars Palace, Las Vegas, NV, USA",
       "link": "https://www.ashrae.org/conferences/2026-winter-conference",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "2026 ASHRAE Winter Conference, January 31 - February 4 2026, Caesars Palace Las Vegas. Concurrent with AHR Expo Feb 2-4. Already concluded as of today (2026-04-19) so this is the most recent past.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.trane.com/commercial/north-america/us/en/about-us/newsroom/blogs/ashrae-2026.html"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_002",
@@ -1020,11 +924,11 @@
       "end_date": "2025-03-07",
       "venue": "IMPACT Exhibition Centre, Bangkok, Thailand",
       "link": "https://www.aseanhvacexpo.com/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "Transcript confirms March 5-7 2025, Bangkok, IMPACT Exhibition Centre.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.jetro.go.jp/en/database/j-messe/tradefair/detail/140582"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_004",
@@ -1034,11 +938,11 @@
       "end_date": "2025-03-28",
       "venue": "Hannover, Germany",
       "link": "https://www.etc16.eu/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ETC16 confirmed 24-28 March 2025 in Hannover.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.euroturbo.eu/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_006",
@@ -1048,11 +952,11 @@
       "end_date": "2025-04-11",
       "venue": "Prague, Czech Republic",
       "link": "https://www.cryogenics-conference.eu/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "18th IIR Cryogenics Conference, 7-11 April 2025, Prague. iifiir.org used only as source_url (news page), link is the non-predatory official domain.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://iifiir.org/en/news/uniting-23-countries-for-cryogenics-progress-highlights-from-the-2025-iir-cryogenics-conference"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_007",
@@ -1062,11 +966,11 @@
       "end_date": "2023-04-07",
       "venue": "Kobe International Conference Center, Kobe, Japan",
       "link": "http://www.jsmf.gr.jp/icmf2022/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ICMF-2023 (11th edition). Held April 2-7 2023, Kobe. 3-year cycle (2013 Jeju → 2016 Florence → 2019 Rio → 2022/2023 Kobe); next edition 2025/2026 but not yet confirmed in searches.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://blog.sintef.com/energy/multiphase-flow-researchers-at-the-international-conference-on-multiphase-flow-kobe-2023/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_008",
@@ -1076,11 +980,11 @@
       "end_date": "2025-05-30",
       "venue": "Gaylord Texan Resort and Convention Center, Dallas, TX, USA",
       "link": "https://www.ieee-itherm.net/imp-dates-conf-2025/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "24th ITherm, May 27-30 2025, Dallas.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.electronics-cooling.com/2025/10/ieee-itherm-2025-conference-highlights/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_009",
@@ -1090,11 +994,11 @@
       "end_date": "2024-06-06",
       "venue": "Madison, Wisconsin, USA",
       "link": "https://cryocooler.org/Conference",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ICC23, June 3-6 2024, Madison, WI.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://bluefors.com/events/23rd-international-cryocooler-conference-icc23/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_010",
@@ -1104,11 +1008,11 @@
       "end_date": "2025-06-18",
       "venue": "University of Maryland, College Park, MD, USA",
       "link": "https://ceee.umd.edu/tptpr2025",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "7th IIR TPTPR, June 15-18 2025, UMD College Park. Note this is 4y cycle, previous was TPTPR 2021 Vicenza (online, Sept 1-3 2021).",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://ceee.umd.edu/event/19452/7th-iir-conference-on-thermophysical-properties-and-transfer-processes-of-refrigerants"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_011",
@@ -1118,11 +1022,11 @@
       "end_date": "2025-07-04",
       "venue": "Mines Paris - PSL, Paris, France",
       "link": "https://ecos2025.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ECOS 2025, 38th edition, June 29 - July 4 2025, Paris.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.minesparis.psl.eu/en/blog/evenements/the-38th-international-conference-on-energy-efficiency-cost-optimisation-simulation-and-environmental-impact-of-energy-systems/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_012",
@@ -1132,11 +1036,11 @@
       "end_date": "2025-09-26",
       "venue": "University Federico II Conference Center, Naples, Italy",
       "link": "https://therminic2025.eu/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "31st THERMINIC, 24-26 September 2025, Naples.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.electronics-cooling.com/2025/12/therminic-2025-highlights/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_013",
@@ -1146,11 +1050,11 @@
       "end_date": "2023-05-18",
       "venue": "Renaissance Chicago Downtown Hotel, Chicago, IL, USA",
       "link": "https://www.hpc2023.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "14th IEA HPC, May 15-18 2023, Chicago. 3y cycle; next 2026 Vienna confirmed future.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://heatpumpingtechnologies.org/events/the-14th-iea-heat-pump-conference-in-chicago-hpc2023/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_014",
@@ -1160,11 +1064,11 @@
       "end_date": "2023-05-17",
       "venue": "University of Edinburgh, Edinburgh, UK",
       "link": "https://icbcht11.eng.ed.ac.uk/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ICBCHT11, May 15-17 2023, Edinburgh.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.uknhtc.org/post/11th-international-conference-on-boiling-and-condensation-heat-transfer-may-2023-edinburgh"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_015",
@@ -1174,11 +1078,11 @@
       "end_date": "2024-07-19",
       "venue": "Kobe International Conference Center, Kobe, Japan",
       "link": "https://www.iccfd.org/iccfd12/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "ICCFD12, July 14-19 2024, Kobe.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://engineering.esteco.com/events/iccfd-12/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_016",
@@ -1188,11 +1092,11 @@
       "end_date": "2023-08-18",
       "venue": "Cape Town International Convention Centre, Cape Town, South Africa",
       "link": "https://ihtc17.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "IHTC-17, August 14-18 2023, Cape Town. 4y cycle historically (IHTC-14 2010, 15 2014, 16 2018). IHTC-17 delayed from 2022 due to pandemic, IHTC-18 moved earlier to 2026 → 3y gap in recent two editions.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://ihtcdigitallibrary.com/conferences/ihtc17.html"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_017",
@@ -1202,11 +1106,11 @@
       "end_date": "2024-12-19",
       "venue": "Hawaii Convention Center, Honolulu, HI, USA",
       "link": "https://prtec2024.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "PRTEC2024 (3rd edition), December 15-19 2024, Honolulu. Series skipped 2023 due to pandemic.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.jsme.or.jp/conference/PRTEC2024/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_018",
@@ -1216,11 +1120,11 @@
       "end_date": "2023-08-26",
       "venue": "Palais des Congrès de Paris, Paris, France",
       "link": "https://www.icr2023.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "26th ICR, August 21-26 2023, Paris Congress Center. (IIR initial news said Aug 21-25; icr2023.org officially lists 21-26.) 4y cycle; next 2027 Seoul.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://ior.org.uk/news/international-congress-of-refrigeration-2023"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_019",
@@ -1230,11 +1134,11 @@
       "end_date": "2024-08-14",
       "venue": "University of Maryland, College Park, MD, USA",
       "link": "https://ceee.umd.edu/gl2024",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "GL 2024 (16th edition), August 11-14 2024, UMD College Park.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://ceee.umd.edu/event/19304/iir-gustav-lorentzen-conference-on-natural-refrigerants-august-11-14"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_020",
@@ -1244,11 +1148,11 @@
       "end_date": "2024-04-24",
       "venue": "Ramada Plaza Hotel Jeju, Jeju, South Korea",
       "link": "https://www.acra2024.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "11th ACRA, April 21-24 2024, Jeju.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://refindustry.com/events/conference/11th-asian-conference-on-refrigeration-and-air-conditioning-acra/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_021",
@@ -1258,11 +1162,11 @@
       "end_date": "2025-02-02",
       "venue": "Pattaya, Thailand",
       "link": "https://www.heatpipethailand.com/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "medium",
-      "notes": "AMBIGUITY RESOLVED: Joint 22nd IHPC / 16th IHPS. Earlier website placeholder said 'November 2024' but event was rescheduled / actually held January 29 - February 2, 2025 in Pattaya, Thailand, per Calyos post-event coverage and multiple LinkedIn announcements. Using the actual held dates (Jan 29 - Feb 2 2025).",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.calyos-tm.com/news-article/calyos-participates-in-the-joint-22nd-ihpc-and-16th-ihps-conference"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo04ezfq",
@@ -1272,11 +1176,11 @@
       "end_date": "2025-08-27",
       "venue": "Brisbane, Australia",
       "link": "https://bs2025.org/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "BS 2025, 19th IBPSA Conference, August 24-27 2025, Brisbane.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.ibpsa-australasia.org/event-details/building-simulation-conference-2025"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo342nwc",
@@ -1286,11 +1190,11 @@
       "end_date": "2024-08-07",
       "venue": "University of Nottingham, Nottingham, UK",
       "link": "https://event.asme.org/MNHMT",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "7th ASME MNHMT, August 5-7 2024, Nottingham UK. Co-located with UKHTC2024.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://asmedigitalcollection.asme.org/MNHT/MNHMT2024/volume/88155"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo347qjj",
@@ -1300,11 +1204,11 @@
       "end_date": "2025-06-27",
       "venue": "University of Almería, Almería, Spain",
       "link": "https://www2.ual.es/greensys2025/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "AMBIGUITY RESOLVED: GreenSys 2025, June 22-27 2025, University of Almería, Spain. Fresh WebSearch confirmed dates (transcript had only location).",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://econutri-project.eu/22-27-june-2025-4-partners-aua-ual-uth-igz-at-greensys-2025-almeria-spain/"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo51rke0v1",
@@ -1314,11 +1218,11 @@
       "end_date": "2024-09-25",
       "venue": "University of Stuttgart, Stuttgart, Germany",
       "link": "https://iwcb2024.welcome-manager.de/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "4th International Workshop on Carnot Batteries, September 23-25 2024, Stuttgart. Organized by KIT, Univ. Stuttgart, and DLR.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.dlr.de/de/tt/aktuelles/veranstaltungen/2024/4-internationaler-workshop-fuer-carnot-batterien"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo520jhk7o",
@@ -1328,11 +1232,11 @@
       "end_date": "2024-07-18",
       "venue": "Purdue University, West Lafayette, IN, USA",
       "link": "https://docs.lib.purdue.edu/iracc/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "20th Purdue IRACC, July 15-18 2024, West Lafayette. Biennial with Herrick Conferences.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://engineering.purdue.edu/Herrick/about/news/Conferences/2024"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo5215jjv5",
@@ -1342,11 +1246,11 @@
       "end_date": "2025-01-24",
       "venue": "Lucerne University of Applied Sciences and Arts (HSLU), Lucerne, Switzerland",
       "link": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage/cctes-sstes-2025/",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "12th SSTES, single-day event Friday 24 January 2025, HSLU Lucerne. Annual cycle; 13th (2026) scheduled.",
-      "updated_at": "2026-04-20T05:11:46.716Z",
-      "source_url": "https://www.sweet-decarb.ch/events/event/12th-swiss-symposium-thermal-energy-storage"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_last_mo5d6axpa3",
@@ -1356,11 +1260,11 @@
       "end_date": "2025-10-18",
       "venue": "Garmisch-Partenkirchen, Germany",
       "link": "https://digitwin2025.comtessa.org/welcome",
-      "source": "ai_backfill",
+      "source": "backfill",
       "confidence": "high",
-      "notes": "5th DigiTwin International Conference 2025, hybrid format.",
-      "source_url": "https://www.aconf.org/conf_224622/",
-      "updated_at": "2026-04-20T05:11:46.716Z"
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:11:46.716+00:00"
     },
     {
       "id": "ed_mo6s5ojh",
@@ -1371,7 +1275,10 @@
       "venue": "Rio de Janeiro, Brazil",
       "link": "https://cdc2025.ieeecss.org/",
       "source": "user_input",
-      "updated_at": "2026-04-20T05:54:37.565Z"
+      "confidence": null,
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-20T05:54:37.565+00:00"
     },
     {
       "id": "ed_mo6tr5sb",
@@ -1381,11 +1288,11 @@
       "end_date": "2026-07-16",
       "venue": "West Lafayette, Indiana, USA",
       "link": "https://iifiir.org/en/events/21st-international-refrigeration-and-air-conditioning-conference-at-purdue",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-21T04:49:43.271Z",
+      "confidence": "high",
       "anchored": false,
-      "anchor_set_at": null
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T04:49:43.271+00:00"
     },
     {
       "id": "ed_mo8592i0",
@@ -1395,11 +1302,11 @@
       "end_date": "2026-06-05",
       "venue": "Singapore",
       "link": "https://www.indoorair2026.org/",
+      "source": "ai_search",
       "confidence": null,
-      "source": "ai_discovery",
       "anchored": false,
       "anchor_set_at": null,
-      "updated_at": "2026-04-21T04:48:56.808Z"
+      "updated_at": "2026-04-21T04:48:56.808+00:00"
     },
     {
       "id": "ed_mo859hc6",
@@ -1409,11 +1316,11 @@
       "end_date": "2026-05-22",
       "venue": "Los Angeles, California, USA",
       "link": "https://iaqvec2026.org/",
+      "source": "ai_search",
       "confidence": null,
-      "source": "ai_discovery",
       "anchored": false,
       "anchor_set_at": null,
-      "updated_at": "2026-04-21T04:49:16.038Z"
+      "updated_at": "2026-04-21T04:49:16.038+00:00"
     },
     {
       "id": "ed_mo88lj4w",
@@ -1423,9 +1330,11 @@
       "end_date": "2022-07-29",
       "venue": "Montreal, Quebec, Canada",
       "link": "https://www.cobee2022.org/",
-      "confidence": "high",
       "source": "ai_search",
-      "updated_at": "2026-04-21T06:22:37.088Z"
+      "confidence": "high",
+      "anchored": false,
+      "anchor_set_at": null,
+      "updated_at": "2026-04-21T06:22:37.088+00:00"
     }
   ]
 }
