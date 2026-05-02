@@ -98,6 +98,53 @@ describe('parseUpdateResponse', () => {
     expect(result.ok).toBe(true);
     expect(result.data.start_date_raw).toBe('2026/09/01');
   });
+
+  // PLAN-032: v1_2 응답의 _sources 필드별 출처 URL 배열
+  it('_sources 객체가 있으면 필드별 URL 배열로 정규화', () => {
+    const text = JSON.stringify({
+      start_date: '2027-08-15',
+      end_date: '2027-08-20',
+      venue: 'Tokyo, Japan',
+      link: 'https://ihtc19.org',
+      _sources: {
+        start_date: ['https://ihtc.org/news/2027', 'https://example.com'],
+        venue: 'https://ihtc19.org/venue',
+      },
+    });
+    const result = parseUpdateResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.data._sources.start_date).toEqual([
+      'https://ihtc.org/news/2027',
+      'https://example.com',
+    ]);
+    expect(result.data._sources.venue).toEqual(['https://ihtc19.org/venue']);
+    expect(result.data._sources.end_date).toBeUndefined();
+  });
+
+  it('_sources 가 없는 v1_1 응답도 깨지지 않음', () => {
+    const text = JSON.stringify({
+      start_date: '2027-08-15',
+      end_date: '2027-08-20',
+      venue: 'Tokyo',
+      link: 'https://x',
+    });
+    const result = parseUpdateResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.data._sources).toBeUndefined();
+  });
+
+  it('_sources 가 빈 객체이거나 잘못된 타입이면 제거', () => {
+    const text = JSON.stringify({
+      start_date: '2027-08-15',
+      end_date: '2027-08-20',
+      venue: 'X',
+      link: 'https://x',
+      _sources: { start_date: [], venue: 12345, link: ['  '] },
+    });
+    const result = parseUpdateResponse(text);
+    expect(result.ok).toBe(true);
+    expect(result.data._sources).toBeUndefined();
+  });
 });
 
 describe('parseVerifyResponse', () => {
