@@ -37,7 +37,7 @@ function getHandlers(kind) {
   };
 }
 
-export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, applyVerifyUpdate }) {
+export function useUpdateQueue({ applyAiUpdate, applyLastDiscovery, applyVerifyUpdate }) {
   const [queue, setQueue] = useState([]);
   const [searching, setSearching] = useState(null);
   const [pending, setPending] = useState([]);
@@ -74,10 +74,6 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, appl
     (async () => {
       let card;
       try {
-        if (!apiKey) {
-          throw new ClaudeApiError('API 키가 필요합니다. 우상단에서 입력해주세요.', { kind: 'auth' });
-        }
-
         // PLAN-013-D: update 직전, last 가 없으면 과거 회차 1건 선행 발굴.
         // 실패/부분 실패여도 main update 는 그대로 진행 (row.last 만 보강됨).
         let rowForUpdate = item.row;
@@ -85,9 +81,11 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, appl
           try {
             const { system: lSys, user: lUser } = buildLastEditionPrompt(rowForUpdate);
             const lRes = await callClaude({
-              apiKey,
               prompt: lUser,
               system: lSys,
+              endpoint: 'update',
+              conferenceId: item.conferenceId,
+              forceRefresh: true,
               model: MODELS.update,
               webSearch: true,
               maxTokens: 1024,
@@ -116,9 +114,11 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, appl
         const { buildPrompt, parse, model } = getHandlers(item.kind);
         const { system, user } = buildPrompt(rowForUpdate);
         const res = await callClaude({
-          apiKey,
           prompt: user,
           system,
+          endpoint: item.kind === 'verify' ? 'verify' : 'update',
+          conferenceId: item.conferenceId,
+          forceRefresh: true,
           model,
           webSearch: true,
           maxTokens: item.kind === 'verify' ? 1536 : 1024,
@@ -158,7 +158,7 @@ export function useUpdateQueue({ apiKey, applyAiUpdate, applyLastDiscovery, appl
         setSearching(null);
       }
     })();
-  }, [queue, searching, apiKey, rateLimitUntil, applyLastDiscovery]);
+  }, [queue, searching, rateLimitUntil, applyLastDiscovery]);
 
   // PLAN-013-A: opts.anchor=true 면 수용 후 anchor 마크 (update kind 만 의미 있음).
   const accept = useCallback((cardId, { anchor = false } = {}) => {

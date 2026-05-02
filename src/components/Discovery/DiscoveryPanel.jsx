@@ -16,11 +16,10 @@ import {
   fmtKRW,
 } from './useDiscoveryState';
 
-export default function DiscoveryPanel({ apiKey, existingConferences = [], onAccept, onClose }) {
+export default function DiscoveryPanel({ existingConferences = [], onAccept, onClose }) {
   const { usage, addUsage, totalCost } = useDiscoveryUsage();
-  const kw = useKeywordExpansion({ apiKey, addUsage });
+  const kw = useKeywordExpansion({ addUsage });
   const search = useDiscoverySearch({
-    apiKey,
     selected: kw.selected,
     existingConferences,
     addUsage,
