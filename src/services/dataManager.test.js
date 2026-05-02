@@ -1,11 +1,4 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  loadConferences,
-  saveConferencesLocal,
-  commitToGitHub,
-  getCachedSha,
-  ConflictError,
-} from './dataManager';
 
 vi.mock('./githubStorage', () => ({
   fetchFile: vi.fn(),
@@ -15,6 +8,19 @@ vi.mock('./githubStorage', () => ({
   },
 }));
 
+// 기본은 supabase 미설정 상태로 가정. 일부 테스트에서 doMock 으로 재설정.
+vi.mock('./supabaseClient', () => ({
+  supabase: null,
+  supabaseConfigured: false,
+}));
+
+import {
+  loadConferences,
+  saveConferencesLocal,
+  commitToGitHub,
+  getCachedSha,
+  ConflictError,
+} from './dataManager';
 import { fetchFile, commitFile } from './githubStorage';
 
 const STORAGE_KEY = 'conferenceFinder.data';
@@ -37,9 +43,9 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-// --- loadConferences ---
+// --- loadConferences (legacy 경로 — supabase 미설정) ---
 
-describe('loadConferences', () => {
+describe('loadConferences (legacy)', () => {
   it('token 있음 → GitHub에서 로드하고 localStorage에 저장', async () => {
     fetchFile.mockResolvedValue({ content: SAMPLE_DATA, sha: 'sha-abc' });
 
@@ -133,5 +139,71 @@ describe('getCachedSha', () => {
 
   it('없으면 null 반환', () => {
     expect(getCachedSha()).toBeNull();
+  });
+});
+
+// --- loadConferences (Supabase 경로) ---
+
+describe('loadConferences (Supabase)', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it('supabaseConfigured=true 일 때 3 테이블 조회 후 mergeAll', async () => {
+    const upstream = [{ id: 'a', full_name: 'A', cycle_years: 1, duration_days: 1 }];
+    const editions = [{ id: 'e1', conference_id: 'a', status: 'upcoming', source: 'ai_search', updated_at: 't' }];
+    const userRows = [{ conference_id: 'a', starred: 1, overrides: { full_name: 'A!' } }];
+
+    const supabaseMock = {
+      from: vi.fn((table) => ({
+        select: vi.fn().mockResolvedValue({
+          data: table === 'conferences_upstream' ? upstream
+            : table === 'editions_upstream' ? editions
+            : userRows,
+          error: null,
+        }),
+      })),
+    };
+
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+
+    const { loadConferences: load } = await import('./dataManager');
+    const result = await load();
+
+    expect(supabaseMock.from).toHaveBeenCalledWith('conferences_upstream');
+    expect(supabaseMock.from).toHaveBeenCalledWith('editions_upstream');
+    expect(supabaseMock.from).toHaveBeenCalledWith('user_conferences');
+    expect(result.data.conferences[0].full_name).toBe('A!');
+    expect(result.data.conferences[0].starred).toBe(1);
+    expect(result.data.editions[0].id).toBe('e1');
+    expect(result.sha).toBeNull();
+  });
+
+  it('Supabase 호출 실패 시 legacy path 로 폴백', async () => {
+    const supabaseMock = {
+      from: vi.fn(() => ({
+        select: vi.fn().mockResolvedValue({ data: null, error: new Error('boom') }),
+      })),
+    };
+
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_DATA));
+    localStorage.setItem(SHA_KEY, 'local-sha');
+
+    const { loadConferences: load } = await import('./dataManager');
+    const result = await load();
+
+    expect(result.data).toEqual(SAMPLE_DATA);
+    expect(result.sha).toBe('local-sha');
+    expect(warn).toHaveBeenCalled();
   });
 });

@@ -1,12 +1,39 @@
 import { fetchFile, commitFile, ConflictError } from './githubStorage';
+import { supabase, supabaseConfigured } from './supabaseClient';
+import { mergeAll } from '../utils/mergeConference';
 
 const STORAGE_KEY = 'conferenceFinder.data';
 const SHA_KEY = 'conferenceFinder.githubSha';
 
 export { ConflictError };
 
+async function loadFromSupabase() {
+  const [confRes, edRes, userRes] = await Promise.all([
+    supabase.from('conferences_upstream').select('*'),
+    supabase.from('editions_upstream').select('*'),
+    supabase.from('user_conferences').select('*'),
+  ]);
+  if (confRes.error) throw confRes.error;
+  if (edRes.error) throw edRes.error;
+  // user_conferences 가 비어있어도 정상 — 첫 로그인 사용자는 row 가 없다.
+  const userRows = userRes.error ? [] : (userRes.data || []);
+  const merged = mergeAll(confRes.data || [], edRes.data || [], userRows);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+  return { data: merged, sha: null };
+}
+
 export async function loadConferences({ token } = {}) {
-  // 관리자(token 있음): GitHub API에서 직접 최신본 가져오기
+  // PLAN-029: Supabase 가 설정된 환경이면 server 우선.
+  if (supabaseConfigured) {
+    try {
+      return await loadFromSupabase();
+    } catch (e) {
+      console.warn('Supabase 로드 실패, 로컬/JSON 폴백:', e);
+      // 폴백 흐름으로 진행
+    }
+  }
+
+  // 관리자(token 있음): GitHub API에서 직접 최신본 가져오기 (legacy)
   if (token) {
     try {
       const { content, sha } = await fetchFile(token);
@@ -14,7 +41,6 @@ export async function loadConferences({ token } = {}) {
       localStorage.setItem(SHA_KEY, sha);
       return { data: content, sha };
     } catch (e) {
-      // GitHub 실패 시 localStorage fallback
       console.warn('GitHub fetch 실패, 로컬 캐시로 대체:', e);
     }
   }
