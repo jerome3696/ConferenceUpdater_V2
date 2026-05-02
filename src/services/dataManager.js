@@ -93,3 +93,32 @@ export function generateDiscoveryConferenceId() {
   const rand = Math.floor(Math.random() * 1296).toString(36).padStart(2, '0');
   return `disc_${Date.now().toString(36)}${rand}`;
 }
+
+// PLAN-038: user_conferences 부분 갱신 (starred, personal_note, overrides).
+// supabaseConfigured 가 false 면 noop — legacy localStorage 경로가 담당.
+// 실패 시 에러 throw (호출 측에서 console.warn 후 UX 계속 진행).
+export async function upsertUserConference(userId, conferenceId, patch) {
+  if (!supabaseConfigured) return;
+  const row = {
+    user_id: userId,
+    conference_id: conferenceId,
+    updated_at: new Date().toISOString(),
+    ...patch,
+  };
+  const { error } = await supabase
+    .from('user_conferences')
+    .upsert(row, { onConflict: 'user_id,conference_id' });
+  if (error) throw error;
+}
+
+// PLAN-038: user_conferences 행 삭제.
+// supabaseConfigured 가 false 면 noop.
+export async function deleteUserConference(userId, conferenceId) {
+  if (!supabaseConfigured) return;
+  const { error } = await supabase
+    .from('user_conferences')
+    .delete()
+    .eq('user_id', userId)
+    .eq('conference_id', conferenceId);
+  if (error) throw error;
+}

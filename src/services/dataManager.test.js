@@ -207,3 +207,104 @@ describe('loadConferences (Supabase)', () => {
     expect(warn).toHaveBeenCalled();
   });
 });
+
+// --- upsertUserConference / deleteUserConference (PLAN-038) ---
+
+describe('upsertUserConference', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it('supabaseConfigured=false 면 noop (Supabase 호출 없음)', async () => {
+    vi.doMock('./supabaseClient', () => ({
+      supabase: null,
+      supabaseConfigured: false,
+    }));
+    const { upsertUserConference: upsert } = await import('./dataManager');
+    // 에러 없이 조용히 반환되어야 함
+    await expect(upsert('u1', 'c1', { starred: 1 })).resolves.toBeUndefined();
+  });
+
+  it('supabaseConfigured=true, 정상 upsert', async () => {
+    const upsertMock = vi.fn().mockResolvedValue({ error: null });
+    const supabaseMock = {
+      from: vi.fn(() => ({ upsert: upsertMock })),
+    };
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+    const { upsertUserConference: upsert } = await import('./dataManager');
+    await expect(upsert('u1', 'c1', { starred: 1 })).resolves.toBeUndefined();
+    expect(supabaseMock.from).toHaveBeenCalledWith('user_conferences');
+    expect(upsertMock).toHaveBeenCalledWith(
+      expect.objectContaining({ user_id: 'u1', conference_id: 'c1', starred: 1 }),
+      { onConflict: 'user_id,conference_id' }
+    );
+  });
+
+  it('upsert error 시 throw', async () => {
+    const dbErr = new Error('db error');
+    const upsertMock = vi.fn().mockResolvedValue({ error: dbErr });
+    const supabaseMock = {
+      from: vi.fn(() => ({ upsert: upsertMock })),
+    };
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+    const { upsertUserConference: upsert } = await import('./dataManager');
+    await expect(upsert('u1', 'c1', { starred: 0 })).rejects.toThrow('db error');
+  });
+
+  it('starred 만 있는 부분 patch — user_id·conference_id·updated_at·starred 포함, 나머지 미포함', async () => {
+    const upsertMock = vi.fn().mockResolvedValue({ error: null });
+    const supabaseMock = {
+      from: vi.fn(() => ({ upsert: upsertMock })),
+    };
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+    const { upsertUserConference: upsert } = await import('./dataManager');
+    await upsert('uid', 'cid', { starred: 0 });
+    const [row] = upsertMock.mock.calls[0];
+    expect(row).toMatchObject({ user_id: 'uid', conference_id: 'cid', starred: 0 });
+    expect(row.updated_at).toBeDefined();
+    expect(Object.keys(row)).not.toContain('personal_note');
+    expect(Object.keys(row)).not.toContain('overrides');
+  });
+});
+
+describe('deleteUserConference', () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it('supabaseConfigured=false 면 noop', async () => {
+    vi.doMock('./supabaseClient', () => ({
+      supabase: null,
+      supabaseConfigured: false,
+    }));
+    const { deleteUserConference: del } = await import('./dataManager');
+    await expect(del('u1', 'c1')).resolves.toBeUndefined();
+  });
+
+  it('정상 delete — eq 체인 올바르게 호출', async () => {
+    const eqMock2 = vi.fn().mockResolvedValue({ error: null });
+    const eqMock1 = vi.fn(() => ({ eq: eqMock2 }));
+    const deleteMock = vi.fn(() => ({ eq: eqMock1 }));
+    const supabaseMock = {
+      from: vi.fn(() => ({ delete: deleteMock })),
+    };
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+    const { deleteUserConference: del } = await import('./dataManager');
+    await expect(del('u1', 'c1')).resolves.toBeUndefined();
+    expect(supabaseMock.from).toHaveBeenCalledWith('user_conferences');
+    expect(eqMock1).toHaveBeenCalledWith('user_id', 'u1');
+    expect(eqMock2).toHaveBeenCalledWith('conference_id', 'c1');
+  });
+});
