@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-**현재: Phase A.2 완료 → A.3 직전, 블루프린트 v2.0 (`docs/blueprint-v2.md`) 확정.** PLAN-030~038 백로그 도출 (라이브러리·audit·source_url·router·admin 대시보드 등). 다음: PLAN 우선순위 결정 + Resend 도메인 + 30명 초대. 상세: `docs/roadmap.md`, `docs/blueprint-v2.md`.
+**현재: Phase A.3 진입 직전, 사이트 검증 1건만 남음.** PLAN-031/032/036/038 머지 + audit_log/v1_2/conferenceMatch/user_conferences write 라이브 (Supabase migrations live 적용). 다음: 사이트에서 v1_2 [근거] 링크 실측 → 운영 작업 (Resend·시드·OAuth) → 30명 초대. 상세: `docs/blueprint-v2.md`, `docs/overnight-report-2026-05-03.md`.
 
 ## 문서 맵 (작업 종류별)
 
