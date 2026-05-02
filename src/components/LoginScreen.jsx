@@ -21,7 +21,8 @@ function LoginScreen() {
     setStatus('sending');
     const { error: err } = await supabase.auth.signInWithOtp({
       email: trimmed,
-      options: { emailRedirectTo: window.location.origin },
+      // GitHub Pages 프로젝트 사이트는 BASE_URL(`/ConferenceUpdater_V2/`) 아래 서빙되므로 경로 포함 필수.
+      options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}` },
     });
     if (err) {
       setStatus('idle');
