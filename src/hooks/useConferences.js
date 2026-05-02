@@ -6,6 +6,8 @@ import {
   commitToGitHub,
   getCachedSha,
   generateDiscoveryConferenceId,
+  upsertUserConference,
+  deleteUserConference,
   ConflictError,
 } from '../services/dataManager';
 
@@ -41,7 +43,7 @@ function mergeAnchor(existing, incoming) {
     : { anchored: false, anchor_set_at: null };
 }
 
-export function useConferences({ token } = {}) {
+export function useConferences({ token, userId } = {}) {
   const [data, setData] = useState({ conferences: [], editions: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -185,10 +187,24 @@ export function useConferences({ token } = {}) {
     next = upsertEdition(next, id, existingUpcomingId, 'upcoming', upcoming);
     next = upsertEdition(next, id, existingLastId, 'past', last);
     persist(next);
+    // PLAN-038: Supabase user_conferences 동기화 (실패해도 UX 보호).
+    if (userId) {
+      const patch = { starred };
+      if (master && Object.keys(master).length > 0) patch.overrides = master;
+      upsertUserConference(userId, id, patch).catch((e) =>
+        console.warn('user_conferences upsert 실패 (saveConferenceEdit):', e)
+      );
+    }
   };
 
   const updateStarred = (id, value) => {
     updateConference(id, { starred: value });
+    // PLAN-038: Supabase user_conferences 동기화 (실패해도 UX 보호).
+    if (userId) {
+      upsertUserConference(userId, id, { starred: value }).catch((e) =>
+        console.warn('user_conferences upsert 실패 (starred):', e)
+      );
+    }
   };
 
   // 검증 결과 수용: status === '불일치' 인 필드만 correct 값으로 학회 마스터에 반영.
@@ -352,6 +368,13 @@ export function useConferences({ token } = {}) {
       : current.editions;
 
     persist({ ...current, conferences: [...current.conferences, master], editions });
+    // PLAN-038: user_conferences UPSERT — starred 기본값(0) 등록.
+    // 가상 라이브러리 등록은 PLAN-030 의존 (TODO: PLAN-030 머지 후 library_id 포함).
+    if (userId) {
+      upsertUserConference(userId, id, { starred: 0 }).catch((e) =>
+        console.warn('user_conferences upsert 실패 (addConferenceFromDiscovery):', e)
+      );
+    }
     return id;
   };
 
@@ -362,6 +385,12 @@ export function useConferences({ token } = {}) {
       conferences: current.conferences.filter((c) => c.id !== id),
       editions: current.editions.filter((e) => e.conference_id !== id),
     });
+    // PLAN-038: Supabase user_conferences 동기화 (실패해도 UX 보호).
+    if (userId) {
+      deleteUserConference(userId, id).catch((e) =>
+        console.warn('user_conferences delete 실패:', e)
+      );
+    }
   };
 
   // 날짜 자동 전환. PLAN-013-A: past 전환 시 anchor 자동 해제.

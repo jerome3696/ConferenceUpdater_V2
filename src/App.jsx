@@ -20,7 +20,7 @@ function App() {
   const auth = useAuth();
   const { token, setToken, clearToken, hasToken } = useGitHubToken();
   const { quota } = useQuota({ userId: auth.user?.id });
-  const conferences = useConferences({ token });
+  const conferences = useConferences({ token, userId: auth.user?.id });
   const updateQueue = useUpdateQueue({
     applyAiUpdate: conferences.applyAiUpdate,
     applyLastDiscovery: conferences.applyLastDiscovery,
