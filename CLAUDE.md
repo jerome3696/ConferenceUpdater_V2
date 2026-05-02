@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-**현재: Phase A.2 완료 → A.3 파일럿 대기.** PLAN-028 + PLAN-029 머지 완료 (서버 MVP + 클라이언트 이관). 사용자 작업: 브라우저 검증 → Resend SMTP → admin 승격 → 30명 초대. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
+**현재: Phase A.2 완료 → A.3 직전, 블루프린트 v2.0 (`docs/blueprint-v2.md`) 확정.** PLAN-030~038 백로그 도출 (라이브러리·audit·source_url·router·admin 대시보드 등). 다음: PLAN 우선순위 결정 + Resend 도메인 + 30명 초대. 상세: `docs/roadmap.md`, `docs/blueprint-v2.md`.
 
 ## 문서 맵 (작업 종류별)
 
