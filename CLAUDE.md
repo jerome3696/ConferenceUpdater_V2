@@ -7,7 +7,7 @@
 
 ## 현재 상태
 
-**현재: Phase A.1 (서버 MVP).** A.0 5개 P0 플랜 완료 (스키마·쿼터·Auth·장기비전). PLAN-028 migration SQL + Edge Function 작성 중. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
+**현재: Phase A.2 (클라이언트 이관 구현 완료, PR 머지 대기).** PLAN-029: Supabase Auth + Edge Function 래퍼 + 쿼터 UI 적용. 다음: PR 머지 → A.3 파일럿. 상세: `docs/roadmap.md`, `docs/dev-guide-v3.md`.
 
 ## 문서 맵 (작업 종류별)
 

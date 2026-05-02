@@ -1,3 +1,5 @@
+import QuotaBadge from './QuotaBadge';
+
 function formatTime(d) {
   if (!d) return '';
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -92,13 +94,17 @@ function ScopeToggle({ scope, onChange }) {
 }
 
 function Header({
-  hasKey, onOpenKeyModal,
+  isAuthenticated,
+  userEmail,
+  onSignOut,
   hasToken, onOpenTokenModal,
   syncStatus, lastSavedAt, onRetryCommit,
   pendingUpdateCount = 0, onOpenUpdatePanel,
   onOpenDiscoveryPanel,
   viewMode = 'table', onChangeViewMode,
   calendarScope = 'starred', onChangeCalendarScope,
+  quota,
+  onShowQuotaDetail,
 }) {
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
@@ -113,7 +119,7 @@ function Header({
         {viewMode === 'calendar' && onChangeCalendarScope && (
           <ScopeToggle scope={calendarScope} onChange={onChangeCalendarScope} />
         )}
-        {hasKey && (
+        {isAuthenticated && (
           <SyncBadge
             status={syncStatus}
             lastSavedAt={lastSavedAt}
@@ -121,18 +127,23 @@ function Header({
             hasToken={hasToken}
           />
         )}
-        {hasKey ? (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-green-100 text-green-800">
-            <span className="w-2 h-2 rounded-full bg-green-500" />
-            관리자 모드
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-slate-100 text-slate-600">
-            <span className="w-2 h-2 rounded-full bg-slate-400" />
-            열람자 모드
-          </span>
+        {isAuthenticated && quota && (
+          <div className="flex items-center gap-1.5">
+            <QuotaBadge
+              used={quota.update_used ?? 0}
+              limit={quota.update_limit ?? 0}
+              label="업데이트"
+              onClick={onShowQuotaDetail ? () => onShowQuotaDetail('update') : undefined}
+            />
+            <QuotaBadge
+              used={quota.discovery_used ?? 0}
+              limit={quota.discovery_limit ?? 0}
+              label="발굴"
+              onClick={onShowQuotaDetail ? () => onShowQuotaDetail('discovery') : undefined}
+            />
+          </div>
         )}
-        {hasKey && pendingUpdateCount > 0 && (
+        {isAuthenticated && pendingUpdateCount > 0 && (
           <button
             onClick={onOpenUpdatePanel}
             className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -140,7 +151,7 @@ function Header({
             업데이트 현황 ({pendingUpdateCount})
           </button>
         )}
-        {hasKey && onOpenDiscoveryPanel && (
+        {isAuthenticated && onOpenDiscoveryPanel && (
           <button
             onClick={onOpenDiscoveryPanel}
             className="px-3 py-1.5 text-sm border border-purple-300 text-purple-700 rounded hover:bg-purple-50"
@@ -149,7 +160,7 @@ function Header({
             🔍 발굴
           </button>
         )}
-        {hasKey && (
+        {isAuthenticated && (
           <button
             onClick={onOpenTokenModal}
             className={`px-3 py-1.5 text-sm border rounded hover:bg-slate-50 ${hasToken ? 'border-green-300 text-green-700' : 'border-slate-300 text-slate-700'}`}
@@ -157,12 +168,15 @@ function Header({
             {hasToken ? 'GitHub 연결됨' : 'GitHub 연결'}
           </button>
         )}
-        <button
-          onClick={onOpenKeyModal}
-          className="px-3 py-1.5 text-sm border border-slate-300 rounded hover:bg-slate-50 text-slate-700"
-        >
-          {hasKey ? 'API 키 관리' : 'API 키 설정'}
-        </button>
+        {isAuthenticated && (
+          <button
+            onClick={onSignOut}
+            className="px-3 py-1.5 text-sm border border-slate-300 rounded hover:bg-slate-50 text-slate-700"
+            title={userEmail ? `${userEmail} 로 로그인됨` : '로그아웃'}
+          >
+            로그아웃
+          </button>
+        )}
       </div>
     </header>
   );

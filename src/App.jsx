@@ -5,9 +5,11 @@ import UpdatePanel from './components/UpdatePanel/UpdatePanel';
 import UpdateModeModal from './components/UpdatePanel/UpdateModeModal';
 import DiscoveryPanel from './components/Discovery/DiscoveryPanel';
 import Header from './components/common/Header';
-import ApiKeyModal from './components/common/ApiKeyModal';
 import GitHubTokenModal from './components/common/GitHubTokenModal';
-import { useApiKey } from './hooks/useApiKey';
+import LoginScreen from './components/LoginScreen';
+import QuotaExhaustedModal from './components/common/QuotaExhaustedModal';
+import { useAuth } from './hooks/useAuth';
+import { useQuota } from './hooks/useQuota';
 import { useGitHubToken } from './hooks/useGitHubToken';
 import { useConferences } from './hooks/useConferences';
 import { useUpdateQueue } from './hooks/useUpdateQueue';
@@ -15,46 +17,44 @@ import { useFiltering } from './hooks/useFiltering';
 import { filterSearchTargets } from './services/updateLogic';
 
 function App() {
-  const { apiKey, setApiKey, clearApiKey, hasKey } = useApiKey();
+  const auth = useAuth();
   const { token, setToken, clearToken, hasToken } = useGitHubToken();
+  const { quota } = useQuota({ userId: auth.user?.id });
   const conferences = useConferences({ token });
   const updateQueue = useUpdateQueue({
-    apiKey,
     applyAiUpdate: conferences.applyAiUpdate,
     applyLastDiscovery: conferences.applyLastDiscovery,
     applyVerifyUpdate: conferences.applyVerifyUpdate,
   });
 
-  const [isKeyModalOpen, setKeyModalOpen] = useState(false);
   const [isTokenModalOpen, setTokenModalOpen] = useState(false);
-  // 개별 업데이트는 큐에만 쌓고 메인 화면 유지(QA #11). 일괄 작업과 헤더 버튼은 overlay 자동 오픈.
   const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
   const [isDiscoveryPanelOpen, setDiscoveryPanelOpen] = useState(false);
-  // PLAN-013-B2: 전체 업데이트 시작 전 모드 선택 모달.
-  // null = 닫힘, { rows } = 열림 (rows 는 모달에서 선택 확정 시 filterSearchTargets 에 전달).
   const [updateModeModal, setUpdateModeModal] = useState(null);
+  const [quotaDetailKind, setQuotaDetailKind] = useState(null);
 
-  // PLAN-009: 테이블/캘린더 뷰 전환. useFiltering은 App 레벨에서 호출해 양쪽 뷰가 동일 필터 상태 공유.
   const filtering = useFiltering(conferences.rows);
-  const [viewMode, setViewMode] = useState('table'); // 'table' | 'calendar'
-  const [calendarScope, setCalendarScope] = useState('starred'); // 'all' | 'starred' | 'filter'
-  const [calendarSubView, setCalendarSubView] = useState('year'); // 'year' | 'month'
+  const [viewMode, setViewMode] = useState('table');
+  const [calendarScope, setCalendarScope] = useState('starred');
+  const [calendarSubView, setCalendarSubView] = useState('year');
+
+  if (auth.loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-sm text-slate-500">로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (!auth.isAuthenticated) {
+    return <LoginScreen />;
+  }
 
   const handleRequestUpdate = (row) => {
-    if (!hasKey) {
-      alert('API 키를 먼저 입력해주세요.');
-      setKeyModalOpen(true);
-      return;
-    }
     updateQueue.enqueue([row]);
   };
 
   const handleRequestUpdateAll = (rows) => {
-    if (!hasKey) {
-      alert('API 키를 먼저 입력해주세요.');
-      setKeyModalOpen(true);
-      return;
-    }
     setUpdateModeModal({ rows });
   };
 
@@ -79,11 +79,6 @@ function App() {
   };
 
   const handleRequestVerifyAll = (rows) => {
-    if (!hasKey) {
-      alert('API 키를 먼저 입력해주세요.');
-      setKeyModalOpen(true);
-      return;
-    }
     if (rows.length === 0) {
       alert('검증할 학회가 없습니다.');
       return;
@@ -100,8 +95,9 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
-        hasKey={hasKey}
-        onOpenKeyModal={() => setKeyModalOpen(true)}
+        isAuthenticated={auth.isAuthenticated}
+        userEmail={auth.user?.email}
+        onSignOut={auth.signOut}
         hasToken={hasToken}
         onOpenTokenModal={() => setTokenModalOpen(true)}
         syncStatus={conferences.syncStatus}
@@ -114,16 +110,18 @@ function App() {
         onChangeViewMode={setViewMode}
         calendarScope={calendarScope}
         onChangeCalendarScope={setCalendarScope}
+        quota={quota}
+        onShowQuotaDetail={setQuotaDetailKind}
       />
       <main className="p-4">
         {viewMode === 'table' ? (
           <MainTable
-            isAdmin={hasKey}
+            isAdmin={auth.isAuthenticated}
             conferences={conferences}
             filtering={filtering}
-            onRequestUpdate={hasKey ? handleRequestUpdate : undefined}
-            onRequestUpdateAll={hasKey ? handleRequestUpdateAll : undefined}
-            onRequestVerifyAll={hasKey ? handleRequestVerifyAll : undefined}
+            onRequestUpdate={handleRequestUpdate}
+            onRequestUpdateAll={handleRequestUpdateAll}
+            onRequestVerifyAll={handleRequestVerifyAll}
           />
         ) : (
           <CalendarView
@@ -152,21 +150,12 @@ function App() {
         <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl my-4 p-6">
             <DiscoveryPanel
-              apiKey={apiKey}
               existingConferences={conferences.rows}
               onAccept={conferences.addConferenceFromDiscovery}
               onClose={() => setDiscoveryPanelOpen(false)}
             />
           </div>
         </div>
-      )}
-      {isKeyModalOpen && (
-        <ApiKeyModal
-          currentKey={apiKey}
-          onSave={(k) => { setApiKey(k); setKeyModalOpen(false); }}
-          onClear={() => { clearApiKey(); setKeyModalOpen(false); }}
-          onClose={() => setKeyModalOpen(false)}
-        />
       )}
       {isTokenModalOpen && (
         <GitHubTokenModal
@@ -181,6 +170,13 @@ function App() {
           totalCount={updateModeModal.rows.length}
           onSelect={handleConfirmUpdateMode}
           onClose={() => setUpdateModeModal(null)}
+        />
+      )}
+      {quotaDetailKind && (
+        <QuotaExhaustedModal
+          kind={quotaDetailKind}
+          userId={auth.user?.id}
+          onClose={() => setQuotaDetailKind(null)}
         />
       )}
     </div>
