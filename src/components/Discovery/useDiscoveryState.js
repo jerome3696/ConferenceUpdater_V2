@@ -106,7 +106,7 @@ export function useDiscoveryUsage() {
 // ──────────────────────────────────────────────────────────────────
 // useKeywordExpansion — Stage 1 (시드 입력 → AI 키워드 확장 → 선택)
 // ──────────────────────────────────────────────────────────────────
-export function useKeywordExpansion({ apiKey, addUsage }) {
+export function useKeywordExpansion({ addUsage }) {
   const [seedInput, setSeedInput] = useState('');
   const [expanded, setExpanded] = useState([]);
   const [customKeywords, setCustomKeywords] = useState([]);
@@ -125,9 +125,9 @@ export function useKeywordExpansion({ apiKey, addUsage }) {
     try {
       const { system, user } = buildDiscoveryExpandPrompt(seeds);
       const res = await callClaude({
-        apiKey,
         prompt: user,
         system,
+        endpoint: 'discovery_expand',
         webSearch: false,
         maxTokens: 768,
         model: DISCOVERY_MODEL,
@@ -179,7 +179,7 @@ export function useKeywordExpansion({ apiKey, addUsage }) {
 // ──────────────────────────────────────────────────────────────────
 // useDiscoverySearch — Stage 2 (선택 키워드 + 기존 학회 배제 → 후보 학회)
 // ──────────────────────────────────────────────────────────────────
-export function useDiscoverySearch({ apiKey, selected, existingConferences, addUsage }) {
+export function useDiscoverySearch({ selected, existingConferences, addUsage }) {
   const [searching, setSearching] = useState(false);
   const [searchError, setSearchError] = useState(null);
   const [candidates, setCandidates] = useState([]);
@@ -197,9 +197,9 @@ export function useDiscoverySearch({ apiKey, selected, existingConferences, addU
     try {
       const { system, user } = buildDiscoverySearchPrompt(selected, existingConferences);
       const res = await callClaude({
-        apiKey,
         prompt: user,
         system,
+        endpoint: 'discovery_search',
         webSearch: true,
         maxWebSearches: 10,
         maxTokens: 4096,
