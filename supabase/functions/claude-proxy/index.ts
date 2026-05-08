@@ -12,6 +12,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { corsHeaders, preflight } from '../_shared/cors.ts';
 import { callAnthropic, extractWebSearchCount } from '../_shared/anthropic.ts';
 import { computeCostUsd } from '../_shared/cost.ts';
+import { recordAuditLog } from '../_shared/auditLog.ts';
 
 // @ts-ignore: Deno namespace is provided by Supabase Edge runtime
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
@@ -201,6 +202,18 @@ Deno.serve(async (req: Request): Promise<Response> => {
       .from('conferences_upstream')
       .update({ last_ai_update_at: new Date().toISOString() })
       .eq('id', conference_id);
+
+    // PLAN-031: audit_log best-effort 기록 — 변경 필드별 row 1개.
+    // trigger(bump_edit_meta) 가 edited_count / last_edited_at 자동 증가.
+    // 실패해도 main 흐름 막지 않음 (recordAuditLog 내부에서 swallow).
+    const responseText = response.content.find((b) => b.type === 'text')?.text;
+    await recordAuditLog({
+      admin,
+      userId,
+      conferenceId: conference_id,
+      endpoint,
+      responseText,
+    });
   }
 
   // ── 8) 쿼터 재조회 후 응답 ─────────────────────────────────

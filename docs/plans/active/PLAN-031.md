@@ -92,11 +92,11 @@ CREATE TRIGGER audit_log_bump_meta
 
 ## 5. 단계 (Steps)
 
-- [ ] **S1** — `feature/PLAN-031-audit-log` 브랜치
-- [ ] **S2** — migration SQL 작성 (메타 컬럼 + 테이블 + RLS + trigger)
-- [ ] **S3** — Edge Function `claude-proxy/index.ts` 의 AI 흐름에 audit_log INSERT 통합
-- [ ] **S4** — 통합 테스트 (curl 시나리오: AI 호출 → audit_log row 생성 + edited_count++ 확인)
-- [ ] **S5** — TypeScript 타입 정의 갱신
+- [x] **S1** — `feature/PLAN-031-audit-log` 브랜치 (S1, S2 는 PR #50 에 통합 머지)
+- [x] **S2** — migration SQL 작성 (메타 컬럼 + 테이블 + RLS + trigger) — PR #50 머지 + live 적용
+- [x] **S3** — Edge Function `claude-proxy/index.ts` 의 AI 흐름에 audit_log INSERT 통합 (`feature/PLAN-031-edge-audit-log` 브랜치, _shared/auditLog.ts 신설)
+- [ ] **S4** — 통합 테스트 (curl 시나리오: AI 호출 → audit_log row 생성 + edited_count++ 확인) — Edge Function 배포 후 사용자 검증
+- [x] **S5** — TypeScript 타입 정의 갱신 (auditLog.ts 인라인)
 - [ ] **S6** — verify-task.sh 통과
 - [ ] **S7** — PR
 
