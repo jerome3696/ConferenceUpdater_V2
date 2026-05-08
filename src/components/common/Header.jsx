@@ -1,4 +1,5 @@
 import QuotaBadge from './QuotaBadge';
+import UserMenu from './UserMenu';
 
 function formatTime(d) {
   if (!d) return '';
@@ -169,13 +170,7 @@ function Header({
           </button>
         )}
         {isAuthenticated && (
-          <button
-            onClick={onSignOut}
-            className="px-3 py-1.5 text-sm border border-slate-300 rounded hover:bg-slate-50 text-slate-700"
-            title={userEmail ? `${userEmail} 로 로그인됨` : '로그아웃'}
-          >
-            로그아웃
-          </button>
+          <UserMenu userEmail={userEmail} onSignOut={onSignOut} />
         )}
       </div>
     </header>
