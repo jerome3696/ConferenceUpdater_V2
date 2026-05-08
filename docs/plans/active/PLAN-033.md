@@ -59,14 +59,14 @@
 
 ## 5. 단계 (Steps)
 
-- [ ] **S1** — `npm install react-router-dom` + 브랜치
-- [ ] **S2** — `App.jsx` 를 라우터 + 7개 Route 로 재구성
-- [ ] **S3** — `src/pages/` 디렉토리 + 7개 페이지 컴포넌트 (placeholder + 기존 컴포넌트 이관)
-- [ ] **S4** — `RouteGuard` (auth/admin)
-- [ ] **S5** — `UserMenu` 드롭다운 + 헤더 통합
-- [ ] **S6** — Discovery 모달 → `/discovery` 페이지 이관
-- [ ] **S7** — 기존 테스트 (App.test.jsx 등) 갱신
-- [ ] **S8** — verify-task.sh 통과
+- [x] **S1** — `npm install react-router-dom@^7` + 브랜치
+- [x] **S2** — `App.jsx` 를 HashRouter + AppShell + 7 Route 로 재구성
+- [x] **S3** — `src/pages/` 디렉토리 + 7 페이지 (LoginPage, MainPage, LibrariesPage, DBSearchPage, DiscoveryPage, SettingsPage, AdminPage)
+- [x] **S4** — `RouteGuard` (auth + adminOnly)
+- [x] **S5** — `UserMenu` 드롭다운 + 헤더 통합 (메인/라이브러리/DB/설정/관리자/로그아웃)
+- [x] **S6** — Discovery 모달 → `/discovery` 페이지 이관 (헤더 발굴 버튼은 navigate('/discovery'))
+- [x] **S7** — `RouteGuard.test.jsx` 신설 (4 케이스: 인증/비인증/admin/non-admin)
+- [x] **S8** — verify-task.sh 통과 (416 tests, +4 RouteGuard / lint / build / secrets)
 - [ ] **S9** — PR
 
 ## 6. 검증

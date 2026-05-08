@@ -1,13 +1,12 @@
 import { useState } from 'react';
-import MainTable from './components/MainTable/MainTable';
-import CalendarView from './components/Calendar/CalendarView';
+import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+
 import UpdatePanel from './components/UpdatePanel/UpdatePanel';
 import UpdateModeModal from './components/UpdatePanel/UpdateModeModal';
-import DiscoveryPanel from './components/Discovery/DiscoveryPanel';
 import Header from './components/common/Header';
 import GitHubTokenModal from './components/common/GitHubTokenModal';
-import LoginScreen from './components/LoginScreen';
 import QuotaExhaustedModal from './components/common/QuotaExhaustedModal';
+import RouteGuard from './components/common/RouteGuard';
 import { useAuth } from './hooks/useAuth';
 import { useQuota } from './hooks/useQuota';
 import { useGitHubToken } from './hooks/useGitHubToken';
@@ -16,7 +15,25 @@ import { useUpdateQueue } from './hooks/useUpdateQueue';
 import { useFiltering } from './hooks/useFiltering';
 import { filterSearchTargets } from './services/updateLogic';
 
+import MainPage from './pages/MainPage';
+import LoginPage from './pages/LoginPage';
+import LibrariesPage from './pages/LibrariesPage';
+import DBSearchPage from './pages/DBSearchPage';
+import DiscoveryPage from './pages/DiscoveryPage';
+import SettingsPage from './pages/SettingsPage';
+import AdminPage from './pages/AdminPage';
+
+// PLAN-033: HashRouter 도입. GitHub Pages 의 base path 변경 시 BrowserRouter 는
+// 404 처리(404.html SPA fallback) 가 필요. HashRouter 는 정적 호스팅 친화.
 function App() {
+  return (
+    <HashRouter>
+      <AppShell />
+    </HashRouter>
+  );
+}
+
+function AppShell() {
   const auth = useAuth();
   const { token, setToken, clearToken, hasToken } = useGitHubToken();
   const { quota } = useQuota({ userId: auth.user?.id });
@@ -27,16 +44,17 @@ function App() {
     applyVerifyUpdate: conferences.applyVerifyUpdate,
   });
 
-  const [isTokenModalOpen, setTokenModalOpen] = useState(false);
-  const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
-  const [isDiscoveryPanelOpen, setDiscoveryPanelOpen] = useState(false);
-  const [updateModeModal, setUpdateModeModal] = useState(null);
-  const [quotaDetailKind, setQuotaDetailKind] = useState(null);
-
   const filtering = useFiltering(conferences.rows);
   const [viewMode, setViewMode] = useState('table');
   const [calendarScope, setCalendarScope] = useState('starred');
   const [calendarSubView, setCalendarSubView] = useState('year');
+
+  const [isTokenModalOpen, setTokenModalOpen] = useState(false);
+  const [isUpdatePanelOpen, setUpdatePanelOpen] = useState(false);
+  const [updateModeModal, setUpdateModeModal] = useState(null);
+  const [quotaDetailKind, setQuotaDetailKind] = useState(null);
+
+  const navigate = useNavigate();
 
   if (auth.loading) {
     return (
@@ -44,10 +62,6 @@ function App() {
         <p className="text-sm text-slate-500">로딩 중...</p>
       </div>
     );
-  }
-
-  if (!auth.isAuthenticated) {
-    return <LoginScreen />;
   }
 
   const handleRequestUpdate = (row) => {
@@ -92,6 +106,18 @@ function App() {
     setUpdatePanelOpen(true);
   };
 
+  // 비로그인: /login 외 모든 경로를 /login 으로.
+  if (!auth.isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
@@ -105,7 +131,7 @@ function App() {
         onRetryCommit={conferences.retryCommit}
         pendingUpdateCount={updateQueue.totalRemaining}
         onOpenUpdatePanel={() => setUpdatePanelOpen(true)}
-        onOpenDiscoveryPanel={() => setDiscoveryPanelOpen(true)}
+        onOpenDiscoveryPanel={() => navigate('/discovery')}
         viewMode={viewMode}
         onChangeViewMode={setViewMode}
         calendarScope={calendarScope}
@@ -114,24 +140,43 @@ function App() {
         onShowQuotaDetail={setQuotaDetailKind}
       />
       <main className="p-4">
-        {viewMode === 'table' ? (
-          <MainTable
-            isAdmin={auth.isAuthenticated}
-            conferences={conferences}
-            filtering={filtering}
-            onRequestUpdate={handleRequestUpdate}
-            onRequestUpdateAll={handleRequestUpdateAll}
-            onRequestVerifyAll={handleRequestVerifyAll}
-          />
-        ) : (
-          <CalendarView
-            rows={conferences.rows}
-            filtering={filtering}
-            scope={calendarScope}
-            subView={calendarSubView}
-            onChangeSubView={setCalendarSubView}
-          />
-        )}
+        <Routes>
+          <Route element={<RouteGuard authenticated={auth.isAuthenticated} />}>
+            <Route
+              path="/"
+              element={(
+                <MainPage
+                  isAuthenticated={auth.isAuthenticated}
+                  conferences={conferences}
+                  filtering={filtering}
+                  viewMode={viewMode}
+                  calendarScope={calendarScope}
+                  calendarSubView={calendarSubView}
+                  onChangeCalendarSubView={setCalendarSubView}
+                  onRequestUpdate={handleRequestUpdate}
+                  onRequestUpdateAll={handleRequestUpdateAll}
+                  onRequestVerifyAll={handleRequestVerifyAll}
+                />
+              )}
+            />
+            <Route
+              path="/discovery"
+              element={(
+                <DiscoveryPage
+                  existingConferences={conferences.rows}
+                  onAccept={conferences.addConferenceFromDiscovery}
+                  onAbsorb={(matchedId) => conferences.updateStarred(matchedId, 1)}
+                />
+              )}
+            />
+            <Route path="/libraries" element={<LibrariesPage />} />
+            <Route path="/db" element={<DBSearchPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+          </Route>
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
       {isUpdatePanelOpen && (
         <div
@@ -143,18 +188,6 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <UpdatePanel queue={updateQueue} onBack={() => setUpdatePanelOpen(false)} />
-          </div>
-        </div>
-      )}
-      {isDiscoveryPanelOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-40 p-4 overflow-y-auto">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl my-4 p-6">
-            <DiscoveryPanel
-              existingConferences={conferences.rows}
-              onAccept={conferences.addConferenceFromDiscovery}
-              onAbsorb={(matchedId) => conferences.updateStarred(matchedId, 1)}
-              onClose={() => setDiscoveryPanelOpen(false)}
-            />
           </div>
         </div>
       )}
