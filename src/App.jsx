@@ -152,6 +152,7 @@ function App() {
             <DiscoveryPanel
               existingConferences={conferences.rows}
               onAccept={conferences.addConferenceFromDiscovery}
+              onAbsorb={(matchedId) => conferences.updateStarred(matchedId, 1)}
               onClose={() => setDiscoveryPanelOpen(false)}
             />
           </div>

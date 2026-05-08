@@ -12,7 +12,7 @@ import {
   parseDiscoveryExpandResponse,
   parseDiscoverySearchResponse,
 } from '../../services/responseParser';
-import { findExistingMatch } from '../../utils/nameMatch';
+import { findUpstreamMatch } from '../../utils/conferenceMatch';
 import { combinePredatoryScore } from '../../utils/predatoryScore';
 import { MODELS } from '../../config/models';
 
@@ -212,25 +212,25 @@ export function useDiscoverySearch({ selected, existingConferences, addUsage }) 
         setSearchError(`응답 파싱 실패 (${parsed.reason})`);
         return;
       }
-      // 011-D: nameMatch 로 기존 학회 중복 제거 (AI 가 놓친 케이스 안전망)
-      const filtered = [];
+      // PLAN-039: 매칭 후보를 silent drop 하는 대신 _match 어노테이션 후 검토 단계에 노출.
+      // findUpstreamMatch (URL 1차 + 이름 2차) 가 매칭된 기존 학회를 반환.
+      const annotated = [];
       let dup = 0;
       for (const c of parsed.candidates) {
-        if (findExistingMatch(c, existingConferences)) {
-          dup++;
-          continue;
-        }
+        const match = findUpstreamMatch(c, existingConferences);
+        if (match) dup++;
         // 011-D: 휴리스틱 점수와 합쳐 보강
         const combined = combinePredatoryScore(c);
-        filtered.push({
+        annotated.push({
           ...c,
           predatory_score: combined.predatory_score,
           predatory_reasons: combined.predatory_reasons,
           heuristic_score: combined.heuristic_score,
+          _match: match || null,
         });
       }
       setDuplicateCount(dup);
-      setCandidates(filtered);
+      setCandidates(annotated);
     } catch (e) {
       setSearchError(formatErrorMessage(e));
     } finally {
@@ -244,7 +244,7 @@ export function useDiscoverySearch({ selected, existingConferences, addUsage }) 
 // ──────────────────────────────────────────────────────────────────
 // useCandidateReview — Stage 3 (후보 accept/reject 토글)
 // ──────────────────────────────────────────────────────────────────
-export function useCandidateReview({ candidates, onAccept }) {
+export function useCandidateReview({ candidates, onAccept, onAbsorb }) {
   const [acceptedIds, setAcceptedIds] = useState(new Set());
   const [rejectedIds, setRejectedIds] = useState(new Set());
 
@@ -269,6 +269,19 @@ export function useCandidateReview({ candidates, onAccept }) {
     setAcceptedIds((prev) => new Set(prev).add(idx));
   };
 
+  // PLAN-039: 매칭된 기존 학회로 흡수 — updateStarred(matchedId, 1) 만 호출.
+  // master 덮어쓰기 안 함 (사용자가 의도하지 않은 변경 방지).
+  const handleAbsorb = (idx) => {
+    const c = candidates[idx];
+    if (!c?._match?.id) return;
+    if (typeof onAbsorb !== 'function') {
+      console.warn('[DiscoveryPanel] onAbsorb prop 미연결');
+      return;
+    }
+    onAbsorb(c._match.id);
+    setAcceptedIds((prev) => new Set(prev).add(idx));
+  };
+
   const handleReject = (idx) => {
     setRejectedIds((prev) => new Set(prev).add(idx));
   };
@@ -281,6 +294,6 @@ export function useCandidateReview({ candidates, onAccept }) {
   return {
     acceptedIds, rejectedIds, visibleCandidates,
     acceptedCount: acceptedIds.size,
-    handleAccept, handleReject, reset,
+    handleAccept, handleAbsorb, handleReject, reset,
   };
 }

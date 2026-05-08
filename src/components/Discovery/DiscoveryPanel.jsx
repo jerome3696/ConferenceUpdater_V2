@@ -16,7 +16,7 @@ import {
   fmtKRW,
 } from './useDiscoveryState';
 
-export default function DiscoveryPanel({ existingConferences = [], onAccept, onClose }) {
+export default function DiscoveryPanel({ existingConferences = [], onAccept, onAbsorb, onClose }) {
   const { usage, addUsage, totalCost } = useDiscoveryUsage();
   const kw = useKeywordExpansion({ addUsage });
   const search = useDiscoverySearch({
@@ -24,7 +24,7 @@ export default function DiscoveryPanel({ existingConferences = [], onAccept, onC
     existingConferences,
     addUsage,
   });
-  const review = useCandidateReview({ candidates: search.candidates, onAccept });
+  const review = useCandidateReview({ candidates: search.candidates, onAccept, onAbsorb });
 
   // 새 검색 시작 전 이전 accept/reject 상태 초기화. 기존 DiscoveryPanel 의 onResetReview 동작 보존.
   const onSearchClick = () => {
@@ -89,8 +89,8 @@ export default function DiscoveryPanel({ existingConferences = [], onAccept, onC
             <span>
               후보 학회 ({review.visibleCandidates.length}/{search.candidates.length})
               {search.duplicateCount > 0 && (
-                <span className="ml-2 text-xs font-normal text-slate-500">
-                  · 기존 DB 중복 {search.duplicateCount}건 필터됨
+                <span className="ml-2 text-xs font-normal text-blue-700">
+                  · 기존 DB 매칭 {search.duplicateCount}건 (카드에서 흡수/신규 선택)
                 </span>
               )}
             </span>
@@ -113,6 +113,7 @@ export default function DiscoveryPanel({ existingConferences = [], onAccept, onC
                     key={i}
                     candidate={c}
                     onAccept={() => review.handleAccept(i)}
+                    onAbsorb={() => review.handleAbsorb(i)}
                     onReject={() => review.handleReject(i)}
                   />
                 );
