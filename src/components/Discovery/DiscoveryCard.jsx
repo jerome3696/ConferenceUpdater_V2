@@ -15,9 +15,11 @@ function Field({ label, value, mono = false }) {
   );
 }
 
-export default function DiscoveryCard({ candidate, onAccept, onReject }) {
+export default function DiscoveryCard({ candidate, onAccept, onAbsorb, onReject }) {
   const isHigh = candidate.predatory_score === 'high';
   const [confirmHigh, setConfirmHigh] = useState(false);
+  // PLAN-039: 기존 upstream 학회와 매칭된 경우 absorb 흐름.
+  const match = candidate._match || null;
 
   const headerTone = isHigh
     ? 'bg-rose-50 border-rose-300'
@@ -48,6 +50,18 @@ export default function DiscoveryCard({ candidate, onAccept, onReject }) {
       </div>
 
       <div className="p-3 space-y-2">
+        {/* PLAN-039: 기존 upstream 학회와 매칭됨 → 흡수/신규 선택 안내 */}
+        {match && (
+          <div className="border border-blue-300 bg-blue-50 rounded px-2 py-1.5 text-[11px] text-blue-800">
+            <span className="font-semibold">이미 DB에 존재:</span>{' '}
+            {match.abbreviation && <span className="font-mono mr-1">{match.abbreviation}</span>}
+            <span className="text-blue-700">{match.full_name}</span>
+            <div className="mt-0.5 text-[10px] text-blue-600">
+              [기존 학회 별표] = 본인 라이브러리에 추가 · [새로 추가] = 별도 학회로 등록
+            </div>
+          </div>
+        )}
+
         {/* 추천 분류 (PLAN-011-B.1) — field 한국어 + matched_keywords 페어 칩 */}
         {(candidate.field || candidate.matched_keywords?.length > 0) && (
           <div className="flex items-center gap-2 flex-wrap pb-2 border-b border-slate-200">
@@ -147,13 +161,33 @@ export default function DiscoveryCard({ candidate, onAccept, onReject }) {
           >
             거절
           </button>
-          <button
-            onClick={onAccept}
-            disabled={isHigh && !confirmHigh}
-            className="px-3 py-1 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
-          >
-            승인
-          </button>
+          {match ? (
+            <>
+              <button
+                onClick={onAccept}
+                disabled={isHigh && !confirmHigh}
+                className="px-3 py-1 text-xs border border-slate-400 rounded hover:bg-slate-100 text-slate-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                title="매칭 무시하고 별도 학회로 등록"
+              >
+                새로 추가
+              </button>
+              <button
+                onClick={onAbsorb}
+                className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                title={`기존 학회 ${match.abbreviation || match.full_name} 에 별표 표시`}
+              >
+                기존 학회 별표
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={onAccept}
+              disabled={isHigh && !confirmHigh}
+              className="px-3 py-1 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
+            >
+              승인
+            </button>
+          )}
         </div>
       </div>
     </div>
