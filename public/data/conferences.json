@@ -221,7 +221,7 @@
       "region": "전세계",
       "official_url": "https://www.ichmt.org/",
       "note": "",
-      "starred": 0,
+      "starred": 1,
       "organizer": "",
       "source": "upstream"
     },
@@ -254,22 +254,6 @@
       "starred": 0,
       "organizer": "",
       "source": "upstream"
-    },
-    {
-      "id": "conf_007",
-      "category": "학회",
-      "field": "열전달",
-      "abbreviation": "ICMF",
-      "full_name": "International Conference on Multiphase Flow",
-      "cycle_years": 3,
-      "duration_days": 5,
-      "region": "유럽",
-      "official_url": "",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:17:13.232+00:00"
     },
     {
       "id": "conf_010",
@@ -383,6 +367,22 @@
       "last_ai_update_at": "2026-05-15T04:43:59.54+00:00"
     },
     {
+      "id": "conf_007",
+      "category": "학회",
+      "field": "열전달",
+      "abbreviation": "ICMF",
+      "full_name": "International Conference on Multiphase Flow",
+      "cycle_years": 3,
+      "duration_days": 5,
+      "region": "유럽",
+      "official_url": "",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-15T04:56:25.857+00:00"
+    },
+    {
       "id": "disc_mo51rke0v1",
       "category": "학회",
       "field": "열저장",
@@ -459,22 +459,6 @@
       "last_ai_update_at": "2026-05-02T15:18:14.122+00:00"
     },
     {
-      "id": "disc_mo5215jjv5",
-      "category": "학회",
-      "field": "에너지 저장",
-      "abbreviation": "SSTES",
-      "full_name": "Swiss Symposium Thermal Energy Storage",
-      "cycle_years": 1,
-      "duration_days": 0,
-      "region": "유럽",
-      "official_url": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:18:25.221+00:00"
-    },
-    {
       "id": "disc_mo8593oimc",
       "category": "학회",
       "field": "건물에너지모델링",
@@ -489,6 +473,22 @@
       "organizer": "",
       "source": "upstream",
       "last_ai_update_at": "2026-05-15T04:43:21.89+00:00"
+    },
+    {
+      "id": "disc_mo5215jjv5",
+      "category": "학회",
+      "field": "에너지 저장",
+      "abbreviation": "SSTES",
+      "full_name": "Swiss Symposium Thermal Energy Storage",
+      "cycle_years": 1,
+      "duration_days": 0,
+      "region": "유럽",
+      "official_url": "https://www.hslu.ch/en/lucerne-school-of-engineering-architecture/about-us/organization-and-topics/organization/competence-centres-and-research-groups/engineering-and-technology/thermal-energy-storage/swiss-symposium-thermal-energy-storage",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-15T04:57:02.761+00:00"
     }
   ],
   "editions": [
