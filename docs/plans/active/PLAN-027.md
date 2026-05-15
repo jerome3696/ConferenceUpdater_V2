@@ -1,10 +1,10 @@
 # PLAN-027: Ultra-Plan 로드맵 체계 구축 — docs/roadmap.md 신설
 
-> **상태**: active
+> **상태**: active (완료 대기 — PR merge 시 자동 이동)
 > **생성일**: 2026-04-21
-> **완료일**: (완료 시 갱신)
+> **완료일**: 2026-05-15
 > **브랜치**: `feature/PLAN-027-ultra-plan-roadmap`
-> **연관 PR**: #
+> **연관 PR**: #29
 > **트랙**: A(체계화) — 문서 계층 재설계
 
 ---
@@ -67,8 +67,8 @@ docs/roadmap.md            (장기 Phase, 북극성)
 - [x] **S4** — `docs/blueprint.md §7` 축약 + §7.2.1 보존
 - [x] **S5** — `docs/dev-guide-v3.md` 상단 3줄 헤더
 - [x] **S6** — 본 PLAN-027 repo 문서 작성
-- [ ] **S7** — `bash scripts/verify-task.sh` 통과
-- [ ] **S8** — `feature/PLAN-027` 커밋 + push + PR
+- [x] **S7** — `bash scripts/verify-task.sh` 통과
+- [x] **S8** — `feature/PLAN-027` 커밋 + push + PR
 - [ ] **S9** — `feature/PLAN-026-server-stack-comparison` 브랜치 스위치 → §2 참조 교체 → 추가 커밋
 - [ ] **S10** — PR 2개(PLAN-026, PLAN-027) merge 후 PLAN-027 completed/ 이동
 
@@ -106,3 +106,4 @@ roadmap.md 완성·승인 후 순차 착수:
 
 - **2026-04-21**: 3-spicy-manatee v3 승인 직후 사용자가 "ultra-plan md 관리" 요청. 문서 3계층 재설계 + 전략 분석 영구 흡수 플랜 수립·착수.
 - **2026-04-21**: roadmap.md(189줄) + CLAUDE.md(59줄) + blueprint.md §7 축약 + dev-guide-v3 헤더 + PLAN-027 repo 플랜 6건 작성 완료.
+- **2026-05-15**: PR #29 merge 완료 확인. 모든 단계 완료 갱신.
