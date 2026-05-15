@@ -1,8 +1,8 @@
 # PLAN-028-api-proxy-mvp: Supabase Edge Function 기반 API 프록시 MVP
 
-> **상태**: active
+> **상태**: active (완료 대기 — PR merge 시 자동 이동)
 > **생성일**: 2026-04-22
-> **완료일**: (미완)
+> **완료일**: 2026-05-15
 > **브랜치**: `feature/PLAN-028-api-proxy-mvp`
 > **연관 PR**: #
 > **트랙**: A(체계화) — Phase **A.1 서버 MVP** (`docs/roadmap.md` §3 A.1)
@@ -106,14 +106,14 @@ cost_usd = input_usd + output_usd - cache_hit_usd * 0.75 + web_search_usd
 
 - [x] **S1** — 브랜치 생성 `feature/PLAN-028-api-proxy-mvp`
 - [x] **S2** — 본 플랜 문서 작성 (v1)
-- [ ] **S3** — `supabase/migrations/0001_initial_schema.sql` 작성 (6 테이블 + RLS + trigger)
-- [ ] **S4** — `supabase/functions/claude-proxy/index.ts` + `_shared/` 작성
-- [ ] **S5** — `scripts/migrate-json-to-supabase.mjs` 작성 (dry-run + --commit)
-- [ ] **S6** — `docs/supabase-deploy.md` 사용자 수동 작업 체크리스트
-- [ ] **S7** — `docs/roadmap.md` §3 A.1 상태 갱신, `dev-guide-v3.md` 현재 Phase 갱신
-- [ ] **S8** — `bash scripts/verify-task.sh` 통과 (src/ 수정 없으므로 lint/test/build 무영향 목표)
-- [ ] **S9** — commit 단위 atomic (plan → migration → function → script → docs)
-- [ ] **S10** — push + PR → 사용자 승인 후 merge
+- [x] **S3** — `supabase/migrations/0001_initial_schema.sql` 작성 (6 테이블 + RLS + trigger)
+- [x] **S4** — `supabase/functions/claude-proxy/index.ts` + `_shared/` 작성
+- [x] **S5** — `scripts/migrate-json-to-supabase.mjs` 작성 (dry-run + --commit)
+- [x] **S6** — `docs/supabase-deploy.md` 사용자 수동 작업 체크리스트
+- [x] **S7** — `docs/roadmap.md` §3 A.1 상태 갱신, `dev-guide-v3.md` 현재 Phase 갱신
+- [x] **S8** — `bash scripts/verify-task.sh` 통과 (src/ 수정 없으므로 lint/test/build 무영향 목표)
+- [x] **S9** — commit 단위 atomic (plan → migration → function → script → docs)
+- [x] **S10** — push + PR → 사용자 승인 후 merge
 
 ### 사용자 개입 필요 (PLAN-028 merge 이후)
 - Supabase 프로젝트 생성 (대시보드)
@@ -164,3 +164,4 @@ cost_usd = input_usd + output_usd - cache_hit_usd * 0.75 + web_search_usd
 ## 9. 작업 로그
 
 - **2026-04-22 (v1)**: A.0 5개 P0 플랜 완료 직후 A.1 착수. 단일 Edge Function + 정적 TTL + Prompt Caching MVP 확정. 사용자 자리비움 동안 자율 실행(승인 받음).
+- **2026-05-15**: 구현 완료 확인. claude-proxy Edge Function 배포됨. 마이그레이션·스크립트·함수 모두 merged.
