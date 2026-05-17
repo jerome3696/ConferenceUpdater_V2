@@ -98,7 +98,7 @@ CREATE TABLE user_libraries (
 - [ ] **S1** — `feature/PLAN-030-libraries` 브랜치
 - [ ] **S2** — migration SQL (3 테이블 + RLS + trigger 확장 + master 시드)
 - [ ] **S3** — `src/utils/mergeConference.js` 확장 — library 정보 join
-- [ ] **S4** — Onboarding 페이지 (가입 후 라이브러리 선택)
+- [x] **S4** — Onboarding 페이지 (가입 후 라이브러리 선택) — `libraryService.js`·`useOnboarding`·`OnboardingPage`, App.jsx 게이팅
 - [ ] **S5** — `/libraries` 페이지 (router PLAN-033 머지 후)
 - [ ] **S6** — 메인 테이블 라이브러리 뱃지 + 필터
 - [ ] **S7** — 동기화 알림 카드 UI
