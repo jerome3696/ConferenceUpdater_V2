@@ -49,6 +49,7 @@ blueprint v3 §7 PLAN 매핑이 범위 SSOT. 권장 작성 순서: 038 → 030 �
 2. **PLAN-037 OAuth** — 기획 단계. Google Cloud Console OAuth client 선행 필요.
 3. **라우터 페이지 콘텐츠 채우기** — PLAN-033 은 7페이지 placeholder 까지. 라이브러리/admin 등 실제 콘텐츠는 PLAN-030/035 흐름.
 4. **사용자 검증 + 운영 준비** — `docs/status.md` §검증·운영 대기 체크리스트 참조.
+5. **운영 견고성** — 보안 audit + 배포 파이프라인 자동화 (blueprint §7.5). PLAN-030 완료 후 후속 PLAN 으로.
 
 A.3 전체 완료 = blueprint v3 완료 → 사용자에게 **v4(Phase B) 전환** 질문 (§4 규칙).
 
