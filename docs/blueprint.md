@@ -385,33 +385,11 @@ CREATE POLICY al_admin_read ON public.audit_log FOR SELECT USING (public.is_admi
 
 ---
 
-## 7. 후속 PLAN 매핑
+## 7. 구현 PLAN 분해 → dev-guide
 
-블루프린트 v2.0 의 Phase A.3 항목들을 PLAN 으로 분해:
+blueprint 는 spec("무엇")만 보유한다. v3 의 **PLAN 분해·범위·의존·작성 순서·진행 상태**는 `docs/dev-guide.md` 가 SSOT — "A.3 PLAN 보드".
 
-| PLAN | 범위 | 의존 |
-|---|---|---|
-| **PLAN-030** library + user_libraries 스키마 + 옵트인 동기화 | §2.4 라이브러리 모델 + §2.5 신규 테이블 | - |
-| **PLAN-031** audit_log + 메타 컬럼 + 자주 편집 학회 위젯 | §2.6 + §5.2 + §5.3 | PLAN-030 |
-| **PLAN-032** AI 응답 source_url 확장 (promptBuilder v1_2 + responseParser + UI) | §5.1 | - |
-| **PLAN-033** react-router 도입 + 페이지 5개 분리 | §6 | - |
-| **PLAN-034** ICS 구독 URL Edge Function | §4.2 | - |
-| **PLAN-035** admin 대시보드 (사용량·비용·라이브러리 큐레이팅·초대 코드) | §4.3 | PLAN-030, PLAN-031 |
-| **PLAN-036** 학회 정체성 매칭 + D3 confirm 모달 | §2.3 | PLAN-030 |
-| **PLAN-037** 비밀번호 + 구글 OAuth 추가 | §3.3 Phase A.3 후반 | PLAN-033 |
-| **PLAN-038** user_conferences write 경로 (starred·overrides 실제 Supabase 저장) | §2.1 (현재 localStorage 잔존) | - |
-
-→ 작성 순서 권고: **PLAN-038 → PLAN-030 → PLAN-031 → PLAN-032 → PLAN-033 → PLAN-035 → PLAN-034 → PLAN-036 → PLAN-037**.
-
-근거:
-- PLAN-038 이 가장 시급 — 현재 starred 토글 등이 localStorage 에만 저장돼 멀티 디바이스 동기화 미작동. 이거 없이는 멀티테넌트 진정한 의미 없음.
-- 라이브러리 모델 (PLAN-030) 은 이후 모든 작업의 데이터 기반.
-- 라우터 (PLAN-033) 는 페이지 분리의 전제.
-- admin 대시보드 (PLAN-035) 가 30명 운영 안전망이라 그 다음.
-
-Phase B 추가 PLAN: 알림 센터 (PLAN-040), 필터 저장 (PLAN-041), AI judge 매칭 (PLAN-042), 셀프 계정 삭제 (PLAN-043).
-
-Phase C 추가 PLAN: 결제 (PLAN-050), 티어 (PLAN-051), 공개 댓글 (PLAN-052).
+(2026-05-17: 이 절에 있던 PLAN 매핑 표를 dev-guide 로 이관. blueprint=무엇 / dev-guide=어떻게·순서 분리.)
 
 ---
 
