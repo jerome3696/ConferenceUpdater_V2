@@ -5,7 +5,7 @@
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-030-libraries`
 > **연관 PR**: #
-> **트랙**: A(체계화) — Phase **A.3 직전** (`docs/blueprint-v2.md` §2.4)
+> **트랙**: A(체계화) — Phase **A.3 직전** (`docs/blueprint.md` §2.4)
 > **의존**: PLAN-038 (user_conferences write 경로) 선행 권장
 
 ---

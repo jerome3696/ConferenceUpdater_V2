@@ -1,6 +1,6 @@
 # PLAN-028-api-proxy-mvp: Supabase Edge Function 기반 API 프록시 MVP
 
-> **상태**: active (완료 대기 — PR merge 시 자동 이동)
+> **상태**: completed (claude-proxy 구현 완료 — 2026-05-17 문서개혁 시 completed/ 이동)
 > **생성일**: 2026-04-22
 > **완료일**: 2026-05-15
 > **브랜치**: `feature/PLAN-028-api-proxy-mvp`

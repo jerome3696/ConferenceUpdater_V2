@@ -1,11 +1,11 @@
 # PLAN-035: admin 대시보드 (사용량·비용·라이브러리 큐레이팅·초대 코드)
 
-> **상태**: active
+> **상태**: completed (PR #60 merge)
 > **생성일**: 2026-05-03
-> **완료일**: (미완)
+> **완료일**: 2026-05-09
 > **브랜치**: `feature/PLAN-035-admin-dashboard`
 > **연관 PR**: #
-> **트랙**: C(기능) — Phase **A.3** (`docs/blueprint-v2.md` §4.3)
+> **트랙**: C(기능) — Phase **A.3** (`docs/blueprint.md` §4.3)
 > **의존**: PLAN-030 (libraries), PLAN-031 (audit_log), PLAN-033 (router)
 
 ---

@@ -1,5 +1,7 @@
 # QA Backlog
 
+> **축③ (디자인·소규모 기능) 의 SSOT.** blueprint 버전과 무관 — 굴러가는 backlog.
+
 사용 중 발견한 개선사항을 즉시 코딩하지 않고 누적 → 5~10건 모이면 일괄 처리.
 
 ## 사용법
@@ -10,7 +12,7 @@
 - **완료**: 처리된 항목은 `[x]`로 체크 (지우지 말 것 — 패턴 추적용).
 - **에스컬레이션**: 한 항목이 명백히 큰 작업이면 즉시 `docs/plans/active/`로 승격.
 
-자세한 워크플로우: `docs/dev-guide-v2.md` §6.
+자세한 워크플로우: `docs/dev-guide.md` §4 + `.claude/rules/axis-3-design.md`.
 
 ---
 

@@ -66,14 +66,17 @@
 | 파일 | 역할 |
 |---|---|
 | `README.md` | 프로젝트 소개, 사용법, API 키/PAT 안내 (프로젝트 루트) |
-| `CLAUDE.md` | Claude Code 작업 지침 (현재 상태, 문서 맵, 작업 규칙) |
-| `docs/blueprint.md` | 프로그램 설계 (What) — 기능·데이터 구조·로드맵 |
-| `docs/dev-guide-v2.md` | Post-MVP 실행 가이드 (Track A/B/C, 체크박스 추적) |
+| `CLAUDE.md` | Claude Code 가드레일 (작업 규칙·금지사항·비자명 제약 포인터) |
+| `docs/status.md` | **현황 진입점** — 3축 통합, "지금 어디까지" SSOT |
+| `docs/roadmap.md` | 비전·블루프린트 체인 색인 (장기) |
+| `docs/blueprint.md` | 활성 blueprint — 설계 (무엇 만드나) |
+| `docs/dev-guide.md` | 활성 dev-guide — 구현 단계맵 (어떻게) |
 | `docs/structure.md` | 이 문서 — 코드 구조 맵 |
-| `docs/design.md` | UI 디자인 결정 로그 |
-| `docs/prompteng.md` | 프롬프트 운영 가이드 + 실행 로그 (현황판/루프/레버/패턴) |
+| `docs/design.md` | UI 디자인 결정 로그 (축③) |
+| `docs/prompteng.md` | 프롬프트 운영 가이드 + 실행 로그 (축②) |
 | `docs/changelog.md` | 변경 이력 (v1.0 MVP 이후) |
-| `docs/qa-backlog.md` | 사용 중 관찰 이슈 누적 (일괄 처리용) |
+| `docs/qa-backlog.md` | 사용 중 관찰 이슈 누적 (축③, 일괄 처리용) |
 | `docs/plans/` | 플랜 문서 — `active/`(진행중), `completed/`(완료), `TEMPLATE.md` |
 | `docs/reference/` | 사람용 레퍼런스 (`HARNESS_MASTER.md` 등) |
-| `docs/legacy/` | 역할 끝난 문서 (dev-guide v1, PROMPT_LOG/STRATEGY 원본, rate_limit_strategy) — 명시 요청 없으면 진입 불요 |
+| `docs/legacy/` | 완료·대체된 과거 문서 보관소 — 명시 요청 없으면 진입 불요 |
+| `.claude/rules/` | 작업 종류별 조건부 가드레일 (axis-1 기능 / axis-2 프롬프트 / axis-3 디자인) |
