@@ -12,7 +12,7 @@
 
 ## 1. 목표 (What)
 
-블루프린트 v2 §2.4 의 라이브러리 모델을 DB·UI 로 구현. 완료 조건:
+blueprint v3 §1.5·§2.4 의 라이브러리 모델을 DB·UI 로 구현. 완료 조건:
 
 1. `libraries` / `library_conferences` / `user_libraries` 3 테이블 + RLS 적용
 2. 가입 흐름에 라이브러리 다중 선택 UI 추가 (LoginScreen 확장 또는 별도 onboarding 페이지)
@@ -51,6 +51,8 @@ CREATE TABLE libraries (
   description  text,
   is_virtual   boolean NOT NULL DEFAULT false,  -- "내 학회" 인 경우 true
   owner_user_id uuid REFERENCES users(id) ON DELETE CASCADE, -- 가상 라이브러리만 NULL 아님
+  lifecycle    text NOT NULL DEFAULT 'building'
+                 CHECK (lifecycle IN ('building','operating')), -- §1.5.3 생애주기
   created_at   timestamptz NOT NULL DEFAULT now()
 );
 CREATE TABLE library_conferences (
@@ -84,6 +86,12 @@ CREATE TABLE user_libraries (
 ### 4.5 시드
 - `lib_master` (관리자 메인) + 32 학회 매핑은 마이그레이션에 INSERT
 - Phase B 추가 라이브러리 (공조·디지털트윈 등) 는 admin 페이지에서 추가
+
+### 4.6 §1.5 재설계 정합 (2026-05-17 재검토)
+
+- **참조 모델**: `library_conferences` 는 학회를 *복사*하지 않고 `conferences_upstream` 을 FK 참조하는 태그. 학회 데이터는 공용 1행 — 본 PLAN 은 멤버십(태그)만 다룸. 사실 필드 개인 override 는 스키마에 없음 (§1.5.1).
+- **생애주기**: `libraries.lifecycle` (`building`→`operating`) 컬럼만 본 PLAN 에 포함. 운영기 자동화(cron 갱신·신뢰도 게이팅·admin 주간 큐)는 **별도 후속 PLAN** (§1.5.6).
+- **Discovery pending**: 발굴·D3 학회는 발굴자 가상 라이브러리("내 학회")에만 적재 = 자연히 "미승인" 상태. 별도 컬럼 불필요 — "비(非)가상 라이브러리에 미편입" 으로 파생. admin 일괄 승인 UI 는 PLAN-035 범위 (§1.5.7).
 
 ## 5. 단계 (Steps)
 
@@ -119,3 +127,4 @@ CREATE TABLE user_libraries (
 ## 9. 작업 로그
 
 - **2026-05-03**: blueprint v2 §2.4 기반 스펙 확정. PLAN-038 (user_conferences write) 선행 권장.
+- **2026-05-17**: blueprint §1.5 grill-me 재설계 대비 재검토 — 대부분 유효. `libraries.lifecycle` 컬럼 추가, 운영기 자동화는 별도 PLAN 으로 분리 (§4.6).
