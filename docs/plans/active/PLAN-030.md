@@ -128,3 +128,4 @@ CREATE TABLE user_libraries (
 
 - **2026-05-03**: blueprint v2 §2.4 기반 스펙 확정. PLAN-038 (user_conferences write) 선행 권장.
 - **2026-05-17**: blueprint §1.5 grill-me 재설계 대비 재검토 — 대부분 유효. `libraries.lifecycle` 컬럼 추가, 운영기 자동화는 별도 PLAN 으로 분리 (§4.6).
+- **2026-05-17**: S1·S2(마이그레이션, 사용자 적용 완료)·S3(`mergeAll` 태그 부착)·S4(온보딩 — `libraryService.js`·`useOnboarding`·`OnboardingPage`, App.jsx 게이팅) 완료. 게이팅 방식: `user_libraries` 구독 0건 = 미온보딩 (별도 컬럼 없이 파생). S5~S10 대기.
