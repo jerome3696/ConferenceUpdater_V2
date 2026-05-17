@@ -65,15 +65,43 @@ export function mergeEdition(upstream) {
 }
 
 /**
- * 3 테이블 raw rows → 기존 dataManager 형식.
+ * raw rows → 기존 dataManager 형식. 각 conference 에 소속 라이브러리 목록(libraries) 부착.
+ * 참조 모델(blueprint §1.5.1): 라이브러리는 학회 데이터를 복사하지 않고 태그로 붙는다.
+ * @param {Array} libraries          libraries 테이블 행 (PLAN-030)
+ * @param {Array} libraryConferences library_conferences 태그 행 (PLAN-030)
  */
-export function mergeAll(upstreamConferences = [], upstreamEditions = [], userConferences = []) {
+export function mergeAll(
+  upstreamConferences = [],
+  upstreamEditions = [],
+  userConferences = [],
+  libraries = [],
+  libraryConferences = [],
+) {
   const userMap = new Map();
   for (const u of userConferences) {
     if (u?.conference_id) userMap.set(u.conference_id, u);
   }
+
+  // conference_id → [library 객체]
+  const libById = new Map();
+  for (const lib of libraries) {
+    if (lib?.id) libById.set(lib.id, lib);
+  }
+  const libsByConf = new Map();
+  for (const lc of libraryConferences) {
+    if (!lc?.conference_id) continue;
+    const lib = libById.get(lc.library_id);
+    if (!lib) continue;
+    if (!libsByConf.has(lc.conference_id)) libsByConf.set(lc.conference_id, []);
+    libsByConf.get(lc.conference_id).push(lib);
+  }
+
   return {
-    conferences: upstreamConferences.map((c) => mergeConference(c, userMap.get(c.id) || null)),
+    conferences: upstreamConferences.map((c) => {
+      const merged = mergeConference(c, userMap.get(c.id) || null);
+      merged.libraries = libsByConf.get(c.id) || [];
+      return merged;
+    }),
     editions: upstreamEditions.map(mergeEdition),
   };
 }
