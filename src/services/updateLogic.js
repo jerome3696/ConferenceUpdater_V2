@@ -1,5 +1,5 @@
 // 전체 업데이트 시 pass/검색 판별 로직.
-// blueprint.md §3.2.2 + PLAN-013-B 참조.
+// docs/legacy/blueprint-v1.2.md §3.2.2 + PLAN-013-B 참조.
 
 import { daysUntil } from '../utils/dateUtils';
 import { classifyUrlTrust } from '../utils/urlClassifier';

@@ -5,7 +5,7 @@
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-033-react-router`
 > **연관 PR**: #
-> **트랙**: A(체계화) — Phase **A.3 후반** (`docs/blueprint-v2.md` §6)
+> **트랙**: A(체계화) — Phase **A.3 후반** (`docs/blueprint.md` §6)
 > **의존**: PLAN-035 (admin), PLAN-030 (libraries) 와 **머지 순서 조율 필요** (라우터 먼저 가는 게 깔끔)
 
 ---

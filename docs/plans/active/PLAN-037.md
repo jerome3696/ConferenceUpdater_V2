@@ -5,7 +5,7 @@
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-037-password-oauth`
 > **연관 PR**: #
-> **트랙**: C(기능) — Phase **A.3 후반** (`docs/blueprint-v2.md` §3.3)
+> **트랙**: C(기능) — Phase **A.3 후반** (`docs/blueprint.md` §3.3)
 > **의존**: PLAN-033 (router) — 설정 페이지 등 진입 경로 필요
 
 ---

@@ -1,6 +1,6 @@
 # PLAN-027: Ultra-Plan 로드맵 체계 구축 — docs/roadmap.md 신설
 
-> **상태**: active (완료 대기 — PR merge 시 자동 이동)
+> **상태**: completed (PR #29 merge — 2026-05-17 문서개혁 시 completed/ 이동)
 > **생성일**: 2026-04-21
 > **완료일**: 2026-05-15
 > **브랜치**: `feature/PLAN-027-ultra-plan-roadmap`

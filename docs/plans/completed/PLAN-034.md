@@ -1,11 +1,11 @@
 # PLAN-034: ICS 캘린더 구독 URL Edge Function
 
-> **상태**: active
+> **상태**: completed (PR #59 merge)
 > **생성일**: 2026-05-03
-> **완료일**: (미완)
+> **완료일**: 2026-05-09
 > **브랜치**: `feature/PLAN-034-ics-feed`
 > **연관 PR**: #
-> **트랙**: C(기능) — Phase **A.3** (`docs/blueprint-v2.md` §4.2)
+> **트랙**: C(기능) — Phase **A.3** (`docs/blueprint.md` §4.2)
 > **의존**: PLAN-038 (user_conferences write 경로), PLAN-033 (settings 페이지 — 토큰 표시)
 
 ---

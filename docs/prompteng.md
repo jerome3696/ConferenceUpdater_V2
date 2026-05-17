@@ -1,5 +1,6 @@
 # Prompt Engineering — 운영 가이드 + 실행 로그
 
+> **축② (학회검색·업데이트 프롬프트 개선) 의 SSOT.** blueprint 버전과 무관 — 프롬프트 버전(v1_x)으로 독립 관리되는 상시 개선 루프.
 > 프롬프트 품질 개선 루프 (가설 → 변경 → 실행 → 분석 → 다음 가설)를 위한 **단일 운영 문서**.
 > 정답지·실행 결과 원본은 `docs/eval/`, 코드는 `src/utils/promptBuilder.js` / `src/services/responseParser.js`.
 > 통합 전 원본: `docs/legacy/PROMPT_LOG.md` (실행 서사) + `docs/legacy/PROMPT_STRATEGY.md` (전략).

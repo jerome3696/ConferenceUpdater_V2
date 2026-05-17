@@ -5,7 +5,7 @@
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-036-matching-util`
 > **연관 PR**: #
-> **트랙**: A(체계화) — Phase **A.3** (`docs/blueprint-v2.md` §2.3, §9 Q9)
+> **트랙**: A(체계화) — Phase **A.3** (`docs/blueprint.md` §2.3, §9 Q9)
 > **의존**: PLAN-038 (수동입력 흐름) — UI 부분만 후행
 
 ---

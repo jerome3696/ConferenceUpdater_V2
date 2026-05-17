@@ -5,7 +5,7 @@
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-032-ai-source-urls`
 > **연관 PR**: #
-> **트랙**: B(품질) — Phase **A.3** (`docs/blueprint-v2.md` §5.1)
+> **트랙**: B(품질) — Phase **A.3** (`docs/blueprint.md` §5.1)
 > **의존**: 없음 (단독 머지 가능)
 
 ---
