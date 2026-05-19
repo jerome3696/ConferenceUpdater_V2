@@ -17,11 +17,13 @@ export default function LibrariesPage({ userId, conferences }) {
   );
 
   // 비동기 동작 공통 래퍼 — 동작 중 버튼 비활성화 + 에러 표시.
-  const run = async (id, fn) => {
+  // reloadConferences=true: 구독 변경은 메인 테이블 게이팅에 영향 → 학회 데이터 재로드.
+  const run = async (id, fn, reloadConferences = false) => {
     setActingId(id);
     setActionError(null);
     try {
       await fn();
+      if (reloadConferences) conferences?.reload?.();
     } catch (e) {
       setActionError(e.message);
     } finally {
@@ -99,7 +101,7 @@ export default function LibrariesPage({ userId, conferences }) {
                     </span>
                     <button
                       type="button"
-                      onClick={() => run(l.id, () => lib.unsubscribe(l.id))}
+                      onClick={() => run(l.id, () => lib.unsubscribe(l.id), true)}
                       disabled={actingId === l.id}
                       className="shrink-0 px-3 py-1.5 text-xs border border-slate-300 text-slate-600 rounded hover:bg-slate-50 disabled:opacity-50"
                     >
@@ -133,7 +135,7 @@ export default function LibrariesPage({ userId, conferences }) {
                     </span>
                     <button
                       type="button"
-                      onClick={() => run(l.id, () => lib.subscribe(l.id))}
+                      onClick={() => run(l.id, () => lib.subscribe(l.id), true)}
                       disabled={actingId === l.id}
                       className="shrink-0 px-3 py-1.5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-slate-300"
                     >

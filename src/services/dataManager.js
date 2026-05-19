@@ -1,13 +1,13 @@
 import { fetchFile, commitFile, ConflictError } from './githubStorage';
 import { supabase, supabaseConfigured } from './supabaseClient';
-import { mergeAll } from '../utils/mergeConference';
+import { mergeAll, gateBySubscribedLibraries } from '../utils/mergeConference';
 
 const STORAGE_KEY = 'conferenceFinder.data';
 const SHA_KEY = 'conferenceFinder.githubSha';
 
 export { ConflictError };
 
-async function loadFromSupabase() {
+async function loadFromSupabase(userId) {
   const [confRes, edRes, userRes, libRes, libConfRes] = await Promise.all([
     supabase.from('conferences_upstream').select('*'),
     supabase.from('editions_upstream').select('*'),
@@ -22,16 +22,30 @@ async function loadFromSupabase() {
   // PLAN-030: 라이브러리 테이블 에러여도 학회 로드는 진행 (graceful).
   const libRows = libRes.error ? [] : (libRes.data || []);
   const libConfRows = libConfRes.error ? [] : (libConfRes.data || []);
-  const merged = mergeAll(confRes.data || [], edRes.data || [], userRows, libRows, libConfRows);
+  let merged = mergeAll(confRes.data || [], edRes.data || [], userRows, libRows, libConfRows);
+
+  // PLAN-030: 메인 테이블은 구독한 라이브러리 + 본인 가상 라이브러리 학회만 표시.
+  // userId 없거나 구독 조회 실패 시 게이팅 생략 — 빈 테이블로 떨어지지 않게.
+  if (userId) {
+    const subRes = await supabase
+      .from('user_libraries')
+      .select('library_id')
+      .eq('user_id', userId);
+    if (!subRes.error) {
+      const subscribedIds = (subRes.data || []).map((r) => r.library_id);
+      merged = gateBySubscribedLibraries(merged, subscribedIds);
+    }
+  }
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
   return { data: merged, sha: null };
 }
 
-export async function loadConferences({ token } = {}) {
+export async function loadConferences({ token, userId } = {}) {
   // PLAN-029: Supabase 가 설정된 환경이면 server 우선.
   if (supabaseConfigured) {
     try {
-      return await loadFromSupabase();
+      return await loadFromSupabase(userId);
     } catch (e) {
       console.warn('Supabase 로드 실패, 로컬/JSON 폴백:', e);
       // 폴백 흐름으로 진행
