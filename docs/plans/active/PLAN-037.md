@@ -55,12 +55,12 @@
 
 ## 5. 단계 (Steps)
 
-- [ ] S1 — 브랜치 + LoginScreen 재구성 ([구글로 로그인] + 매직링크 폴백)
-- [ ] S2 — 구글 OAuth 통합 (`signInWithOAuth`) — Supabase·Google Cloud 콘솔 작업은 사용자
-- [ ] S3 — 자율가입 차단 + 비초대 로그인 시도 안내 메시지
-- [ ] S4 — `invitations` 폐기 — 테이블 DROP 마이그레이션 + AdminPage InviteSection 제거
-- [ ] S5 — blueprint §3.3 수정 (비밀번호 제외 반영)
-- [ ] S6 — 테스트 + verify-task.sh
+- [x] S1 — 브랜치 + LoginScreen 재구성 ([구글로 로그인] + 매직링크 폴백)
+- [x] S2 — 구글 OAuth 통합 (`signInWithOAuth`) — Google Cloud OAuth client·Supabase provider 설정 완료(2026-05-19)
+- [x] S3 — 비초대 로그인 시도 안내 메시지(`friendlyAuthError`). 자율가입 차단 토글은 사용자 작업(Supabase "Allow signups" OFF)
+- [x] S4 — `invitations` 폐기 — DROP 마이그레이션(`20260519000001_drop_invitations.sql`) + AdminPage InviteSection 제거
+- [x] S5 — blueprint §3.3 수정 (PR #68)
+- [x] S6 — verify-task.sh 통과 (✅ 6, 테스트 438)
 - [ ] S7 — PR
 
 ## 6. 검증
@@ -85,3 +85,4 @@
 
 - **2026-05-03**: blueprint v2 §3.3 기반 초기 스펙 (비밀번호+OAuth).
 - **2026-05-19**: grill-me 재설계 — 비밀번호 제외(구글+매직링크), 게이팅을 Supabase 기본 초대로 확정, `invitations` 테이블 폐기, `/settings` 보류. blueprint §3.3 수정 필요.
+- **2026-05-19 (구현)**: 사용자와 Google Cloud OAuth client 생성·Supabase provider 연결 완료. S1~S6 구현 — LoginScreen 에 구글 버튼+매직링크, AdminPage InviteSection 제거, DROP 마이그레이션 작성. **사용자 잔여**: ① DROP 마이그레이션 적용 ② Supabase "Allow new signups" OFF ③ 파일럿 사용자 대시보드 초대.

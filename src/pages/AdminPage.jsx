@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../services/supabaseClient';
 
 // ── 섹션별 데이터 훅 ─────────────────────────────────────────
@@ -167,32 +167,6 @@ function useAbuseSignals() {
   return { data, loading, error };
 }
 
-function useInvitations() {
-  const [invitations, setInvitations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data: rows, error: err } = await supabase
-        .from('invitations')
-        .select('id, code, intended_email, used_by, used_at, expires_at, created_at')
-        .order('created_at', { ascending: false });
-      if (err) throw err;
-      setInvitations(rows ?? []);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { load(); }, [load]);
-
-  return { invitations, loading, error, reload: load };
-}
-
 function useUsers() {
   const [users, setUsers] = useState([]);
 
@@ -214,14 +188,6 @@ function useUsers() {
 
 function SectionHeader({ children }) {
   return <h2 className="text-base font-semibold text-slate-700 mb-3">{children}</h2>;
-}
-
-function StatusBadge({ ok, label }) {
-  return (
-    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${ok ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'}`}>
-      {label}
-    </span>
-  );
 }
 
 function LoadingRow({ cols }) {
@@ -365,99 +331,6 @@ function AbuseSection() {
   );
 }
 
-// e) 초대 코드 발급
-function InviteSection() {
-  const { invitations, loading, error, reload } = useInvitations();
-  const [email, setEmail] = useState('');
-  const [issuing, setIssuing] = useState(false);
-  const [issueError, setIssueError] = useState(null);
-
-  async function handleIssue() {
-    setIssuing(true);
-    setIssueError(null);
-    try {
-      const { data: codeData, error: codeErr } = await supabase.rpc('generate_invite_code');
-      if (codeErr) throw codeErr;
-
-      const { data: { user } } = await supabase.auth.getUser();
-      const { error: insertErr } = await supabase.from('invitations').insert({
-        code: codeData,
-        intended_email: email.trim() || null,
-        created_by: user?.id ?? null,
-      });
-      if (insertErr) throw insertErr;
-
-      setEmail('');
-      await reload();
-    } catch (e) {
-      setIssueError(e.message);
-    } finally {
-      setIssuing(false);
-    }
-  }
-
-  function inviteStatus(inv) {
-    if (inv.used_by) return { label: '사용됨', ok: false };
-    if (new Date(inv.expires_at) < new Date()) return { label: '만료', ok: false };
-    return { label: '미사용', ok: true };
-  }
-
-  return (
-    <section className="mb-8">
-      <SectionHeader>초대 코드 발급</SectionHeader>
-      <div className="flex gap-2 mb-4">
-        <input
-          type="email"
-          placeholder="대상 이메일 (선택)"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          className="flex-1 border border-slate-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
-        />
-        <button
-          onClick={handleIssue}
-          disabled={issuing}
-          className="px-4 py-1.5 bg-sky-500 text-white text-sm rounded hover:bg-sky-600 disabled:opacity-50"
-        >
-          {issuing ? '발급 중...' : '발급'}
-        </button>
-      </div>
-      {issueError && <p className="text-sm text-red-500 mb-3">{issueError}</p>}
-      {loading && <p className="text-sm text-slate-400">로딩 중...</p>}
-      {error && <p className="text-sm text-red-500">{error}</p>}
-      {!loading && !error && (
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase">
-              <tr>
-                <th className="px-4 py-2 text-left">코드</th>
-                <th className="px-4 py-2 text-left">대상 이메일</th>
-                <th className="px-4 py-2 text-left">상태</th>
-                <th className="px-4 py-2 text-left">만료일</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {invitations.length === 0 && (
-                <tr><td colSpan={4} className="py-6 text-center text-sm text-slate-400">발급된 코드 없음</td></tr>
-              )}
-              {invitations.map(inv => {
-                const status = inviteStatus(inv);
-                return (
-                  <tr key={inv.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-2 font-mono text-slate-700">{inv.code}</td>
-                    <td className="px-4 py-2 text-slate-600">{inv.intended_email ?? '—'}</td>
-                    <td className="px-4 py-2"><StatusBadge ok={status.ok} label={status.label} /></td>
-                    <td className="px-4 py-2 text-slate-500 text-xs">{inv.expires_at?.slice(0, 10)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </section>
-  );
-}
-
 // f) 사용자 한도 조정
 function QuotaSection() {
   const users = useUsers();
@@ -558,7 +431,6 @@ const TABS = [
   { id: 'cost',    label: '비용 추세' },
   { id: 'edited',  label: '자주 편집' },
   { id: 'abuse',   label: '어뷰즈' },
-  { id: 'invite',  label: '초대 코드' },
   { id: 'quota',   label: '한도 조정' },
 ];
 
@@ -569,8 +441,8 @@ export default function AdminPage() {
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold text-slate-800 mb-1">관리자 대시보드</h1>
       <p className="text-xs text-slate-400 mb-5">
-        {/* TODO: PLAN-030 완료 후 라이브러리 통계 위젯 + 라이브러리 큐레이팅 UI 추가 */}
-        라이브러리 큐레이팅은 PLAN-030 완료 후 구현 예정
+        {/* 라이브러리 통계 위젯 + 큐레이팅 UI 는 PLAN-040 범위 */}
+        라이브러리 큐레이팅은 PLAN-040 에서 구현 예정
       </p>
 
       {/* 탭 바 */}
@@ -594,7 +466,6 @@ export default function AdminPage() {
       {tab === 'cost'   && <CostTrendSection />}
       {tab === 'edited' && <TopEditedSection />}
       {tab === 'abuse'  && <AbuseSection />}
-      {tab === 'invite' && <InviteSection />}
       {tab === 'quota'  && <QuotaSection />}
     </div>
   );
