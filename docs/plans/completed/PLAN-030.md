@@ -1,10 +1,10 @@
 # PLAN-030: 라이브러리 스키마 + 사용자 구독 + 옵트인 동기화
 
-> **상태**: active (스펙 확정, 구현 대기)
+> **상태**: completed
 > **생성일**: 2026-05-03
-> **완료일**: (미완)
-> **브랜치**: `feature/PLAN-030-libraries`
-> **연관 PR**: #
+> **완료일**: 2026-05-19
+> **브랜치**: `feature/PLAN-030-libraries` · `fix/PLAN-030-library-gating`(S11)
+> **연관 PR**: #64 (S5~S10) · S11 게이팅 후속 PR
 > **트랙**: A(체계화) — Phase **A.3 직전** (`docs/blueprint.md` §2.4)
 > **의존**: PLAN-038 (user_conferences write 경로) 선행 권장
 
@@ -106,7 +106,7 @@ CREATE TABLE user_libraries (
 - [x] **S8** — 테스트 추가 (`useLibraries.test.js`, `useFiltering` 라이브러리 필터)
 - [x] **S9** — verify-task.sh 통과 (✅ 6 / ❌ 0)
 - [x] **S11** — 메인 테이블 구독 게이팅 — `gateBySubscribedLibraries` + `loadFromSupabase(userId)` + `useConferences.reload`
-- [ ] **S10** — PR (S11 포함, PR #64)
+- [x] **S10** — PR — PR #64 (S5~S10 머지 완료) + S11 게이팅 후속 PR
 
 ## 6. 검증
 
@@ -132,4 +132,5 @@ CREATE TABLE user_libraries (
 - **2026-05-17**: blueprint §1.5 grill-me 재설계 대비 재검토 — 대부분 유효. `libraries.lifecycle` 컬럼 추가, 운영기 자동화는 별도 PLAN 으로 분리 (§4.6).
 - **2026-05-17**: S1·S2(마이그레이션, 사용자 적용 완료)·S3(`mergeAll` 태그 부착)·S4(온보딩 — `libraryService.js`·`useOnboarding`·`OnboardingPage`, App.jsx 게이팅) 완료. 게이팅 방식: `user_libraries` 구독 0건 = 미온보딩 (별도 컬럼 없이 파생). S5~S10 대기.
 - **2026-05-19**: S5~S9 완료. `/libraries` 페이지(`useLibraries` hook + `libraryService` 5개 함수 추가) — 구독 목록·추가/해제·동기화 알림. S7 동기화 알림은 **라이브러리 단위 일괄 [확인]** 방식 채택. S6 메인 테이블에 라이브러리 뱃지 컬럼 + FilterBar 라이브러리 필터. PR #64.
-- **2026-05-19 (S11)**: 사용자 피드백 — "라이브러리 해제해도 메인 테이블에 학회가 남는다". 원인: 메인 테이블이 `conferences_upstream` 전체를 무조건 로드 (라이브러리는 태그/필터로만). blueprint §1.5.1·§2.4 의 "구독 라이브러리 합집합 = 개인 테이블" 모델과 불일치. → **구독 게이팅 추가**: `gateBySubscribedLibraries`(순수 함수) + `loadFromSupabase(userId)` 가 `user_libraries` 조회 후 필터 + `useConferences.reload` 로 구독 변경 시 즉시 반영. 가상 라이브러리·orphan 학회는 안전망으로 항상 통과. PR #64 에 포함.
+- **2026-05-19 (S11)**: 사용자 피드백 — "라이브러리 해제해도 메인 테이블에 학회가 남는다". 원인: 메인 테이블이 `conferences_upstream` 전체를 무조건 로드 (라이브러리는 태그/필터로만). blueprint §1.5.1·§2.4 의 "구독 라이브러리 합집합 = 개인 테이블" 모델과 불일치. → **구독 게이팅 추가**: `gateBySubscribedLibraries`(순수 함수) + `loadFromSupabase(userId)` 가 `user_libraries` 조회 후 필터 + `useConferences.reload` 로 구독 변경 시 즉시 반영. 가상 라이브러리·orphan 학회는 안전망으로 항상 통과.
+- **2026-05-19 (S11 PR 분리)**: PR #64 머지 시 S11 커밋(`14b9595`)이 push 직후 타이밍으로 누락 — S5~S10 만 main 반영됨. S11 게이팅을 `fix/PLAN-030-library-gating` 브랜치로 cherry-pick 해 별도 PR 로 재상정. 이 PR 머지로 PLAN-030 완료.

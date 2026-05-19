@@ -29,7 +29,7 @@ blueprint v3 = 상업화 Phase A(30명 파일럿). 서버 도입 → 클라이�
 | PLAN | 범위 (blueprint §) | 의존 | 상태 |
 |---|---|---|---|
 | PLAN-038 | user_conferences write 경로 §2.1 | - | ✅ |
-| PLAN-030 | 라이브러리 스키마+구독+옵트인 동기화 §1.5·§2.4 | PLAN-038 | 🔵 active — S1~S9 완료, S10(PR) 대기 |
+| PLAN-030 | 라이브러리 스키마+구독+옵트인 동기화 §1.5·§2.4 | PLAN-038 | ✅ (S11 게이팅 PR 머지로 완료) |
 | PLAN-031 | audit_log+메타+위젯 §2.6·§5.2·§5.3 | PLAN-030 | ✅ |
 | PLAN-032 | AI source_url 확장 §5.1 | - | ✅ |
 | PLAN-033 | react-router 7페이지 §6 | - | ✅ |
@@ -45,11 +45,9 @@ blueprint v3 = 상업화 Phase A(30명 파일럿). 서버 도입 → 클라이�
 
 ## 3. 남은 일 (A.3 마감 → 30명 초대)
 
-1. **PLAN-030 라이브러리** — S1~S9 완료 (`/libraries` 페이지·메인 테이블 뱃지/필터·동기화 알림·테스트). S10(PR) 후 머지·검증은 사용자.
-2. **PLAN-037 OAuth** — 기획. Google Cloud OAuth client 선행 필요.
-3. 라우터 페이지 콘텐츠 채우기 — PLAN-030/035 흐름.
-4. 사용자 검증·운영 준비 — `docs/status.md` §3 체크리스트.
-5. 운영 견고성 (보안 audit + 배포 파이프라인) — blueprint §7.5, PLAN-030 완료 후 후속 PLAN.
+1. **PLAN-037 OAuth** — 기획. Google Cloud OAuth client 선행 필요.
+2. 사용자 검증·운영 준비 — `docs/status.md` §3 체크리스트.
+3. 운영 견고성 (보안 audit + 배포 파이프라인) — blueprint §7.5, 후속 PLAN.
 
 A.3 전체 완료 = blueprint v3 완료 → 사용자에게 v4 전환 질문.
 
