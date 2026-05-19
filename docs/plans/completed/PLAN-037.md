@@ -1,10 +1,10 @@
 # PLAN-037: 구글 OAuth 로그인 + 초대 게이팅
 
-> **상태**: active (설계 확정 — 착수 대기)
+> **상태**: completed
 > **생성일**: 2026-05-03
-> **완료일**: (미완)
+> **완료일**: 2026-05-20
 > **브랜치**: `feature/PLAN-037-oauth`
-> **연관 PR**: #
+> **연관 PR**: #69
 > **트랙**: C(기능) — Phase **A.3 후반** (`docs/blueprint.md` §3.3)
 > **의존**: PLAN-033 (router)
 
@@ -61,7 +61,7 @@
 - [x] S4 — `invitations` 폐기 — DROP 마이그레이션(`20260519000001_drop_invitations.sql`) + AdminPage InviteSection 제거
 - [x] S5 — blueprint §3.3 수정 (PR #68)
 - [x] S6 — verify-task.sh 통과 (✅ 6, 테스트 438)
-- [ ] S7 — PR
+- [x] S7 — PR #69 머지·배포 완료
 
 ## 6. 검증
 
@@ -85,4 +85,5 @@
 
 - **2026-05-03**: blueprint v2 §3.3 기반 초기 스펙 (비밀번호+OAuth).
 - **2026-05-19**: grill-me 재설계 — 비밀번호 제외(구글+매직링크), 게이팅을 Supabase 기본 초대로 확정, `invitations` 테이블 폐기, `/settings` 보류. blueprint §3.3 수정 필요.
-- **2026-05-19 (구현)**: 사용자와 Google Cloud OAuth client 생성·Supabase provider 연결 완료. S1~S6 구현 — LoginScreen 에 구글 버튼+매직링크, AdminPage InviteSection 제거, DROP 마이그레이션 작성. **사용자 잔여**: ① DROP 마이그레이션 적용 ② Supabase "Allow new signups" OFF ③ 파일럿 사용자 대시보드 초대.
+- **2026-05-19 (구현)**: 사용자와 Google Cloud OAuth client 생성·Supabase provider 연결 완료. S1~S6 구현 — LoginScreen 에 구글 버튼+매직링크, AdminPage InviteSection 제거, DROP 마이그레이션 작성. PR #69 머지·배포.
+- **2026-05-20 (완료)**: 사용자가 구글 로그인 동작 확인 ✅, DROP 마이그레이션 Supabase 적용 ✅, "Allow new signups" OFF ✅. PLAN-037 완료. 파일럿 사용자 초대는 운영 절차로 별도(Authentication → Users → Invite user).

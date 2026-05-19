@@ -37,7 +37,7 @@ blueprint v3 = 상업화 Phase A(30명 파일럿). 서버 도입 → 클라이�
 | PLAN-035 | admin 대시보드 §4.3 | PLAN-030·031 | ✅ |
 | PLAN-036 | 학회 정체성 매칭 §1.5.2·§2.3 | PLAN-030 | ✅ |
 | PLAN-039 | D3 confirm 모달 (발굴 흡수/신규) | PLAN-036 | ✅ |
-| PLAN-037 | 구글 OAuth 로그인 + 초대 게이팅 §3.3 | PLAN-033 | 🔵 active — 구현 완료(PR #69), 사용자 설정 3건 대기 |
+| PLAN-037 | 구글 OAuth 로그인 + 초대 게이팅 §3.3 | PLAN-033 | ✅ (2026-05-20 완료, PR #69) |
 | PLAN-041 | "내 학회" 가상 라이브러리 완성 (발굴 적재+UI) | PLAN-030 | 🔵 active — S2·S3 완료(PR #70), S1(발굴 적재)은 PLAN-040 의존 |
 | PLAN-040 | 관리자 기능 정비 — role 권한+마스터 큐레이팅 UI+GitHub 레거시 | PLAN-030·035·041 | 🔵 active (설계 확정 — 착수 대기) |
 
@@ -47,11 +47,10 @@ blueprint v3 = 상업화 Phase A(30명 파일럿). 서버 도입 → 클라이�
 
 ## 3. 남은 일 (A.3 마감 → 30명 초대)
 
-1. **PLAN-037** — 구현 완료(PR #69). 사용자 잔여: DROP 마이그레이션 적용 · Supabase "Allow signups" OFF · 파일럿 사용자 초대.
-2. **PLAN-041** — S2·S3(UI 노출) 완료(PR #70). S1(발굴 적재)은 PLAN-040 의 `conferences_upstream` write 경로 의존.
-3. **PLAN-040** — 설계 확정, 착수 대기. 대형 구조 변경 — RLS 마이그레이션은 사용자 적용. 단계별 체크포인트 권장.
-4. 사용자 검증·운영 준비 — `docs/status.md` §3 체크리스트.
-5. 운영 견고성 (보안 audit + 배포 파이프라인) — blueprint §7.5, 후속 PLAN.
+1. **PLAN-041** — S2·S3(UI 노출) 완료(PR #70). S1(발굴 적재)은 PLAN-040 의 `conferences_upstream` write 경로 의존.
+2. **PLAN-040** — 설계 확정, 착수 대기. 대형 구조 변경 — RLS 마이그레이션은 사용자 적용. 단계별 체크포인트 권장.
+3. 사용자 검증·운영 준비 — `docs/status.md` §3 체크리스트.
+4. 운영 견고성 (보안 audit + 배포 파이프라인) — blueprint §7.5, 후속 PLAN.
 
 A.3 전체 완료 = blueprint v3 완료 → 사용자에게 v4 전환 질문.
 
