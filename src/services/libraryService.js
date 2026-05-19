@@ -46,3 +46,68 @@ export async function subscribeUserToLibraries(userId, libraryIds) {
     .upsert(rows, { onConflict: 'user_id,library_id', ignoreDuplicates: true });
   if (error) throw new Error(error.message);
 }
+
+/**
+ * 본인이 구독한 라이브러리 + 라이브러리 메타 (/libraries 페이지·동기화 알림용).
+ * 가상 "내 학회" 는 user_libraries 에 들어가지 않으므로 결과에 포함되지 않는다.
+ * @param {string} userId
+ * @returns {Promise<Array<{id,name,description,is_virtual,lifecycle,last_seen_at,subscribed_at}>>}
+ */
+export async function fetchUserLibraries(userId) {
+  if (!supabase || !userId) return [];
+  const { data, error } = await supabase
+    .from('user_libraries')
+    .select('library_id, last_seen_at, subscribed_at, libraries(id, name, description, is_virtual, lifecycle)')
+    .eq('user_id', userId);
+  if (error) throw new Error(error.message);
+  return (data ?? [])
+    .filter((r) => r.libraries) // 라이브러리가 삭제된 고아 행 방어
+    .map((r) => ({
+      ...r.libraries,
+      last_seen_at: r.last_seen_at,
+      subscribed_at: r.subscribed_at,
+    }));
+}
+
+/**
+ * 라이브러리 ↔ 학회 태그 전체 (added_at 포함). 동기화 알림이 last_seen_at 과 비교.
+ * @returns {Promise<Array<{library_id:string,conference_id:string,added_at:string}>>}
+ */
+export async function fetchLibraryConferences() {
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from('library_conferences')
+    .select('library_id, conference_id, added_at');
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+/**
+ * 라이브러리 구독 해제.
+ * @param {string} userId
+ * @param {string} libraryId
+ */
+export async function unsubscribeFromLibrary(userId, libraryId) {
+  if (!supabase || !userId || !libraryId) return;
+  const { error } = await supabase
+    .from('user_libraries')
+    .delete()
+    .eq('user_id', userId)
+    .eq('library_id', libraryId);
+  if (error) throw new Error(error.message);
+}
+
+/**
+ * 옵트인 동기화 알림 확인 — last_seen_at 을 now() 로 갱신해 알림을 dismiss.
+ * @param {string} userId
+ * @param {string} libraryId
+ */
+export async function markLibrarySeen(userId, libraryId) {
+  if (!supabase || !userId || !libraryId) return;
+  const { error } = await supabase
+    .from('user_libraries')
+    .update({ last_seen_at: new Date().toISOString() })
+    .eq('user_id', userId)
+    .eq('library_id', libraryId);
+  if (error) throw new Error(error.message);
+}

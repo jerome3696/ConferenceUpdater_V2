@@ -184,7 +184,10 @@ function AppShell() {
                 />
               )}
             />
-            <Route path="/libraries" element={<LibrariesPage />} />
+            <Route
+              path="/libraries"
+              element={<LibrariesPage userId={auth.user.id} conferences={conferences} />}
+            />
             <Route path="/db" element={<DBSearchPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/admin" element={<AdminPage />} />
