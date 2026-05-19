@@ -130,7 +130,15 @@ function AppShell() {
     );
   }
   if (onboarding.status === 'needed') {
-    return <OnboardingPage userId={auth.user.id} onComplete={onboarding.markDone} />;
+    // PLAN-030: 온보딩 완료 시 학회 데이터 재로드 필수.
+    // useConferences 는 구독 0건 상태(온보딩 전)에 로드됐으므로, 구독 게이팅 결과가
+    // 빈 목록이다. 구독 직후 reload 해야 선택한 라이브러리 학회가 메인에 나타난다.
+    return (
+      <OnboardingPage
+        userId={auth.user.id}
+        onComplete={() => { onboarding.markDone(); conferences.reload(); }}
+      />
+    );
   }
 
   return (
