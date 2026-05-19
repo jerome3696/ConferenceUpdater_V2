@@ -79,6 +79,24 @@ export default function LibrariesPage({ userId, conferences }) {
             </section>
           )}
 
+          {/* 내 라이브러리 — 가입 시 자동 생성, 해제 불가 (PLAN-041) */}
+          {lib.personalLibrary && (
+            <section className="mb-8">
+              <h2 className="text-sm font-semibold text-slate-700 mb-2">내 라이브러리</h2>
+              <div className="flex items-start justify-between gap-3 border border-slate-200 rounded p-3 bg-slate-50">
+                <span>
+                  <span className="block text-sm font-medium text-slate-800">
+                    {lib.personalLibrary.name}
+                  </span>
+                  <span className="block text-xs text-slate-500 mt-0.5">
+                    내가 발굴·추가한 학회가 모이는 공간입니다. 자동 생성되며 해제할 수 없습니다.
+                  </span>
+                </span>
+                <span className="shrink-0 px-2 py-1 text-xs text-slate-400">🔒 기본</span>
+              </div>
+            </section>
+          )}
+
           {/* 구독 중인 라이브러리 */}
           <section className="mb-8">
             <h2 className="text-sm font-semibold text-slate-700 mb-2">

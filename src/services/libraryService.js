@@ -70,6 +70,24 @@ export async function fetchUserLibraries(userId) {
 }
 
 /**
+ * 본인 소유 가상 "내 학회" 라이브러리 (PLAN-030 가입 트리거가 자동 생성).
+ * user_libraries 구독이 아니라 owner 기반이므로 별도 조회.
+ * @param {string} userId
+ * @returns {Promise<{id:string,name:string,description:string|null}|null>}
+ */
+export async function fetchOwnedVirtualLibrary(userId) {
+  if (!supabase || !userId) return null;
+  const { data, error } = await supabase
+    .from('libraries')
+    .select('id, name, description')
+    .eq('owner_user_id', userId)
+    .eq('is_virtual', true)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data ?? null;
+}
+
+/**
  * 라이브러리 ↔ 학회 태그 전체 (added_at 포함). 동기화 알림이 last_seen_at 과 비교.
  * @returns {Promise<Array<{library_id:string,conference_id:string,added_at:string}>>}
  */

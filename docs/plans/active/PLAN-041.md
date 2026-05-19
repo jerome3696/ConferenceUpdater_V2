@@ -46,11 +46,11 @@ blueprint §1.5.7: 일반 사용자 발굴(D1)·수동입력(D3) 학회는 **본
 
 ## 5. 단계 (Steps)
 
-- [ ] S1 — `libraryService`/`useConferences` — 발굴 학회의 "내 학회" `library_conferences` INSERT
-- [ ] S2 — `useLibraries`/`LibrariesPage` — "내 학회" 잠긴 항목 렌더 (해제 버튼 없음)
-- [ ] S3 — `OnboardingPage` — "내 학회" 잠긴 사전선택 표시
-- [ ] S4 — 테스트 + verify-task.sh
-- [ ] S5 — PR
+- [ ] S1 — 발굴 학회의 "내 학회" `library_conferences` INSERT — **차단됨** (아래 §9 참조)
+- [x] S2 — `libraryService.fetchOwnedVirtualLibrary` + `useLibraries.personalLibrary` + `LibrariesPage` "내 라이브러리" 잠긴 항목
+- [x] S3 — `OnboardingPage` — "내 학회" 잠긴 안내 항목
+- [x] S4 — 테스트 (`useLibraries.test.js` personalLibrary) + verify-task.sh ✅ 6
+- [ ] S5 — PR (S2·S3 분), S1 은 별도
 
 ## 6. 검증
 
@@ -71,3 +71,5 @@ blueprint §1.5.7: 일반 사용자 발굴(D1)·수동입력(D3) 학회는 **본
 ## 9. 작업 로그
 
 - **2026-05-19**: grill-me 중 식별 — PLAN-030 이 "내 학회" 가상 라이브러리를 스키마까지만 만들고 발굴 적재·UI 노출을 미완으로 남김. 별도 PLAN 으로 분리.
+- **2026-05-19 (구현)**: S2·S3(UI 노출) 완료 — `/libraries`·온보딩에 "내 학회" 잠긴 항목 표시.
+  **S1 차단 발견**: 발굴 학회는 `addConferenceFromDiscovery` 가 로컬 state + `user_conferences` 에만 쓰고 `conferences_upstream` 에는 안 넣는다. `library_conferences.conference_id` 는 `conferences_upstream` 을 FK 참조 → 발굴 학회를 "내 학회"에 태그하려면 먼저 `conferences_upstream` 에 적재해야 함(blueprint §1.5.7 "공용 DB 에 pending 적재"). 이 write 경로는 PLAN-040(`conferences_upstream` write + RLS) 영역. **S1 은 PLAN-040 이후 또는 별도 발굴-영속화 보강과 함께** 진행. PLAN-041 의존 = PLAN-030 뿐이라 적었으나 S1 은 사실상 PLAN-040 의존.
