@@ -67,6 +67,17 @@ export default function OnboardingPage({ userId, onComplete }) {
         </p>
 
         <div className="mt-6 border-t border-slate-200 pt-6">
+          {/* PLAN-041: "내 학회"는 가입 시 자동 생성 — 안내만, 선택·해제 불가 */}
+          <div className="mb-4 flex items-start justify-between gap-3 border border-slate-200 rounded p-3 bg-slate-50">
+            <span>
+              <span className="block text-sm font-medium text-slate-800">내 학회</span>
+              <span className="block text-xs text-slate-500 mt-0.5">
+                내가 발굴·추가한 학회가 모이는 개인 공간 — 자동으로 포함됩니다.
+              </span>
+            </span>
+            <span className="shrink-0 px-2 py-1 text-xs text-slate-400">🔒 기본</span>
+          </div>
+
           {loading && (
             <p className="text-sm text-slate-400">라이브러리를 불러오는 중...</p>
           )}

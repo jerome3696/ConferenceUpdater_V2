@@ -5,6 +5,7 @@ vi.mock('../services/libraryService', () => ({
   fetchUserLibraries: vi.fn(),
   fetchSelectableLibraries: vi.fn(),
   fetchLibraryConferences: vi.fn(),
+  fetchOwnedVirtualLibrary: vi.fn(),
   subscribeUserToLibraries: vi.fn(),
   unsubscribeFromLibrary: vi.fn(),
   markLibrarySeen: vi.fn(),
@@ -15,6 +16,7 @@ import {
   fetchUserLibraries,
   fetchSelectableLibraries,
   fetchLibraryConferences,
+  fetchOwnedVirtualLibrary,
   subscribeUserToLibraries,
   unsubscribeFromLibrary,
   markLibrarySeen,
@@ -43,6 +45,7 @@ beforeEach(() => {
   fetchUserLibraries.mockResolvedValue(SUBSCRIBED);
   fetchSelectableLibraries.mockResolvedValue(SELECTABLE);
   fetchLibraryConferences.mockResolvedValue(LIB_CONFS);
+  fetchOwnedVirtualLibrary.mockResolvedValue({ id: 'lib_personal_u1', name: '내 학회', description: null });
   subscribeUserToLibraries.mockResolvedValue(undefined);
   unsubscribeFromLibrary.mockResolvedValue(undefined);
   markLibrarySeen.mockResolvedValue(undefined);
@@ -65,6 +68,14 @@ describe('useLibraries', () => {
     const { result } = renderHook(() => useLibraries('u1'));
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.available.map((l) => l.id)).toEqual(['lib_dt']);
+  });
+
+  it('personalLibrary: 본인 가상 "내 학회" 노출 (PLAN-041)', async () => {
+    const { result } = renderHook(() => useLibraries('u1'));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.personalLibrary).toEqual({
+      id: 'lib_personal_u1', name: '내 학회', description: null,
+    });
   });
 
   it('syncAlerts: last_seen_at 이후 추가된 학회만 묶음', async () => {
