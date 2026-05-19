@@ -10,7 +10,8 @@
 
 - **활성 체인**: **v3** — 멀티테넌트 + 라이브러리 (상업화 Phase A, 30명 파일럿).
 - **단계**: dev-guide v3 §A.3 라이브러리·운영 기반 **진행 중**. A.0~A.2 완료, PLAN-030(라이브러리)·PLAN-037(구글 OAuth+초대) 완료.
-- **다음**: PLAN-041(S1) · PLAN-040(관리자 기능) · 아래 검증 5건 · 파일럿 30명 초대(Supabase 대시보드).
+- **다음 우선**: **커스텀 도메인 전환** (`conf-tracker.com` — 30명 초대 전 권장, §3 참조).
+- **그 다음**: PLAN-040(관리자 기능) · PLAN-041(S1) · 검증 5건 · 30명 초대.
 
 ---
 
@@ -43,7 +44,14 @@ A.3 후반 머지분의 실측 검증. 출처: 구 `legacy/session-report-2026-0
 - [ ] **PR #56 발굴 흡수/신규 선택** — `/#/discovery` 에서 기존 학회 매칭 시 배너 + [기존 별표]/[새로 추가] 버튼 동작.
 - [ ] **PR #49 v1_2 [근거] 링크 실측** — 카드 필드 옆 `[근거]` 노출 + claude-proxy 응답 `_sources` 확인. 실패 시 `promptBuilder.js` `DEFAULT_UPDATE_VERSION` → `v1_1` 롤백.
 - [x] ~~Resend 도메인 verify~~ — 완료 (2026-05-19, `conf-tracker.com` 인증 + Supabase 발신주소 `noreply@conf-tracker.com`).
-- [ ] **운영 준비 3건** — Google OAuth client 생성 / 라이브러리 시드 큐레이션(32학회) / admin 큐레이팅 UI(→ PLAN-040 으로 이관).
+- [x] ~~Google OAuth client 생성~~ — 완료 (2026-05-19, PLAN-037).
+- [ ] **커스텀 도메인 전환** (`conf-tracker.com` — 다음 우선, 30명 초대 전):
+  - ① Cloudflare DNS: 기존 터널 레코드 정리 + `conf-tracker.com` → GitHub Pages 4개 A 레코드(185.199.108.153 등) 또는 CNAME `jerome3696.github.io`
+  - ② GitHub 저장소 Pages 설정 → Custom domain = `conf-tracker.com` + HTTPS 강제
+  - ③ Google Cloud OAuth client → 승인된 리디렉션 URI 그대로(Supabase callback) 유지, JavaScript 원본만 새 도메인 추가(필요 시)
+  - ④ Supabase Site URL/Redirect URLs → `https://conf-tracker.com/` 로 변경
+  - ⑤ `vite.config.js` `base` `/ConferenceUpdater_V2/` → `/` + 재배포
+- [ ] **운영 준비 2건** — 라이브러리 시드 큐레이션(32학회) / admin 큐레이팅 UI(→ PLAN-040).
 
 ---
 
