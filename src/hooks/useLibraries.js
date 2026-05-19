@@ -3,6 +3,7 @@ import {
   fetchUserLibraries,
   fetchSelectableLibraries,
   fetchLibraryConferences,
+  fetchOwnedVirtualLibrary,
   subscribeUserToLibraries,
   unsubscribeFromLibrary,
   markLibrarySeen,
@@ -20,6 +21,7 @@ export function useLibraries(userId) {
   const [subscribed, setSubscribed] = useState([]);
   const [allSelectable, setAllSelectable] = useState([]);
   const [libConfs, setLibConfs] = useState([]);
+  const [personalLibrary, setPersonalLibrary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,10 +31,12 @@ export function useLibraries(userId) {
       fetchUserLibraries(userId),
       fetchSelectableLibraries(),
       fetchLibraryConferences(),
-    ]).then(([subs, selectable, lc]) => {
+      fetchOwnedVirtualLibrary(userId),
+    ]).then(([subs, selectable, lc, personal]) => {
       setSubscribed(subs);
       setAllSelectable(selectable);
       setLibConfs(lc);
+      setPersonalLibrary(personal);
       setError(null);
     });
   }, [userId]);
@@ -83,7 +87,7 @@ export function useLibraries(userId) {
 
   return {
     loading, error,
-    subscribed, available, syncAlerts,
+    subscribed, available, syncAlerts, personalLibrary,
     subscribe, unsubscribe, dismissAlert,
     refresh: load,
   };
