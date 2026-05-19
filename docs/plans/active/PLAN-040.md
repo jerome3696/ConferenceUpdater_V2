@@ -1,11 +1,12 @@
 # PLAN-040: 관리자 기능 정비 — role 권한 분리 + 마스터 큐레이팅 UI + GitHub 레거시 정리
 
-> **상태**: active (기획 — 착수 대기)
+> **상태**: active (설계 확정 — 착수 대기)
 > **생성일**: 2026-05-19
 > **완료일**: (미완)
 > **브랜치**: `feature/PLAN-040-admin`
 > **연관 PR**: #
 > **트랙**: A(체계화)
+> **의존**: PLAN-030 · PLAN-035 · PLAN-041 ("내 학회" 적재 — 승격 대상)
 
 ---
 
@@ -38,20 +39,43 @@ blueprint §1.5.1 "공용 DB 는 AI·admin 만 변경" 원칙을 실제 UI 로 �
 - OAuth·비밀번호 로그인 — PLAN-037
 - 운영기 자동화(cron 갱신 등) — 별도 후속 PLAN (blueprint §1.5.6)
 
-## 4. 설계 결정
+## 4. 설계 결정 (2026-05-19 grill-me 확정)
 
-(착수 시 확정) — 핵심 미결정 사항:
-- GitHub 레거시: **완전 제거** vs **관리자 백업 기능으로 재정의** — 둘 중 택1
-- 마스터 편집 UI 위치: AdminPage 확장 vs 별도 큐레이팅 페이지
-- `conferences_upstream` write 의 RLS: admin role 정책 추가 + audit_log 연동 여부
+### 4.1 role 권한 분리
+`isAdmin = isAuthenticated` → `users.role==='admin'` 으로 치환. 경계선:
+
+| 기능 | 일반 사용자 | 관리자 |
+|---|---|---|
+| 별표·개인 메모·라이브러리 구독·AI 업데이트·발굴 | ✅ | ✅ |
+| 학회 사실 편집·라이브러리 큐레이팅·사용자 관리 | ❌ | ✅ |
+
+- `users.role` 은 Supabase 에서 수동 설정 (파일럿 = jerome3696). 별도 UI 불요.
+
+### 4.2 사실 편집 = 관리자 전용 (blueprint §1.5.1 준수)
+blueprint §1.5.1 "사실 필드 개인 override 금지, 개인 레이어는 메타데이터 전용"에 맞춰 [편집] 모달을 관리자 전용으로. 일반 사용자는 별표·메모만. **개인 override 코드 제거** (`mergeConference`·`saveConferenceEdit`·`useConferences` 의 `overrides` 경로). `user_conferences.overrides` 컬럼은 미사용화 (DROP 은 선택적 후속).
+
+### 4.3 편집 UI — 기존 surface 재활용 (새 페이지 없음)
+- **학회 사실 + 라이브러리 태그**: 메인 테이블 기존 [편집] 모달 재활용. 관리자가 쓰면 `conferences_upstream` 에 직접 write. 모달에 "이 학회가 속한 라이브러리" 다중선택 추가.
+- **라이브러리 CRUD** (생성·이름·생애주기): AdminPage 에 "라이브러리 관리" 섹션 추가.
+- **관리자는 구독 게이팅 무시** — 큐레이팅하려면 전체 학회가 보여야 하므로 `gateBySubscribedLibraries` 를 관리자에겐 건너뜀.
+- **승격 흐름**: 사용자 "내 학회"(PLAN-041)에 쌓인 발굴 학회를 관리자가 중앙 라이브러리로 편입 (§1.5.7).
+
+### 4.4 GitHub 레거시 완전 제거
+`githubStorage.js`·`useGitHubToken`·`GitHubTokenModal`·useConferences 의 커밋·디바운스·`syncStatus`·SyncBadge·App.jsx 토큰 모달 — 전부 삭제. Supabase 단일 데이터 계층.
+
+### 4.5 감사 로그 — DB 트리거
+`conferences_upstream`·`editions_upstream` 에 UPDATE/INSERT/DELETE 트리거 → `audit_log` 자동 기록. 경로 무관(앱·대시보드·AI) 전부 포착. roadmap Phase A "trust-all + 감사로그" 모델 부합. admin role 의 마스터 테이블 write RLS 정책도 추가(필수).
 
 ## 5. 단계 (Steps)
 
-- [ ] S1 — `role` 조회 훅/컨텍스트 + `isAdmin` 치환
-- [ ] S2 — admin 마스터/라이브러리 큐레이팅 UI + RLS admin write 정책
-- [ ] S3 — GitHub 레거시 제거 또는 재정의
-- [ ] S4 — 테스트 + verify-task.sh
-- [ ] S5 — PR
+- [ ] S1 — `role` 조회 + `isAdmin` 치환 (`users.role==='admin'`), 권한 경계 적용
+- [ ] S2 — 개인 override 코드 제거 ([편집] 모달 관리자 전용화)
+- [ ] S3 — admin write RLS 정책 + `audit_log` 트리거 (마이그레이션)
+- [ ] S4 — [편집] 모달 → 관리자 시 `conferences_upstream` write + 라이브러리 태그 다중선택
+- [ ] S5 — AdminPage "라이브러리 관리" 섹션 (라이브러리 CRUD + 발굴 학회 승격)
+- [ ] S6 — GitHub 레거시 완전 제거
+- [ ] S7 — 테스트 + verify-task.sh
+- [ ] S8 — PR
 
 ## 6. 검증 (Verification)
 
@@ -72,4 +96,5 @@ blueprint §1.5.1 "공용 DB 는 AI·admin 만 변경" 원칙을 실제 UI 로 �
 
 ## 9. 작업 로그
 
-- **2026-05-19**: 사용자 질문(마스터 편집 방안·GitHub 연결 의미)에서 미정리 3건 식별 → PLAN 으로 기록. 착수 시점 미정 — PLAN-037(OAuth) 와 우선순위 조율 필요.
+- **2026-05-19**: 사용자 질문(마스터 편집 방안·GitHub 연결 의미)에서 미정리 3건 식별 → PLAN 으로 기록.
+- **2026-05-19 (grill-me)**: 설계 확정 — §4 전면 작성. role 분리·사실편집 관리자전용(개인 override 제거)·기존 surface 재활용·GitHub 완전제거·audit 트리거. 구현 순서: PLAN-037 → PLAN-041 → PLAN-040.

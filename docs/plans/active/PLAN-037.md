@@ -1,95 +1,87 @@
-# PLAN-037: 비밀번호 + 구글 OAuth 인증 추가
+# PLAN-037: 구글 OAuth 로그인 + 초대 게이팅
 
-> **상태**: active
+> **상태**: active (설계 확정 — 착수 대기)
 > **생성일**: 2026-05-03
 > **완료일**: (미완)
-> **브랜치**: `feature/PLAN-037-password-oauth`
+> **브랜치**: `feature/PLAN-037-oauth`
 > **연관 PR**: #
 > **트랙**: C(기능) — Phase **A.3 후반** (`docs/blueprint.md` §3.3)
-> **의존**: PLAN-033 (router) — 설정 페이지 등 진입 경로 필요
+> **의존**: PLAN-033 (router)
 
 ---
 
 ## 1. 목표 (What)
 
-매직링크 외 추가 인증 수단 도입. 완료 조건:
-1. 이메일 + 비밀번호 가입·로그인 흐름 (Supabase Auth password grant)
-2. 구글 OAuth 로그인 (Supabase Auth provider)
-3. LoginScreen 재구성 — 메일 입력 + [비밀번호로 로그인 / 매직링크 / 구글] 3 경로
-4. 사용자 설정 페이지 — 비밀번호 변경 / OAuth 연동 해제
+로그인 수단에 구글 OAuth 를 추가하고, 가입을 초대제로 게이팅한다. 완료 조건:
+
+1. 구글 OAuth 로그인 (Supabase Auth provider) — LoginScreen 메인 버튼
+2. 매직링크는 폴백으로 유지
+3. 자율 가입 차단 — 초대된 계정만 로그인 가능 (Phase A·B)
 
 ## 2. 배경·동기 (Why)
 
-- /grill-me Q5-c: 사용자가 메인 진입 시 빠른 로그인 원함. 매직링크 만 쓰면 이메일 왕복 1분 마찰.
-- 30명 파일럿 단계 운영 안정성 ↑ — 매직링크 SMTP 장애 시에도 비밀번호 폴백 가능
-- 구글 OAuth = 학교 도메인 사용자 즉시 로그인 (편의성 ↑)
+- 2026-05-19 grill-me: 로그인 수단·게이팅 설계 확정.
+- 현재 가입은 완전 자율 — 모르는 사람이 들어와 Claude API 비용을 소모할 위험. roadmap §4 "초대 기반 1차 방어".
+- 비밀번호는 제외 — 매직링크(폴백)+구글이 전원을 커버, 비밀번호는 유지보수(재설정 등) 비용 대비 가치 낮음. Phase C(공개 전환) 때 재검토.
 
 ## 3. 범위 (Scope)
 
 ### 포함
-- Supabase Auth 설정 — 비밀번호 활성, 구글 provider 활성 (사용자가 Google Cloud Console 작업 필요)
-- LoginScreen 3 경로 UI:
-  - 이메일 + 비밀번호 입력
-  - [매직링크 보내기] 링크 (비밀번호 모르는 사용자)
-  - [구글로 로그인] 버튼
-- Sign-up 흐름 — 이메일 + 비밀번호 (초대 코드와 함께)
-- 설정 페이지 — 비밀번호 변경 / OAuth 연동 보기·해제
-- 신규 가입 시에만 admin 의 invite 코드 검증 (`POST /sign-up` 또는 trigger 검증)
+- Supabase 구글 OAuth provider 활성화 (사용자가 Google Cloud OAuth client 생성 선행)
+- LoginScreen 재구성 — [구글로 로그인] 버튼(메인) + 이메일 매직링크(폴백)
+- 자율 가입 차단 — Supabase Auth "Allow new signups" OFF. 관리자가 Supabase 대시보드에서 사용자 초대
+- `invitations` 테이블 + AdminPage InviteSection 폐기 (Supabase 기본 초대로 대체)
+- 비초대 이메일 로그인 시도 → 친절한 안내 메시지
 
 ### 제외 (Non-goals)
-- Apple OAuth (Phase C)
-- SSO·SAML (Phase C+)
-- 2단계 인증 (Phase C)
+- 이메일+비밀번호 로그인 — Phase C 재검토 (blueprint §3.3 수정)
+- `/settings` 페이지 — 담을 내용 생길 때 별도
+- Apple OAuth·SSO·2FA — Phase C+
 
-## 4. 설계 결정
+## 4. 설계 결정 (2026-05-19 grill-me 확정)
 
-### 4.1 비밀번호 가입 흐름
-- 사용자 가입 시 매직링크 path 처럼 invite 코드 검증
-- Supabase Auth `signUp({email, password, options: {data: {invitation_code: '...'}}})`
-- trigger 가 `data.invitation_code` 를 invitations 테이블에서 검증, 없으면 가입 차단
+### 4.1 로그인 수단 — 구글 OAuth + 매직링크 (비밀번호 없음)
+초대제 게이팅 하에서 초대된 사용자는 매직링크(전원 가능)·구글(이메일 일치 시 자동 링크)로 충분. 비밀번호는 최고 유지보수 비용(재설정 플로우·강도 검증) 대비 가치 낮아 제외.
 
-### 4.2 구글 OAuth
-- Supabase Dashboard > Authentication > Providers > Google 활성화
-- Google Cloud Console 에서 OAuth client ID 생성, redirect URI 등록
-- LoginScreen 의 [구글] 버튼이 `signInWithOAuth({provider: 'google', options: {redirectTo: '...'}})` 호출
-- 신규 사용자 OAuth 가입 시 invite 코드 검증 — challenge: OAuth callback 후에 코드 받기 어려움
-  - 옵션: OAuth 가입은 admin 가 사후 limit 풀어주는 방식 (limit=0 으로 시작)
-  - 또는: OAuth 진입 전 invite 코드 입력 화면 표시 → query 로 전달
+### 4.2 게이팅 — Supabase 기본 초대 (`invitations` 테이블 폐기)
+- Supabase "Allow new signups" OFF → 신규 자율가입 불가.
+- 관리자가 Supabase 대시보드(Authentication → Users → Invite user)에서 각 파일럿 사용자 초대 → Supabase 가 초대 메일 발송.
+- 모든 로그인 수단에 균일 적용 — 계정이 미리 존재해야만 로그인 가능(수단 무관).
+- 코드 기반 `invitations` 테이블·AdminPage 초대 UI 는 폐기 (절반 구현된 레거시 — 더 나쁜 설계를 완성하느니 제거).
+- **Phase C 전환** = "Allow signups" 토글 ON 하나로 자율 가입 개방 (roadmap: Phase C "n명 랜덤").
 
-### 4.3 LoginScreen UX
-- 메인: 이메일 + 비밀번호 입력 + [로그인] 버튼
-- 보조: [비밀번호 잊음? 매직링크로 받기] 링크
-- 보조: [구글로 로그인] (별도 OAuth)
-- 가입 토글: [계정 없음? 가입] → 같은 화면에서 비밀번호 + invite 코드 입력으로 전환
+### 4.3 OAuth ↔ 초대 상호작용
+자율가입 OFF 상태에서 구글 로그인: 초대로 계정이 미리 생성된 이메일이면 OAuth 가 그 계정에 링크되어 로그인 성공, 미초대 이메일이면 차단. 별도 코드 불필요.
 
 ## 5. 단계 (Steps)
 
-- [ ] **S1** — 브랜치 + LoginScreen 재구성
-- [ ] **S2** — 비밀번호 가입 흐름 + invite 코드 검증 trigger
-- [ ] **S3** — 구글 OAuth 통합 (사용자 Google Cloud + Supabase 콘솔 작업 별도)
-- [ ] **S4** — 설정 페이지 비밀번호 변경 + OAuth 해제 UI
-- [ ] **S5** — 테스트 (mock 시나리오)
-- [ ] **S6** — verify-task.sh 통과
-- [ ] **S7** — PR
+- [ ] S1 — 브랜치 + LoginScreen 재구성 ([구글로 로그인] + 매직링크 폴백)
+- [ ] S2 — 구글 OAuth 통합 (`signInWithOAuth`) — Supabase·Google Cloud 콘솔 작업은 사용자
+- [ ] S3 — 자율가입 차단 + 비초대 로그인 시도 안내 메시지
+- [ ] S4 — `invitations` 폐기 — 테이블 DROP 마이그레이션 + AdminPage InviteSection 제거
+- [ ] S5 — blueprint §3.3 수정 (비밀번호 제외 반영)
+- [ ] S6 — 테스트 + verify-task.sh
+- [ ] S7 — PR
 
 ## 6. 검증
 
 - [ ] verify-task.sh 통과
-- [ ] 비밀번호 가입 → invite 검증 → users + quotas trigger 정상
-- [ ] 비밀번호 로그인 후 헤더 쿼터 표시
-- [ ] 구글 로그인 → 첫 진입 시 invite 검증 또는 limit=0 으로 시작
-- [ ] 비밀번호 변경 후 새 비밀번호로 로그인
+- [ ] 초대된 이메일: 구글 로그인 → users + quotas trigger 정상, 헤더 쿼터 표시
+- [ ] 초대된 이메일: 매직링크 로그인 정상
+- [ ] 미초대 이메일: 로그인/가입 차단 + 안내 메시지
+- [ ] 구조 변경 시 `structure.md` 갱신
 
 ## 7. 리스크·롤백
 
-- **리스크**: 구글 OAuth 의 invite 코드 검증 우회 가능성. limit=0 시작이 안전망.
-- **롤백**: provider disable + LoginScreen 매직링크 only 로 회귀
+- **리스크**: 자율가입 OFF 후 기존 미초대 사용자(테스트 계정 등) 접근 불가 — 사전에 필요한 계정 정리.
+- **롤백**: 구글 provider disable + LoginScreen 매직링크 only 회귀 + "Allow signups" ON.
 
 ## 8. 후속
 
-- Apple OAuth (Phase C)
-- 학교 도메인 화이트리스트 (Phase B 검토)
+- `/settings` 페이지 (담을 내용 생길 때)
+- 비밀번호·Apple OAuth — Phase C
 
 ## 9. 작업 로그
 
-- **2026-05-03**: blueprint v2 §3.3 기반 스펙 확정. Google Cloud Console 작업은 사용자 영역.
+- **2026-05-03**: blueprint v2 §3.3 기반 초기 스펙 (비밀번호+OAuth).
+- **2026-05-19**: grill-me 재설계 — 비밀번호 제외(구글+매직링크), 게이팅을 Supabase 기본 초대로 확정, `invitations` 테이블 폐기, `/settings` 보류. blueprint §3.3 수정 필요.
