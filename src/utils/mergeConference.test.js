@@ -127,3 +127,36 @@ describe('mergeAll', () => {
     expect(out).toEqual({ conferences: [], editions: [] });
   });
 });
+
+describe('mergeAll — 라이브러리 부착 (PLAN-030)', () => {
+  const ups = [
+    { id: 'a', full_name: 'A', cycle_years: 1, duration_days: 1 },
+    { id: 'b', full_name: 'B', cycle_years: 1, duration_days: 1 },
+  ];
+  const libraries = [
+    { id: 'lib_master', name: '마스터', is_virtual: false },
+    { id: 'lib_hvac', name: '공조', is_virtual: false },
+  ];
+
+  it('library_conferences 태그로 conference.libraries 구성', () => {
+    const libConfs = [
+      { library_id: 'lib_master', conference_id: 'a' },
+      { library_id: 'lib_hvac', conference_id: 'a' },
+      { library_id: 'lib_master', conference_id: 'b' },
+    ];
+    const out = mergeAll(ups, [], [], libraries, libConfs);
+    expect(out.conferences[0].libraries.map((l) => l.id)).toEqual(['lib_master', 'lib_hvac']);
+    expect(out.conferences[1].libraries.map((l) => l.id)).toEqual(['lib_master']);
+  });
+
+  it('라이브러리 인자 없으면 libraries=[] (하위호환)', () => {
+    const out = mergeAll(ups, [], []);
+    expect(out.conferences[0].libraries).toEqual([]);
+  });
+
+  it('존재하지 않는 library_id 태그는 무시', () => {
+    const libConfs = [{ library_id: 'lib_ghost', conference_id: 'a' }];
+    const out = mergeAll(ups, [], [], libraries, libConfs);
+    expect(out.conferences[0].libraries).toEqual([]);
+  });
+});

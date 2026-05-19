@@ -30,6 +30,7 @@ const GROUPS = [
       { key: 'duration_days', label: <>기간<br />(일)</> },
       { key: 'region', label: '지역', cellClass: 'min-w-[4.5rem]' },
       { key: 'official_url', label: '링크' },
+      { key: 'libraries', label: '라이브러리', cellClass: 'min-w-[6rem]' },
     ],
   },
   {
@@ -97,6 +98,7 @@ function getSortValue(row, key) {
     case 'last_end': return row.last?.end_date || '';
     case 'last_venue': return row.last?.venue || '';
     case 'last_link': return row.last?.link || '';
+    case 'libraries': return (row.libraries || []).map((l) => l.name).join(', ');
     default: return row[key] ?? '';
   }
 }
@@ -122,7 +124,7 @@ export default function MainTable({ isAdmin = false, conferences, filtering, onR
     return next;
   });
 
-  const { filters, setFilters, filtered, options: { categories, fields, regions } } = useFilteringFallback(rows, filtering);
+  const { filters, setFilters, filtered, options: { categories, fields, regions, libraries } } = useFilteringFallback(rows, filtering);
   const { sortKey, sortDir, onSort, sorted } = useSorting(filtered, getSortValue, 'upcoming_start');
 
   if (loading) return <div className="p-8 text-slate-500">로딩 중...</div>;
@@ -192,9 +194,9 @@ export default function MainTable({ isAdmin = false, conferences, filtering, onR
       </div>
     )}
     <FilterBar
-      categories={categories} fields={fields} regions={regions}
+      categories={categories} fields={fields} regions={regions} libraries={libraries}
       category={filters.category} field={filters.field}
-      region={filters.region} query={filters.query}
+      region={filters.region} query={filters.query} library={filters.library}
       onChange={setFilters}
       total={rows.length} filtered={sorted.length}
     />
@@ -282,7 +284,19 @@ export default function MainTable({ isAdmin = false, conferences, filtering, onR
               <td className="px-3 py-2 text-center border-r border-slate-200">{r.cycle_years || ''}</td>
               <td className="px-3 py-2 text-center border-r border-slate-200">{r.duration_days || ''}</td>
               <td className="px-3 py-2 border-r border-slate-200 cell-text min-w-[4.5rem]">{r.region}</td>
-              <td className="px-3 py-2 border-r-2 border-slate-400 whitespace-nowrap"><LinkCell href={r.official_url} /></td>
+              <td className="px-3 py-2 border-r border-slate-200 whitespace-nowrap"><LinkCell href={r.official_url} /></td>
+              <td className="px-3 py-2 border-r-2 border-slate-400 min-w-[6rem]">
+                <div className="flex flex-wrap gap-1">
+                  {(r.libraries || []).map((l) => (
+                    <span
+                      key={l.id}
+                      className="px-1.5 py-0.5 rounded text-xs whitespace-nowrap bg-indigo-100 text-indigo-700"
+                    >
+                      {l.name}
+                    </span>
+                  ))}
+                </div>
+              </td>
               {/* Upcoming */}
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.start_date || ''}</td>
               <td className="px-3 py-2 whitespace-nowrap border-r border-slate-200">{r.upcoming?.end_date || ''}</td>

@@ -16,13 +16,32 @@ function Select({ label, value, onChange, options }) {
   );
 }
 
+// PLAN-030 S6: 라이브러리는 {id,name} 객체 목록 — value 는 id, 표시는 name.
+function LibrarySelect({ value, onChange, options }) {
+  return (
+    <label className="flex items-center gap-1 text-sm">
+      <span className="text-slate-600">라이브러리</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-slate-300 rounded px-2 py-1 bg-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+      >
+        <option value="">전체</option>
+        {options.map((o) => (
+          <option key={o.id} value={o.id}>{o.name}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 export default function FilterBar({
-  categories, fields, regions,
-  category, field, region, query,
+  categories, fields, regions, libraries = [],
+  category, field, region, query, library = '',
   onChange, total, filtered,
 }) {
-  const reset = () => onChange({ category: '', field: '', region: '', query: '' });
-  const hasFilter = category || field || region || query;
+  const reset = () => onChange({ category: '', field: '', region: '', query: '', library: '' });
+  const hasFilter = category || field || region || query || library;
 
   return (
     <div className="flex flex-wrap items-center gap-3 p-3 mb-3 bg-white border border-slate-300 rounded">
@@ -32,6 +51,10 @@ export default function FilterBar({
         onChange={(v) => onChange({ category, field: v, region, query })} />
       <Select label="지역" value={region} options={regions}
         onChange={(v) => onChange({ category, field, region: v, query })} />
+      {libraries.length > 0 && (
+        <LibrarySelect value={library} options={libraries}
+          onChange={(v) => onChange({ library: v })} />
+      )}
       <label className="flex items-center gap-1 text-sm">
         <span className="text-slate-600">검색</span>
         <input

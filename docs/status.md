@@ -46,21 +46,14 @@ A.3 후반 머지분의 실측 검증. 출처: 구 `legacy/session-report-2026-0
 
 ---
 
-## 4. 문서 지도 (작업 종류별)
+## 4. 문서 지도
 
-| 언제 | 무엇을 읽나 |
-|---|---|
-| 지금 어디까지 왔나 | **이 문서 (status.md)** |
-| 장기 비전·블루프린트 체인·상업화 Phase | `roadmap.md` |
-| 기능 설계 / 구현 가능성 판단 | `blueprint.md` (활성 v3) |
-| 구현 순서·단계 진행 | `dev-guide.md` (활성 v3) |
-| 프롬프트 변경·평가 (축②) | `prompteng.md` |
-| UI/디자인 결정 (축③) | `design.md` |
-| 사용 중 이슈 수집 (축③) | `qa-backlog.md` |
-| 코드 구조 탐색 | `structure.md` |
-| 새 기능 플랜 작성 | `docs/plans/TEMPLATE.md` |
-| 작업 종류별 가드레일 | `.claude/rules/axis-{1,2,3}-*.md` |
-| 완료·대체된 과거 문서 | `docs/legacy/` |
+문서 5층 체계(roadmap/status/blueprint/dev-guide/plan)와 작업 워크플로우는 **`CLAUDE.md`** 가 SSOT.
+
+- 다음에 뭘 할까 / PLAN 진행 상태 → `dev-guide.md`
+- 무엇을 만드나(설계) → `blueprint.md` · 장기 비전·체인 → `roadmap.md`
+- 프롬프트(축②) → `prompteng.md` · 디자인·소규모(축③) → `qa-backlog.md` · 코드 맵 → `structure.md`
+- 완료·대체된 과거 문서 → `docs/legacy/`
 
 ---
 

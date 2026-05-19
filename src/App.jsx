@@ -8,6 +8,7 @@ import GitHubTokenModal from './components/common/GitHubTokenModal';
 import QuotaExhaustedModal from './components/common/QuotaExhaustedModal';
 import RouteGuard from './components/common/RouteGuard';
 import { useAuth } from './hooks/useAuth';
+import { useOnboarding } from './hooks/useOnboarding';
 import { useQuota } from './hooks/useQuota';
 import { useGitHubToken } from './hooks/useGitHubToken';
 import { useConferences } from './hooks/useConferences';
@@ -17,6 +18,7 @@ import { filterSearchTargets } from './services/updateLogic';
 
 import MainPage from './pages/MainPage';
 import LoginPage from './pages/LoginPage';
+import OnboardingPage from './pages/OnboardingPage';
 import LibrariesPage from './pages/LibrariesPage';
 import DBSearchPage from './pages/DBSearchPage';
 import DiscoveryPage from './pages/DiscoveryPage';
@@ -35,6 +37,7 @@ function App() {
 
 function AppShell() {
   const auth = useAuth();
+  const onboarding = useOnboarding(auth.user?.id);
   const { token, setToken, clearToken, hasToken } = useGitHubToken();
   const { quota } = useQuota({ userId: auth.user?.id });
   const conferences = useConferences({ token, userId: auth.user?.id });
@@ -118,6 +121,18 @@ function AppShell() {
     );
   }
 
+  // PLAN-030 S4: 로그인했으나 라이브러리 미구독(온보딩 전)이면 라이브러리 선택 화면.
+  if (onboarding.status === 'loading') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <p className="text-sm text-slate-500">로딩 중...</p>
+      </div>
+    );
+  }
+  if (onboarding.status === 'needed') {
+    return <OnboardingPage userId={auth.user.id} onComplete={onboarding.markDone} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
@@ -169,7 +184,10 @@ function AppShell() {
                 />
               )}
             />
-            <Route path="/libraries" element={<LibrariesPage />} />
+            <Route
+              path="/libraries"
+              element={<LibrariesPage userId={auth.user.id} conferences={conferences} />}
+            />
             <Route path="/db" element={<DBSearchPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/admin" element={<AdminPage />} />

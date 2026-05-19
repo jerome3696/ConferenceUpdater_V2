@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-const INITIAL_FILTERS = { category: '', field: '', region: '', query: '', starredOnly: false };
+const INITIAL_FILTERS = { category: '', field: '', region: '', query: '', library: '', starredOnly: false };
 
 export function useFiltering(rows) {
   const [filters, _setFilters] = useState(INITIAL_FILTERS);
@@ -10,10 +10,19 @@ export function useFiltering(rows) {
 
   const options = useMemo(() => {
     const uniq = (key) => [...new Set(rows.map((r) => r[key]).filter(Boolean))].sort();
+    // PLAN-030 S6: 라이브러리는 {id,name} 객체 — id 로 유니크, name 으로 정렬.
+    const libById = new Map();
+    for (const r of rows) {
+      for (const l of r.libraries || []) {
+        if (l?.id) libById.set(l.id, l);
+      }
+    }
+    const libraries = [...libById.values()].sort((a, b) => a.name.localeCompare(b.name));
     return {
       categories: uniq('category'),
       fields: uniq('field'),
       regions: uniq('region'),
+      libraries,
     };
   }, [rows]);
 
@@ -23,6 +32,7 @@ export function useFiltering(rows) {
       if (filters.category && r.category !== filters.category) return false;
       if (filters.field && r.field !== filters.field) return false;
       if (filters.region && r.region !== filters.region) return false;
+      if (filters.library && !(r.libraries || []).some((l) => l.id === filters.library)) return false;
       if (filters.starredOnly && !r.starred) return false;
       if (q) {
         const hay = `${r.full_name || ''} ${r.abbreviation || ''}`.toLowerCase();

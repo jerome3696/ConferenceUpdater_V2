@@ -22,7 +22,9 @@ CREATE INDEX IF NOT EXISTS idx_invitations_code       ON public.invitations(code
 CREATE INDEX IF NOT EXISTS idx_invitations_expires_at ON public.invitations(expires_at);
 
 -- 16자 hex 초대 코드 생성 함수
+-- gen_random_uuid() 는 PostgreSQL 13+ 코어 내장 — pgcrypto 확장 불요.
+-- (구: encode(gen_random_bytes(8),'hex') — pgcrypto 미활성 환경에서 실패하여 교체)
 CREATE OR REPLACE FUNCTION public.generate_invite_code()
 RETURNS text LANGUAGE sql AS $$
-  SELECT encode(gen_random_bytes(8), 'hex');
+  SELECT substr(replace(gen_random_uuid()::text, '-', ''), 1, 16);
 $$;

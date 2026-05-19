@@ -385,33 +385,49 @@ CREATE POLICY al_admin_read ON public.audit_log FOR SELECT USING (public.is_admi
 
 ---
 
-## 7. 후속 PLAN 매핑
+## 7. 구현 PLAN 분해 → dev-guide
 
-블루프린트 v2.0 의 Phase A.3 항목들을 PLAN 으로 분해:
+blueprint 는 spec("무엇")만 보유한다. v3 의 **PLAN 분해·범위·의존·작성 순서·진행 상태**는 `docs/dev-guide.md` 가 SSOT — "A.3 PLAN 보드".
 
-| PLAN | 범위 | 의존 |
-|---|---|---|
-| **PLAN-030** library + user_libraries 스키마 + 옵트인 동기화 | §2.4 라이브러리 모델 + §2.5 신규 테이블 | - |
-| **PLAN-031** audit_log + 메타 컬럼 + 자주 편집 학회 위젯 | §2.6 + §5.2 + §5.3 | PLAN-030 |
-| **PLAN-032** AI 응답 source_url 확장 (promptBuilder v1_2 + responseParser + UI) | §5.1 | - |
-| **PLAN-033** react-router 도입 + 페이지 5개 분리 | §6 | - |
-| **PLAN-034** ICS 구독 URL Edge Function | §4.2 | - |
-| **PLAN-035** admin 대시보드 (사용량·비용·라이브러리 큐레이팅·초대 코드) | §4.3 | PLAN-030, PLAN-031 |
-| **PLAN-036** 학회 정체성 매칭 + D3 confirm 모달 | §2.3 | PLAN-030 |
-| **PLAN-037** 비밀번호 + 구글 OAuth 추가 | §3.3 Phase A.3 후반 | PLAN-033 |
-| **PLAN-038** user_conferences write 경로 (starred·overrides 실제 Supabase 저장) | §2.1 (현재 localStorage 잔존) | - |
+(2026-05-17: 이 절에 있던 PLAN 매핑 표를 dev-guide 로 이관. blueprint=무엇 / dev-guide=어떻게·순서 분리.)
 
-→ 작성 순서 권고: **PLAN-038 → PLAN-030 → PLAN-031 → PLAN-032 → PLAN-033 → PLAN-035 → PLAN-034 → PLAN-036 → PLAN-037**.
+---
 
-근거:
-- PLAN-038 이 가장 시급 — 현재 starred 토글 등이 localStorage 에만 저장돼 멀티 디바이스 동기화 미작동. 이거 없이는 멀티테넌트 진정한 의미 없음.
-- 라이브러리 모델 (PLAN-030) 은 이후 모든 작업의 데이터 기반.
-- 라우터 (PLAN-033) 는 페이지 분리의 전제.
-- admin 대시보드 (PLAN-035) 가 30명 운영 안전망이라 그 다음.
+## 7.5 운영 견고성 — 보안 + 배포 파이프라인 (2026-05-17 추가)
 
-Phase B 추가 PLAN: 알림 센터 (PLAN-040), 필터 저장 (PLAN-041), AI judge 매칭 (PLAN-042), 셀프 계정 삭제 (PLAN-043).
+> 30명 실사용 런치 전 갖춰야 할 시스템 속성. **요구사항·게이트 설계는 여기, 실행은 후속 PLAN.**
 
-Phase C 추가 PLAN: 결제 (PLAN-050), 티어 (PLAN-051), 공개 댓글 (PLAN-052).
+### 7.5.1 보안 모델
+
+**현 상태**:
+- Anthropic API 키는 Edge Function 서버 보관 — 브라우저 노출 없음.
+- 모든 테이블 RLS 활성. 공용 DB 쓰기는 service_role(Edge Function) 독점.
+- service_role 키는 Edge Function 환경변수만 — 프론트 절대 금지.
+
+**점검·강화 대상** (후속 PLAN 에서 audit):
+- 전 테이블 RLS 정책 정합성 전수 검사 (신규 `libraries`/`library_conferences`/`user_libraries` 포함).
+- `claude-proxy` Edge Function 의 호출자 JWT 검증 — 인증 사용자만 쿼터·API 소비.
+- 초대코드 게이트·어뷰즈 신호 (roadmap §B.3 연결).
+- AI 응답 파싱 try-catch, 입력 검증, 의존성 취약점.
+
+### 7.5.2 배포 파이프라인 — 목표
+
+**현 상태**: `main` push → 프론트 자동 배포(`.github/workflows/deploy.yml`). 마이그레이션 적용·Edge Function 배포는 **수동**.
+
+**목표**: **CI green + 사람 승인 게이트 후 자동 적용.**
+- GitHub Actions 워크플로에 마이그레이션 적용·Edge Function 배포 단계 추가.
+- 게이트: 테스트 통과 필수 + GitHub Environments 보호 규칙(필수 승인자)으로 **사람 1-click 승인 후** prod 반영.
+- **무인 자동 적용 금지** — 잘못된 마이그레이션의 prod 직행 차단.
+
+### 7.5.3 트레이드오프 (명시)
+
+자동화 ↑ = Supabase 액세스 토큰 등 크리덴셜이 CI secret 에 상주 = 사고 시 폭발 반경 ↑. 완화: 최소 권한 토큰, 승인 게이트, secret 주기 회전.
+
+### 7.5.4 실행 = 후속 PLAN
+
+- 보안 audit·강화 → 별도 PLAN (`/security-review` 스킬 활용 가능).
+- 배포 파이프라인 자동화 → 별도 PLAN.
+- PLAN-030 완료 후 착수. blueprint 는 요구사항·게이트 설계만 보유.
 
 ---
 
@@ -428,6 +444,7 @@ Phase C 추가 PLAN: 결제 (PLAN-050), 티어 (PLAN-051), 공개 댓글 (PLAN-0
 
 ## 9. 변경 이력
 
+- **2026-05-17**: §7.5 운영 견고성 추가 — 보안 모델·강화 대상 + 배포 파이프라인 목표(CI green + 사람 승인 게이트). 실행은 후속 PLAN.
 - **2026-05-17 (grill-me 재설계)**: §1.5 신설 — 참조 모델 확정(사실 필드 개인 override 금지), 전역 정체성 ID, 라이브러리 생애주기(구축기→운영기, admin 수동 플립), 운영기 출처기반 신뢰도 게이팅 + admin 주간 큐(~10분). Discovery 발굴·편입 모델 — 개인 발굴 pending → admin 일괄 승인(§1.5.7). §1·§2.1·§2.3·§2.4 정합 갱신.
 - **2026-05-17**: 5층 문서 모델 개혁 — 구 `blueprint-v2.md` 를 활성 `blueprint.md` 로 승격, 체인 번호 v3 로 정합 (구 독립번호 v2.0 → 통합 체인 v3).
 - **2026-05-03 (구 v2.0)**: /grill-me 인터뷰 후 멀티테넌트 모델 종합 (Q1~Q9). 라이브러리·개인 fork·공용 DB 3계층 확정. PLAN-030~038 도출.

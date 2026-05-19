@@ -8,16 +8,21 @@ const SHA_KEY = 'conferenceFinder.githubSha';
 export { ConflictError };
 
 async function loadFromSupabase() {
-  const [confRes, edRes, userRes] = await Promise.all([
+  const [confRes, edRes, userRes, libRes, libConfRes] = await Promise.all([
     supabase.from('conferences_upstream').select('*'),
     supabase.from('editions_upstream').select('*'),
     supabase.from('user_conferences').select('*'),
+    supabase.from('libraries').select('*'),
+    supabase.from('library_conferences').select('*'),
   ]);
   if (confRes.error) throw confRes.error;
   if (edRes.error) throw edRes.error;
   // user_conferences 가 비어있어도 정상 — 첫 로그인 사용자는 row 가 없다.
   const userRows = userRes.error ? [] : (userRes.data || []);
-  const merged = mergeAll(confRes.data || [], edRes.data || [], userRows);
+  // PLAN-030: 라이브러리 테이블 에러여도 학회 로드는 진행 (graceful).
+  const libRows = libRes.error ? [] : (libRes.data || []);
+  const libConfRows = libConfRes.error ? [] : (libConfRes.data || []);
+  const merged = mergeAll(confRes.data || [], edRes.data || [], userRows, libRows, libConfRows);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
   return { data: merged, sha: null };
 }

@@ -12,7 +12,7 @@ describe('useFiltering', () => {
   it('초기 상태: 모든 행 pass + 빈 필터', () => {
     const { result } = renderHook(() => useFiltering(ROWS));
     expect(result.current.filtered).toHaveLength(3);
-    expect(result.current.filters).toEqual({ category: '', field: '', region: '', query: '', starredOnly: false });
+    expect(result.current.filters).toEqual({ category: '', field: '', region: '', query: '', library: '', starredOnly: false });
   });
 
   it('options: category/field/region 유니크 + 정렬', () => {
@@ -64,7 +64,7 @@ describe('useFiltering', () => {
     act(() => result.current.setFilters({ category: 'heat', field: '', region: '', query: '' }));
     act(() => result.current.setFilters({ starredOnly: true }));
     expect(result.current.filters).toEqual({
-      category: 'heat', field: '', region: '', query: '', starredOnly: true,
+      category: 'heat', field: '', region: '', query: '', library: '', starredOnly: true,
     });
     expect(result.current.filtered.map((r) => r.id)).toEqual([1, 3]);
   });
@@ -76,6 +76,48 @@ describe('useFiltering', () => {
     act(() => result.current.setFilters({ category: 'fluid', field: '', region: '', query: '' }));
     expect(result.current.filters.starredOnly).toBe(true);
     // starredOnly=true + category=fluid: FD는 starred=0 이므로 탈락, 결과 없음
+    expect(result.current.filtered).toEqual([]);
+  });
+});
+
+// --- PLAN-030 S6: 라이브러리 필터 ---
+
+describe('useFiltering — 라이브러리 필터 (PLAN-030)', () => {
+  const LIB_MASTER = { id: 'lib_master', name: '마스터' };
+  const LIB_HVAC = { id: 'lib_hvac', name: '공조' };
+  const LIB_ROWS = [
+    { id: 1, full_name: 'A', abbreviation: 'A', libraries: [LIB_MASTER, LIB_HVAC] },
+    { id: 2, full_name: 'B', abbreviation: 'B', libraries: [LIB_MASTER] },
+    { id: 3, full_name: 'C', abbreviation: 'C', libraries: [] },
+  ];
+
+  it('초기 필터에 library:"" 포함', () => {
+    const { result } = renderHook(() => useFiltering(LIB_ROWS));
+    expect(result.current.filters.library).toBe('');
+  });
+
+  it('options.libraries: id 유니크 + name 정렬', () => {
+    const { result } = renderHook(() => useFiltering(LIB_ROWS));
+    expect(result.current.options.libraries).toEqual([LIB_HVAC, LIB_MASTER]);
+  });
+
+  it('library 필터: 해당 태그가 붙은 학회만 통과', () => {
+    const { result } = renderHook(() => useFiltering(LIB_ROWS));
+    act(() => result.current.setFilters({ library: 'lib_hvac' }));
+    expect(result.current.filtered.map((r) => r.id)).toEqual([1]);
+  });
+
+  it('library 필터는 부분 머지 — 다른 필터를 지우지 않음', () => {
+    const { result } = renderHook(() => useFiltering(LIB_ROWS));
+    act(() => result.current.setFilters({ query: 'A', category: '', field: '', region: '' }));
+    act(() => result.current.setFilters({ library: 'lib_master' }));
+    expect(result.current.filters.query).toBe('A');
+    expect(result.current.filtered.map((r) => r.id)).toEqual([1]);
+  });
+
+  it('libraries 필드 없는 행도 안전 처리 (필터 시 탈락)', () => {
+    const { result } = renderHook(() => useFiltering([{ id: 9, full_name: 'X', abbreviation: 'X' }]));
+    act(() => result.current.setFilters({ library: 'lib_master' }));
     expect(result.current.filtered).toEqual([]);
   });
 });
