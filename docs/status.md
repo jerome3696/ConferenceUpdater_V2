@@ -10,7 +10,7 @@
 
 - **활성 체인**: **v3** — 멀티테넌트 + 라이브러리 (상업화 Phase A, 30명 파일럿).
 - **단계**: dev-guide v3 §A.3 라이브러리·운영 기반 **진행 중**. A.0~A.2 완료, PLAN-030(라이브러리) 완료.
-- **다음**: PLAN-037(OAuth, 기획) · 아래 검증 5건.
+- **다음**: PLAN-037(OAuth, 기획) · PLAN-040(관리자 기능 정비, 기획) · 아래 검증 5건.
 
 ---
 
@@ -18,7 +18,7 @@
 
 ### 축① 핵심 기능 개발 — `blueprint.md` / `dev-guide.md`
 - A.3 PLAN 대부분 머지 완료 (030·031·032·033·034·035·036·038·039).
-- **active**: PLAN-037 (OAuth, 기획).
+- **active**: PLAN-037 (OAuth, 기획) · PLAN-040 (관리자 기능 정비, 기획).
 - 규칙: `.claude/rules/axis-1-features.md`.
 
 ### 축② 학회검색·업데이트 프롬프트 — `prompteng.md`
@@ -42,7 +42,8 @@ A.3 후반 머지분의 실측 검증. 출처: 구 `legacy/session-report-2026-0
 - [ ] **PR #57 react-router 회귀 테스트 (가장 중요)** — 재배포 후 별표·update·verify·GitHub 커밋·쿼터·캘린더·헤더 메뉴·로그아웃/재진입 전수 확인. 위험: App.jsx 모달↔페이지 분리 props 누락.
 - [ ] **PR #56 발굴 흡수/신규 선택** — `/#/discovery` 에서 기존 학회 매칭 시 배너 + [기존 별표]/[새로 추가] 버튼 동작.
 - [ ] **PR #49 v1_2 [근거] 링크 실측** — 카드 필드 옆 `[근거]` 노출 + claude-proxy 응답 `_sources` 확인. 실패 시 `promptBuilder.js` `DEFAULT_UPDATE_VERSION` → `v1_1` 롤백.
-- [ ] **운영 준비 4건** — Resend 도메인 verify / Google OAuth client 생성 / 라이브러리 시드 큐레이션(32학회) / PLAN-035 admin 위젯 우선순위·디자인 결정.
+- [x] ~~Resend 도메인 verify~~ — 완료 (2026-05-19, `conf-tracker.com` 인증 + Supabase 발신주소 `noreply@conf-tracker.com`).
+- [ ] **운영 준비 3건** — Google OAuth client 생성 / 라이브러리 시드 큐레이션(32학회) / admin 큐레이팅 UI(→ PLAN-040 으로 이관).
 
 ---
 
