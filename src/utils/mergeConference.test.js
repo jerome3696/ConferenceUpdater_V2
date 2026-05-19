@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mergeConference, mergeEdition, mergeAll } from './mergeConference';
+import { mergeConference, mergeEdition, mergeAll, gateBySubscribedLibraries } from './mergeConference';
 
 describe('mergeConference', () => {
   const upstream = {
@@ -158,5 +158,52 @@ describe('mergeAll — 라이브러리 부착 (PLAN-030)', () => {
     const libConfs = [{ library_id: 'lib_ghost', conference_id: 'a' }];
     const out = mergeAll(ups, [], [], libraries, libConfs);
     expect(out.conferences[0].libraries).toEqual([]);
+  });
+});
+
+describe('gateBySubscribedLibraries — 구독 게이팅 (PLAN-030)', () => {
+  const LIB_MASTER = { id: 'lib_master', name: '마스터', is_virtual: false };
+  const LIB_HVAC = { id: 'lib_hvac', name: '공조', is_virtual: false };
+  const LIB_MINE = { id: 'lib_personal_u1', name: '내 학회', is_virtual: true };
+
+  // a=master, b=hvac, c=가상("내 학회"), d=orphan(라이브러리 없음)
+  const merged = {
+    conferences: [
+      { id: 'a', libraries: [LIB_MASTER] },
+      { id: 'b', libraries: [LIB_HVAC] },
+      { id: 'c', libraries: [LIB_MINE] },
+      { id: 'd', libraries: [] },
+    ],
+    editions: [
+      { id: 'e_a', conference_id: 'a' },
+      { id: 'e_b', conference_id: 'b' },
+      { id: 'e_d', conference_id: 'd' },
+    ],
+  };
+
+  it('구독 라이브러리 학회만 통과 (+ 가상 + orphan 안전망)', () => {
+    const out = gateBySubscribedLibraries(merged, ['lib_master']);
+    // a(구독) + c(가상, 항상) + d(orphan 안전망). b(hvac 미구독) 제외.
+    expect(out.conferences.map((c) => c.id)).toEqual(['a', 'c', 'd']);
+  });
+
+  it('남은 학회의 edition 만 유지', () => {
+    const out = gateBySubscribedLibraries(merged, ['lib_master']);
+    expect(out.editions.map((e) => e.id)).toEqual(['e_a', 'e_d']);
+  });
+
+  it('가상 라이브러리는 구독 목록에 없어도 항상 통과', () => {
+    const out = gateBySubscribedLibraries(merged, []);
+    // 구독 0건이라도 c(가상) + d(orphan) 는 남는다.
+    expect(out.conferences.map((c) => c.id)).toEqual(['c', 'd']);
+  });
+
+  it('복수 구독 — 합집합', () => {
+    const out = gateBySubscribedLibraries(merged, ['lib_master', 'lib_hvac']);
+    expect(out.conferences.map((c) => c.id)).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('빈 merged 안전 처리', () => {
+    expect(gateBySubscribedLibraries({}, ['lib_master'])).toEqual({ conferences: [], editions: [] });
   });
 });

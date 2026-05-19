@@ -105,3 +105,26 @@ export function mergeAll(
     editions: upstreamEditions.map(mergeEdition),
   };
 }
+
+/**
+ * PLAN-030: 메인 테이블 게이팅 — 사용자가 구독한 라이브러리(+ 본인 가상 "내 학회")에
+ * 속한 학회만 남긴다. mergeAll 결과를 받아 필터링하는 순수 함수.
+ *
+ * - 가상 라이브러리(`is_virtual`)는 RLS 상 본인 것만 조회되므로 항상 허용.
+ * - 어떤 라이브러리에도 속하지 않은 학회(orphan)는 안전망으로 표시 유지 — 데이터
+ *   이상이나 아직 태그되지 않은 발굴 학회가 사라지지 않게.
+ *
+ * @param {{conferences:Array, editions:Array}} merged  mergeAll 출력
+ * @param {string[]} subscribedLibraryIds  user_libraries 의 library_id 목록
+ */
+export function gateBySubscribedLibraries(merged, subscribedLibraryIds = []) {
+  const allowed = new Set(subscribedLibraryIds);
+  const conferences = (merged.conferences || []).filter((c) => {
+    const libs = c.libraries || [];
+    if (libs.length === 0) return true; // orphan 안전망
+    return libs.some((l) => l.is_virtual || allowed.has(l.id));
+  });
+  const keptIds = new Set(conferences.map((c) => c.id));
+  const editions = (merged.editions || []).filter((e) => keptIds.has(e.conference_id));
+  return { conferences, editions };
+}

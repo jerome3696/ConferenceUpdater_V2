@@ -182,6 +182,56 @@ describe('loadConferences (Supabase)', () => {
     expect(result.sha).toBeNull();
   });
 
+  it('userId 전달 시 구독 라이브러리 학회만 게이팅 (PLAN-030)', async () => {
+    const upstream = [
+      { id: 'a', full_name: 'A', cycle_years: 1, duration_days: 1 },
+      { id: 'b', full_name: 'B', cycle_years: 1, duration_days: 1 },
+    ];
+    const libraries = [
+      { id: 'lib_master', name: '마스터', is_virtual: false },
+      { id: 'lib_hvac', name: '공조', is_virtual: false },
+    ];
+    const libConfs = [
+      { library_id: 'lib_master', conference_id: 'a' },
+      { library_id: 'lib_hvac', conference_id: 'b' },
+    ];
+    const dataByTable = {
+      conferences_upstream: upstream,
+      editions_upstream: [],
+      user_conferences: [],
+      libraries,
+      library_conferences: libConfs,
+    };
+
+    const supabaseMock = {
+      from: vi.fn((table) => {
+        if (table === 'user_libraries') {
+          // 사용자는 lib_master 만 구독.
+          return {
+            select: vi.fn(() => ({
+              eq: vi.fn().mockResolvedValue({ data: [{ library_id: 'lib_master' }], error: null }),
+            })),
+          };
+        }
+        return {
+          select: vi.fn().mockResolvedValue({ data: dataByTable[table] ?? [], error: null }),
+        };
+      }),
+    };
+
+    vi.doMock('./supabaseClient', () => ({
+      supabase: supabaseMock,
+      supabaseConfigured: true,
+    }));
+
+    const { loadConferences: load } = await import('./dataManager');
+    const result = await load({ userId: 'u1' });
+
+    expect(supabaseMock.from).toHaveBeenCalledWith('user_libraries');
+    // lib_hvac 미구독 → conf 'b' 제외, 'a' 만 남음.
+    expect(result.data.conferences.map((c) => c.id)).toEqual(['a']);
+  });
+
   it('Supabase 호출 실패 시 legacy path 로 폴백', async () => {
     const supabaseMock = {
       from: vi.fn(() => ({

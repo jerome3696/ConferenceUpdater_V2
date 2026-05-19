@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { isExpired } from '../utils/dateUtils';
 import {
   loadConferences,
@@ -49,6 +49,8 @@ export function useConferences({ token, userId } = {}) {
   const [error, setError] = useState(null);
   const [syncStatus, setSyncStatus] = useState('idle'); // idle | dirty | saving | saved | error | conflict
   const [lastSavedAt, setLastSavedAt] = useState(null);
+  // PLAN-030: 라이브러리 구독 변경 후 데이터 재로드 트리거 (값 증가 = 재fetch).
+  const [reloadKey, setReloadKey] = useState(0);
 
   // ref로 최신값 유지 (debounce 타이머 내부에서 참조)
   const tokenRef = useRef(token);
@@ -58,20 +60,24 @@ export function useConferences({ token, userId } = {}) {
   useEffect(() => { tokenRef.current = token; }, [token]);
   useEffect(() => { dataRef.current = data; }, [data]);
 
-  // 초기 로드 (token 변화에 재로드: 토큰 설정 직후 최신본 fetch)
+  // 초기 로드 (token·userId 변화 또는 reloadKey 증가 시 재로드).
+  // PLAN-030: userId 가 게이팅(구독 라이브러리 학회만)에 쓰이므로 의존성에 포함.
   useEffect(() => {
     let cancelled = false;
     // 토큰 변경 시 로딩 상태로 즉시 전환해야 UI에서 깜빡임 없이 fetch 표시 가능.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
-    loadConferences({ token })
+    loadConferences({ token, userId })
       .then(({ data: loaded }) => {
         if (!cancelled) setData(loaded);
       })
       .catch((e) => !cancelled && setError(e))
       .finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
-  }, [token]);
+  }, [token, userId, reloadKey]);
+
+  // PLAN-030: 라이브러리 구독 변경 후 외부에서 호출 — 게이팅된 학회 목록 재fetch.
+  const reload = useCallback(() => setReloadKey((k) => k + 1), []);
 
   const runCommit = async () => {
     const currentToken = tokenRef.current;
@@ -416,6 +422,7 @@ export function useConferences({ token, userId } = {}) {
     data,
     syncStatus,
     lastSavedAt,
+    reload,
     retryCommit,
     addConference,
     updateConference,
