@@ -13,7 +13,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_004",
@@ -28,7 +39,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_006",
@@ -43,7 +65,18 @@
       "note": "IIR 시리즈",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_008",
@@ -58,7 +91,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_009",
@@ -73,7 +117,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_011",
@@ -88,7 +143,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_012",
@@ -103,7 +169,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_014",
@@ -118,7 +195,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_015",
@@ -133,7 +221,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_016",
@@ -148,7 +247,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_017",
@@ -163,7 +273,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_018",
@@ -178,7 +299,18 @@
       "note": "IIR 시리즈",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_019",
@@ -193,7 +325,18 @@
       "note": "IIR 시리즈",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "user_mo04ezfq",
@@ -208,7 +351,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "user_mo342nwc",
@@ -223,7 +377,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "user_mo347qjj",
@@ -238,7 +403,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "disc_mo5d5wybn7",
@@ -253,71 +429,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
-    },
-    {
-      "id": "conf_010",
-      "category": "학회",
-      "field": "열물성/냉매",
-      "abbreviation": "TPTPR",
-      "full_name": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants",
-      "cycle_years": 4,
-      "duration_days": 4,
-      "region": "전세계",
-      "official_url": "https://iifiir.org/en/iir-conferences-series",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:17:30.384+00:00"
-    },
-    {
-      "id": "conf_013",
-      "category": "학회",
-      "field": "냉동공조",
-      "abbreviation": "",
-      "full_name": "IEA Heat Pump Conference",
-      "cycle_years": 3,
-      "duration_days": 4,
-      "region": "전세계",
-      "official_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:17:40.218+00:00"
-    },
-    {
-      "id": "conf_020",
-      "category": "학회",
-      "field": "냉동공조",
-      "abbreviation": "ACRA",
-      "full_name": "Asian Conference on Refrigeration and Air-conditioning",
-      "cycle_years": 2,
-      "duration_days": 4,
-      "region": "아시아",
-      "official_url": "",
-      "note": "ACRA series biennial (11th 2024 Jeju → 12th 2026 Taichung).",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:17:52.441+00:00"
-    },
-    {
-      "id": "conf_021",
-      "category": "학회",
-      "field": "열전달",
-      "abbreviation": "IHPC&S",
-      "full_name": "International Heat Pipe Conferences and Symposia",
-      "cycle_years": 1,
-      "duration_days": 5,
-      "region": "전세계",
-      "official_url": "",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:18:02.088+00:00"
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_001",
@@ -332,7 +455,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_002",
@@ -348,7 +482,18 @@
       "starred": 0,
       "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-15T04:42:45.124+00:00"
+      "last_ai_update_at": "2026-05-26T04:35:29.925+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_005",
@@ -364,7 +509,18 @@
       "starred": 0,
       "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-15T04:43:59.54+00:00"
+      "last_ai_update_at": "2026-05-26T04:35:43.711+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "conf_007",
@@ -380,7 +536,126 @@
       "starred": 0,
       "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-15T04:56:25.857+00:00"
+      "last_ai_update_at": "2026-05-26T04:36:01.137+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "conf_010",
+      "category": "학회",
+      "field": "열물성/냉매",
+      "abbreviation": "TPTPR",
+      "full_name": "IIR Conference on Thermophysical Properties and Transfer Processes of Refrigerants",
+      "cycle_years": 4,
+      "duration_days": 4,
+      "region": "전세계",
+      "official_url": "https://iifiir.org/en/iir-conferences-series",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:36:18.551+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "conf_013",
+      "category": "학회",
+      "field": "냉동공조",
+      "abbreviation": "",
+      "full_name": "IEA Heat Pump Conference",
+      "cycle_years": 3,
+      "duration_days": 4,
+      "region": "전세계",
+      "official_url": "https://heatpumpingtechnologies.org/about-hpt-tcp/iea-heat-pump-conference/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:36:32.111+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "conf_020",
+      "category": "학회",
+      "field": "냉동공조",
+      "abbreviation": "ACRA",
+      "full_name": "Asian Conference on Refrigeration and Air-conditioning",
+      "cycle_years": 2,
+      "duration_days": 4,
+      "region": "아시아",
+      "official_url": "",
+      "note": "ACRA series biennial (11th 2024 Jeju → 12th 2026 Taichung).",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:36:49.607+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "conf_021",
+      "category": "학회",
+      "field": "열전달",
+      "abbreviation": "IHPC&S",
+      "full_name": "International Heat Pipe Conferences and Symposia",
+      "cycle_years": 1,
+      "duration_days": 5,
+      "region": "전세계",
+      "official_url": "",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:37:02.663+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "disc_mo51rke0v1",
@@ -395,7 +670,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "disc_mo5d6axpa3",
@@ -410,7 +696,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
+      "source": "upstream",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "disc_mo8592i0e0",
@@ -425,54 +722,18 @@
       "note": "",
       "starred": 0,
       "organizer": "",
-      "source": "upstream"
-    },
-    {
-      "id": "disc_mo859hc6bf",
-      "category": "학회",
-      "field": "공기질",
-      "abbreviation": "IAQVEC",
-      "full_name": "IAQVEC - International Conference on Indoor Air Quality, Ventilation, and Energy Conservation in Buildings",
-      "cycle_years": 2,
-      "duration_days": 0,
-      "region": "전세계",
-      "official_url": "https://iaqvec2026.org/",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream"
-    },
-    {
-      "id": "disc_mo520jhk7o",
-      "category": "학회",
-      "field": "냉동공조",
-      "abbreviation": "IRACC",
-      "full_name": "International Refrigeration and Air Conditioning Conference at Purdue (Harrick Conference)",
-      "cycle_years": 2,
-      "duration_days": 0,
-      "region": "전세계",
-      "official_url": "https://docs.lib.purdue.edu/iracc/",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-02T15:18:14.122+00:00"
-    },
-    {
-      "id": "disc_mo8593oimc",
-      "category": "학회",
-      "field": "건물에너지모델링",
-      "abbreviation": "COBEE",
-      "full_name": "COBEE - International Conference on Building Energy and Environment",
-      "cycle_years": 3,
-      "duration_days": 0,
-      "region": "전세계",
-      "official_url": "https://cobee2025.cobee2025.org/",
-      "note": "",
-      "starred": 0,
-      "organizer": "",
-      "source": "upstream",
-      "last_ai_update_at": "2026-05-15T04:43:21.89+00:00"
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     },
     {
       "id": "disc_mo5215jjv5",
@@ -488,7 +749,99 @@
       "starred": 0,
       "organizer": "",
       "source": "upstream",
-      "last_ai_update_at": "2026-05-15T04:57:02.761+00:00"
+      "last_ai_update_at": "2026-05-20T02:37:53.391+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "disc_mo8593oimc",
+      "category": "학회",
+      "field": "건물에너지모델링",
+      "abbreviation": "COBEE",
+      "full_name": "COBEE - International Conference on Building Energy and Environment",
+      "cycle_years": 3,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://cobee2025.cobee2025.org/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-20T02:38:09.252+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "disc_mo859hc6bf",
+      "category": "학회",
+      "field": "공기질",
+      "abbreviation": "IAQVEC",
+      "full_name": "IAQVEC - International Conference on Indoor Air Quality, Ventilation, and Energy Conservation in Buildings",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://iaqvec2026.org/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:37:20.056+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
+    },
+    {
+      "id": "disc_mo520jhk7o",
+      "category": "학회",
+      "field": "냉동공조",
+      "abbreviation": "IRACC",
+      "full_name": "International Refrigeration and Air Conditioning Conference at Purdue (Harrick Conference)",
+      "cycle_years": 2,
+      "duration_days": 0,
+      "region": "전세계",
+      "official_url": "https://docs.lib.purdue.edu/iracc/",
+      "note": "",
+      "starred": 0,
+      "organizer": "",
+      "source": "upstream",
+      "last_ai_update_at": "2026-05-26T04:37:38.707+00:00",
+      "libraries": [
+        {
+          "id": "lib_master",
+          "name": "마스터",
+          "description": "운영자 큐레이팅 메인 라이브러리 (열유체·건물공조)",
+          "is_virtual": false,
+          "owner_user_id": null,
+          "lifecycle": "building",
+          "created_at": "2026-05-17T09:42:15.723275+00:00"
+        }
+      ]
     }
   ],
   "editions": [
@@ -790,15 +1143,15 @@
       "id": "ed_mo1ifst3",
       "conference_id": "conf_005",
       "status": "upcoming",
-      "start_date": "2026-04-20",
-      "end_date": "2026-04-24",
+      "start_date": "2027-04-05",
+      "end_date": "2027-04-08",
       "venue": "Hannover, Germany",
       "link": "https://www.hannovermesse.de",
       "source": "ai_search",
       "confidence": "high",
       "anchored": false,
       "anchor_set_at": null,
-      "updated_at": "2026-04-17T15:57:35.09+00:00"
+      "updated_at": "2026-06-05T00:40:47.682Z"
     },
     {
       "id": "ed_mo1ihhw0",
